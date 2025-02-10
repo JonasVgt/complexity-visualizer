@@ -2,4 +2,5 @@
 
 mod app;
 mod sidepanel;
+mod graph;
 pub use app::TemplateApp;
