@@ -7,16 +7,26 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, rust-overlay, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        overlays = [ (import rust-overlay) ];
-        pkgs = import nixpkgs { inherit system overlays; };
-      in with pkgs; {
+  outputs = {
+    self,
+    nixpkgs,
+    rust-overlay,
+    flake-utils,
+    ...
+  }:
+    flake-utils.lib.eachDefaultSystem (system: let
+      overlays = [(import rust-overlay)];
+      pkgs = import nixpkgs {inherit system overlays;};
+      rust = pkgs.rust-bin.stable.latest.default.override {
+        extensions = ["rust-src" "rust-std"];
+        targets = ["wasm32-unknown-unknown"];
+      };
+    in
+      with pkgs; {
         devShells.default = mkShell rec {
           buildInputs = [
             # Rust
-            rust-bin.stable.latest.default
+            rust
             trunk
 
             # misc. libraries
@@ -36,10 +46,9 @@
             xorg.libXrandr
             xorg.libXi
             xorg.libX11
-
           ];
 
-          LD_LIBRARY_PATH = "${lib.makeLibraryPath buildInputs}";
+          LD_LIBRARY_PATH = lib.makeLibraryPath buildInputs;
         };
       });
 }
