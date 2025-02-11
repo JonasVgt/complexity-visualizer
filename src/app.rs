@@ -97,7 +97,7 @@ impl eframe::App for TemplateApp {
                 "Source code."
             ));
 
-            graph_ui(ui);
+            graph_ui(ui, &mut self.selected_class);
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
                 powered_by_egui_and_eframe(ui);
