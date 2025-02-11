@@ -4,4 +4,4 @@ mod app;
 mod sidepanel;
 mod graph;
 mod database;
-pub use app::TemplateApp;
+pub use app::ComplexityVisualizerApp;

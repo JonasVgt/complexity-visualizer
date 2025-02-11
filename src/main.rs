@@ -20,7 +20,7 @@ fn main() -> eframe::Result {
     eframe::run_native(
         "Complexity Visualizer",
         native_options,
-        Box::new(|cc| Ok(Box::new(complexity_visualizer::TemplateApp::new(cc)))),
+        Box::new(|cc| Ok(Box::new(complexity_visualizer::ComplexityVisualizerApp::new(cc)))),
     )
 }
 
@@ -50,7 +50,7 @@ fn main() {
             .start(
                 canvas,
                 web_options,
-                Box::new(|cc| Ok(Box::new(complexity_visualizer::TemplateApp::new(cc)))),
+                Box::new(|cc| Ok(Box::new(complexity_visualizer::ComplexityVisualizerApp::new(cc)))),
             )
             .await;
 

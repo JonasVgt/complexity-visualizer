@@ -3,7 +3,7 @@ use crate::{database::complexity_class::ComplextiyClass, graph::graph_ui, sidepa
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
-pub struct TemplateApp {
+pub struct ComplexityVisualizerApp {
     // Example stuff:
     label: String,
 
@@ -14,7 +14,7 @@ pub struct TemplateApp {
     selected_class : ComplextiyClass,
 }
 
-impl Default for TemplateApp {
+impl Default for ComplexityVisualizerApp {
     fn default() -> Self {
         Self {
             // Example stuff:
@@ -30,7 +30,7 @@ impl Default for TemplateApp {
     }
 }
 
-impl TemplateApp {
+impl ComplexityVisualizerApp {
     /// Called once before the first frame.
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         // This is also where you can customize the look and feel of egui using
@@ -46,7 +46,7 @@ impl TemplateApp {
     }
 }
 
-impl eframe::App for TemplateApp {
+impl eframe::App for ComplexityVisualizerApp {
     /// Called by the frame work to save state before shutdown.
     fn save(&mut self, storage: &mut dyn eframe::Storage) {
         eframe::set_value(storage, eframe::APP_KEY, self);
@@ -78,29 +78,16 @@ impl eframe::App for TemplateApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.heading("eframe template");
-
-            ui.horizontal(|ui| {
-                ui.label("Write something: ");
-                ui.text_edit_singleline(&mut self.label);
-            });
-
-            ui.add(egui::Slider::new(&mut self.value, 0.0..=10.0).text("value"));
-            if ui.button("Increment").clicked() {
-                self.value += 1.0;
-            }
+            ui.heading("Complexity Classes");
 
             ui.separator();
 
-            ui.add(egui::github_link_file!(
-                "https://github.com/emilk/eframe_template/blob/main/",
-                "Source code."
-            ));
+
 
             graph_ui(ui, &mut self.selected_class);
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
-                powered_by_egui_and_eframe(ui);
+                footer(ui);
                 egui::warn_if_debug_build(ui);
             });
         });
@@ -114,7 +101,7 @@ impl eframe::App for TemplateApp {
     }
 }
 
-fn powered_by_egui_and_eframe(ui: &mut egui::Ui) {
+fn footer(ui: &mut egui::Ui) {
     ui.horizontal(|ui| {
         ui.spacing_mut().item_spacing.x = 0.0;
         ui.label("Powered by ");
@@ -125,5 +112,10 @@ fn powered_by_egui_and_eframe(ui: &mut egui::Ui) {
             "https://github.com/emilk/egui/tree/master/crates/eframe",
         );
         ui.label(".");
+        ui.add_space(10.0);
+        ui.add(egui::github_link_file!(
+            "https://github.com/JonasVgt/complexity-visualizer",
+            "Source code."
+        ));
     });
 }
