@@ -1,4 +1,4 @@
-mod complexity_class;
+pub mod complexity_class;
 
 use complexity_class::ComplextiyClass;
 use rusqlite::{Connection, Result};
@@ -10,7 +10,7 @@ pub struct MyDatabase {
 impl MyDatabase {
     pub fn new() -> Self {
         let conn = Connection::open("classes.db").expect("Failed to open database");
-        Self { conn: conn }
+        Self { conn }
     }
 
     pub fn fetch_complexity_classes(&self) -> Result<Vec<ComplextiyClass>> {

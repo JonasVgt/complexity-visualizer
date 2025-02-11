@@ -96,7 +96,17 @@ impl eframe::App for TemplateApp {
             });
         });
 
-        egui::SidePanel::right("my_right_panel").show(ctx, |ui| ui_sidepanel(ui));
+        egui::SidePanel::right("my_right_panel").show(ctx, |ui| {
+            ui_sidepanel(
+                ui,
+                crate::database::complexity_class::ComplextiyClass {
+                    id: 1,
+                    name: String::from("PTIME"),
+                    description: String::from("PTIME description"),
+                    wikipedia_link: String::from("link"),
+                },
+            )
+        });
     }
 }
 
