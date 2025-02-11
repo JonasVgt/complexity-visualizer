@@ -16,12 +16,12 @@ impl MyDatabase {
     pub fn fetch_complexity_classes(&self) -> Result<Vec<ComplextiyClass>> {
         let mut stmt = self.conn.prepare("SELECT * FROM complexity_classes")?;
         let classes: Vec<ComplextiyClass> = stmt
-            .query_map([], |_| {
+            .query_map([], |row| {
                 Ok(ComplextiyClass {
-                    id: 1,
-                    name: String::from("abc"),
-                    description: String::from("desc"),
-                    wikipedia_link: String::from("wikipedia.de"),
+                    id: row.get("id")?,
+                    name: row.get("name")?,
+                    description: row.get("description")?,
+                    wikipedia_link: row.get("wikipedia_link")?,
                 })
             })?
             .collect::<Result<Vec<ComplextiyClass>>>()?;
