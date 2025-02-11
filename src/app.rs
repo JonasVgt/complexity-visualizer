@@ -1,4 +1,4 @@
-use crate::{graph::graph_ui, sidepanel::ui_sidepanel};
+use crate::{database::complexity_class::ComplextiyClass, graph::graph_ui, sidepanel::ui_sidepanel};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -9,6 +9,9 @@ pub struct TemplateApp {
 
     #[serde(skip)] // This how you opt-out of serialization of a field
     value: f32,
+
+    #[serde(skip)]
+    selected_class : ComplextiyClass,
 }
 
 impl Default for TemplateApp {
@@ -17,6 +20,12 @@ impl Default for TemplateApp {
             // Example stuff:
             label: "Hello World!".to_owned(),
             value: 2.7,
+            selected_class: ComplextiyClass {
+                id: 1,
+                name: String::from("No class selected"),
+                description: String::from(""),
+                wikipedia_link: String::from(""),
+            }
         }
     }
 }
@@ -99,12 +108,7 @@ impl eframe::App for TemplateApp {
         egui::SidePanel::right("my_right_panel").show(ctx, |ui| {
             ui_sidepanel(
                 ui,
-                crate::database::complexity_class::ComplextiyClass {
-                    id: 1,
-                    name: String::from("PTIME"),
-                    description: String::from("PTIME description"),
-                    wikipedia_link: String::from("link"),
-                },
+                &self.selected_class
             )
         });
     }
