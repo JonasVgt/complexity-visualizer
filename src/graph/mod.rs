@@ -1,5 +1,5 @@
 use egui::ScrollArea;
-use node::node_ui;
+use node::NodeWidget;
 
 use crate::database::{complexity_class::ComplextiyClass, MyDatabase};
 
@@ -17,7 +17,9 @@ pub fn graph_ui(ui: &mut egui::Ui, selected_class: &mut ComplextiyClass) {
         classes
             .into_iter()
             .map(|class| {
-                let response = node_ui(ui, &class.name);
+                let response = ui.add(NodeWidget {
+                    label: class.name.clone(),
+                });
                 if response.clicked() {
                     *selected_class = class;
                 }
