@@ -1,4 +1,6 @@
-use crate::{database::complexity_class::ComplextiyClass, graph::graph_ui, sidepanel::ui_sidepanel};
+use crate::{
+    database::complexity_class::ComplextiyClass, graph::graph_ui, sidepanel::ui_sidepanel,
+};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -11,7 +13,7 @@ pub struct ComplexityVisualizerApp {
     value: f32,
 
     #[serde(skip)]
-    selected_class : ComplextiyClass,
+    selected_class: ComplextiyClass,
 }
 
 impl Default for ComplexityVisualizerApp {
@@ -25,7 +27,7 @@ impl Default for ComplexityVisualizerApp {
                 name: String::from("No class selected"),
                 description: String::from(""),
                 wikipedia_link: String::from(""),
-            }
+            },
         }
     }
 }
@@ -82,8 +84,6 @@ impl eframe::App for ComplexityVisualizerApp {
 
             ui.separator();
 
-
-
             graph_ui(ui, &mut self.selected_class);
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
@@ -92,12 +92,8 @@ impl eframe::App for ComplexityVisualizerApp {
             });
         });
 
-        egui::SidePanel::right("my_right_panel").show(ctx, |ui| {
-            ui_sidepanel(
-                ui,
-                &self.selected_class
-            )
-        });
+        egui::SidePanel::right("my_right_panel")
+            .show(ctx, |ui| ui_sidepanel(ui, &self.selected_class));
     }
 }
 
