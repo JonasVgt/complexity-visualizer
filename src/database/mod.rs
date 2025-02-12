@@ -1,31 +1,27 @@
 pub mod complexity_class;
 
 use complexity_class::ComplexityClass;
-use rusqlite::{Connection, Result};
+use rmp_serde::from_slice;
+use std::{fs::File, io::Read};
 
-pub struct MyDatabase {
-    conn: Connection,
-}
+pub struct MyDatabase {}
 
 impl MyDatabase {
     pub fn new() -> Self {
-        let conn = Connection::open("classes.db").expect("Failed to open database");
-        Self { conn }
+        Self {}
     }
 
-    pub fn fetch_complexity_classes(&self) -> Result<Vec<ComplexityClass>> {
-        let mut stmt = self.conn.prepare("SELECT * FROM complexity_classes")?;
-        let classes: Vec<ComplexityClass> = stmt
-            .query_map([], |row| {
-                Ok(ComplexityClass {
-                    id: row.get("id")?,
-                    name: row.get("name")?,
-                    description: row.get("description")?,
-                    wikipedia: row.get("wikipedia_link")?,
-                })
-            })?
-            .collect::<Result<Vec<ComplexityClass>>>()?;
+    pub fn fetch_complexity_classes(&self) -> Result<Vec<ComplexityClass>, std::io::Error> {
+        let mut file = File::open("./assets/classes.msgpack")?;
 
-        Ok(classes)
+        // Read the file contents into a buffer
+        let mut buffer = Vec::new();
+        file.read_to_end(&mut buffer)?;
+
+        // Deserialize MessagePack data into Rust struct
+        let data: Vec<ComplexityClass> =
+            from_slice(&buffer).expect("Failed to deserialize msgpack");
+
+        Ok(data)
     }
 }
