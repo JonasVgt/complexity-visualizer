@@ -1,5 +1,5 @@
 use crate::{
-    database::complexity_class::ComplextiyClass, graph::graph_ui, sidepanel::ui_sidepanel,
+    database::complexity_class::ComplextiyClass, graph::GraphWidget, sidepanel::ui_sidepanel,
 };
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
@@ -87,7 +87,9 @@ impl eframe::App for ComplexityVisualizerApp {
 
             ui.separator();
 
-            graph_ui(ui, &mut self.selected_class);
+            ui.add(GraphWidget {
+                selected_class: &mut self.selected_class,
+            });
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
                 footer(ui);
