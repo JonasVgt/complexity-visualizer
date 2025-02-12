@@ -1,6 +1,6 @@
 pub mod complexity_class;
 
-use complexity_class::ComplextiyClass;
+use complexity_class::ComplexityClass;
 use rusqlite::{Connection, Result};
 
 pub struct MyDatabase {
@@ -13,18 +13,18 @@ impl MyDatabase {
         Self { conn }
     }
 
-    pub fn fetch_complexity_classes(&self) -> Result<Vec<ComplextiyClass>> {
+    pub fn fetch_complexity_classes(&self) -> Result<Vec<ComplexityClass>> {
         let mut stmt = self.conn.prepare("SELECT * FROM complexity_classes")?;
-        let classes: Vec<ComplextiyClass> = stmt
+        let classes: Vec<ComplexityClass> = stmt
             .query_map([], |row| {
-                Ok(ComplextiyClass {
+                Ok(ComplexityClass {
                     id: row.get("id")?,
                     name: row.get("name")?,
                     description: row.get("description")?,
                     wikipedia_link: row.get("wikipedia_link")?,
                 })
             })?
-            .collect::<Result<Vec<ComplextiyClass>>>()?;
+            .collect::<Result<Vec<ComplexityClass>>>()?;
 
         Ok(classes)
     }

@@ -1,12 +1,12 @@
 use egui::{pos2, Rect, Scene, Widget};
 use node::NodeWidget;
 
-use crate::database::{complexity_class::ComplextiyClass, MyDatabase};
+use crate::database::{complexity_class::ComplexityClass, MyDatabase};
 
 mod node;
 
 pub struct GraphWidget<'a> {
-    pub selected_class: &'a mut ComplextiyClass,
+    pub selected_class: &'a mut ComplexityClass,
 }
 
 impl Widget for GraphWidget<'_> {

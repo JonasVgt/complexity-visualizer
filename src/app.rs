@@ -1,5 +1,5 @@
 use crate::{
-    database::complexity_class::ComplextiyClass, graph::GraphWidget, sidepanel::ui_sidepanel,
+    database::complexity_class::ComplexityClass, graph::GraphWidget, sidepanel::ui_sidepanel,
 };
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
@@ -13,7 +13,7 @@ pub struct ComplexityVisualizerApp {
     value: f32,
 
     #[serde(skip)]
-    selected_class: ComplextiyClass,
+    selected_class: ComplexityClass,
 }
 
 impl Default for ComplexityVisualizerApp {
@@ -22,7 +22,7 @@ impl Default for ComplexityVisualizerApp {
             // Example stuff:
             label: "Hello World!".to_owned(),
             value: 2.7,
-            selected_class: ComplextiyClass {
+            selected_class: ComplexityClass {
                 id: 1,
                 name: String::from("No class selected"),
                 description: String::from(""),
