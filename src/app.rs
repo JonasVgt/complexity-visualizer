@@ -78,6 +78,9 @@ impl eframe::App for ComplexityVisualizerApp {
             });
         });
 
+        egui::SidePanel::right("my_right_panel")
+            .show(ctx, |ui| ui_sidepanel(ui, &self.selected_class));
+
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
             ui.heading("Complexity Classes");
@@ -91,9 +94,6 @@ impl eframe::App for ComplexityVisualizerApp {
                 egui::warn_if_debug_build(ui);
             });
         });
-
-        egui::SidePanel::right("my_right_panel")
-            .show(ctx, |ui| ui_sidepanel(ui, &self.selected_class));
     }
 }
 

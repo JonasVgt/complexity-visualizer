@@ -1,4 +1,4 @@
-use egui::ScrollArea;
+use egui::{pos2, Rect, Scene};
 use node::NodeWidget;
 
 use crate::database::{complexity_class::ComplextiyClass, MyDatabase};
@@ -10,22 +10,30 @@ pub fn graph_ui(ui: &mut egui::Ui, selected_class: &mut ComplextiyClass) {
 
     let classes = database.fetch_complexity_classes().unwrap();
 
-    ScrollArea::both().show(ui, |ui| {
-        let available_size = ui.available_size();
-        ui.set_min_size(available_size);
-
-        classes
-            .into_iter()
-            .map(|class| {
-                let response = ui.add(NodeWidget {
-                    label: class.name.clone(),
-                });
+    Scene::new().show(
+        ui,
+        &mut Rect::from_min_size(
+            pos2(0.0, 0.0),
+            egui::Vec2 {
+                x: 1000.0,
+                y: 1000.0,
+            },
+        ),
+        |ui| {
+            let mut i = 0;
+            for class in classes {
+                let pos = egui::pos2((200 * i) as f32, (100 * i) as f32);
+                let response = ui.put(
+                    egui::Rect::from_center_size(pos, egui::vec2(50.0, 50.0)),
+                    NodeWidget {
+                        label: class.name.clone(),
+                    },
+                );
                 if response.clicked() {
                     *selected_class = class;
                 }
-                response
-            })
-            .reduce(|acc, e| acc.union(e))
-            .unwrap();
-    });
+                i += 1;
+            }
+        },
+    );
 }
