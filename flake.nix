@@ -21,6 +21,9 @@
         extensions = ["rust-src" "rust-std"];
         targets = ["wasm32-unknown-unknown"];
       };
+      python = pkgs.python3.withPackages (p: [
+        p.msgpack
+      ]);
     in
       with pkgs; {
         devShells.default = mkShell rec {
@@ -46,6 +49,9 @@
             xorg.libXrandr
             xorg.libXi
             xorg.libX11
+
+            # python
+            python
           ];
 
           LD_LIBRARY_PATH = lib.makeLibraryPath buildInputs;
