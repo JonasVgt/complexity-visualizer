@@ -21,7 +21,7 @@ impl MyDatabase {
                     id: row.get("id")?,
                     name: row.get("name")?,
                     description: row.get("description")?,
-                    wikipedia_link: row.get("wikipedia_link")?,
+                    wikipedia: row.get("wikipedia_link")?,
                 })
             })?
             .collect::<Result<Vec<ComplexityClass>>>()?;

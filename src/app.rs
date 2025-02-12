@@ -26,7 +26,7 @@ impl Default for ComplexityVisualizerApp {
                 id: 1,
                 name: String::from("No class selected"),
                 description: String::from(""),
-                wikipedia_link: String::from(""),
+                wikipedia: String::from(""),
             },
         }
     }

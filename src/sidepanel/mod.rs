@@ -5,5 +5,5 @@ pub fn ui_sidepanel(ui: &mut egui::Ui, class: &ComplexityClass) {
     ui.separator();
     ui.label(&class.description);
     ui.separator();
-    ui.hyperlink(&class.wikipedia_link);
+    ui.hyperlink(&class.wikipedia);
 }
