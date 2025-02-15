@@ -6,14 +6,13 @@ use crate::database::{complexity_class::ComplexityClass, MyDatabase};
 mod node;
 
 pub struct GraphWidget<'a> {
-    pub selected_class: &'a mut ComplexityClass,
+    pub selected_class: &'a ComplexityClass,
+    pub db: &'a mut MyDatabase,
 }
 
 impl Widget for GraphWidget<'_> {
-    fn ui(self, ui: &mut egui::Ui) -> egui::Response {
-        let database = MyDatabase::new();
-
-        let classes = database.fetch_complexity_classes().unwrap();
+    fn ui(mut self, ui: &mut egui::Ui) -> egui::Response {
+        self.db.finish();
 
         let response = Scene::new().show(
             ui,
@@ -26,7 +25,7 @@ impl Widget for GraphWidget<'_> {
             ),
             |ui| {
                 let mut i = 0;
-                for class in classes {
+                for class in &self.db.classes {
                     let pos = egui::pos2((200 * i) as f32, (100 * i) as f32);
                     let response = ui.put(
                         egui::Rect::from_center_size(pos, egui::vec2(50.0, 50.0)),
@@ -35,7 +34,7 @@ impl Widget for GraphWidget<'_> {
                         },
                     );
                     if response.clicked() {
-                        *self.selected_class = class;
+                        self.selected_class = class;
                     }
                     i += 1;
                 }
