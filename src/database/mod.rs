@@ -3,7 +3,7 @@ pub mod complexity_class;
 use complexity_class::ComplexityClass;
 use flowync::CompactFlower;
 use rmp_serde::from_slice;
-use std::{fs::File, io::Read};
+
 
 pub struct MyDatabase {
     pub flower: CompactFlower<ComplexityClass, Vec<ComplexityClass>, String>,
@@ -22,6 +22,8 @@ impl MyDatabase {
 
     #[cfg(not(target_arch = "wasm32"))]
     pub fn fetch_complexity_classes() -> Result<Vec<ComplexityClass>, std::io::Error> {
+        use std::{fs::File, io::Read};
+        
         let mut file = File::open("./assets/classes.msgpack")?;
 
         // Read the file contents into a buffer
