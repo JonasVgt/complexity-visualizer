@@ -60,7 +60,7 @@ impl MyDatabase {
         use web_sys::RequestInit;
         use web_sys::Response;
 
-        let mut opts = RequestInit::new();
+        let opts = RequestInit::new();
         opts.set_method("GET");
         //opts.mode(RequestMode::Cors);
 
