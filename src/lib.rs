@@ -3,5 +3,6 @@
 mod app;
 mod database;
 mod graph;
+mod model;
 mod sidepanel;
 pub use app::ComplexityVisualizerApp;

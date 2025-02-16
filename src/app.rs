@@ -1,5 +1,8 @@
 use crate::{
-    database::{complexity_class::ComplexityClass, MyDatabase}, graph::GraphWidget, sidepanel::ui_sidepanel,
+    database::{complexity_class::ComplexityClass, MyDatabase},
+    graph::GraphWidget,
+    model::Model,
+    sidepanel::ui_sidepanel,
 };
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
@@ -16,7 +19,7 @@ pub struct ComplexityVisualizerApp {
     selected_class: ComplexityClass,
 
     #[serde(skip)]
-    db : MyDatabase
+    model: Model,
 }
 
 impl Default for ComplexityVisualizerApp {
@@ -31,7 +34,7 @@ impl Default for ComplexityVisualizerApp {
                 description: String::from(""),
                 wikipedia: String::from(""),
             },
-            db: MyDatabase::new(),
+            model: Model::new(MyDatabase::new()),
         }
     }
 }
@@ -93,7 +96,7 @@ impl eframe::App for ComplexityVisualizerApp {
 
             ui.add(GraphWidget {
                 selected_class: &mut self.selected_class,
-                db: &mut self.db,
+                model: &mut self.model,
             });
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {

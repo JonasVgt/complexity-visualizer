@@ -1,19 +1,17 @@
 use egui::{pos2, Rect, Scene, Widget};
 use node::NodeWidget;
 
-use crate::database::{complexity_class::ComplexityClass, MyDatabase};
+use crate::{database::complexity_class::ComplexityClass, model::Model};
 
 mod node;
 
 pub struct GraphWidget<'a> {
     pub selected_class: &'a ComplexityClass,
-    pub db: &'a mut MyDatabase,
+    pub model: &'a mut Model,
 }
 
 impl Widget for GraphWidget<'_> {
     fn ui(mut self, ui: &mut egui::Ui) -> egui::Response {
-        self.db.finish();
-
         let response = Scene::new().show(
             ui,
             &mut Rect::from_min_size(
@@ -25,7 +23,7 @@ impl Widget for GraphWidget<'_> {
             ),
             |ui| {
                 let mut i = 0;
-                for class in &self.db.classes {
+                for class in self.model.classes() {
                     let pos = egui::pos2((200 * i) as f32, (100 * i) as f32);
                     let response = ui.put(
                         egui::Rect::from_center_size(pos, egui::vec2(50.0, 50.0)),
