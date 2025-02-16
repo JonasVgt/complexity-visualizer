@@ -1,17 +1,17 @@
 use egui::{pos2, Rect, Scene, Widget};
 use node::NodeWidget;
 
-use crate::{database::complexity_class::ComplexityClass, model::Model};
+use crate::model::Model;
 
 mod node;
 
 pub struct GraphWidget<'a> {
-    pub selected_class: &'a ComplexityClass,
+    pub selected_class: &'a mut Option<u32>,
     pub model: &'a mut Model,
 }
 
 impl Widget for GraphWidget<'_> {
-    fn ui(mut self, ui: &mut egui::Ui) -> egui::Response {
+    fn ui(self, ui: &mut egui::Ui) -> egui::Response {
         let response = Scene::new().show(
             ui,
             &mut Rect::from_min_size(
@@ -32,7 +32,7 @@ impl Widget for GraphWidget<'_> {
                         },
                     );
                     if response.clicked() {
-                        self.selected_class = class;
+                        *self.selected_class = Some(class.id);
                     }
                     i += 1;
                 }

@@ -23,4 +23,8 @@ impl Model {
         }
         return &self.classes;
     }
+
+    pub fn get_class(&self, id: u32) -> Option<&ComplexityClass> {
+        self.classes.iter().find(|e| e.id == id)
+    }
 }

@@ -1,9 +1,4 @@
-use crate::{
-    database::{complexity_class::ComplexityClass, MyDatabase},
-    graph::GraphWidget,
-    model::Model,
-    sidepanel::ui_sidepanel,
-};
+use crate::{database::MyDatabase, graph::GraphWidget, model::Model, sidepanel::ui_sidepanel};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -16,7 +11,7 @@ pub struct ComplexityVisualizerApp {
     value: f32,
 
     #[serde(skip)]
-    selected_class: ComplexityClass,
+    selected_class: Option<u32>,
 
     #[serde(skip)]
     model: Model,
@@ -28,12 +23,7 @@ impl Default for ComplexityVisualizerApp {
             // Example stuff:
             label: "Hello World!".to_owned(),
             value: 2.7,
-            selected_class: ComplexityClass {
-                id: 1,
-                name: String::from("No class selected"),
-                description: String::from(""),
-                wikipedia: String::from(""),
-            },
+            selected_class: None,
             model: Model::new(MyDatabase::new()),
         }
     }
@@ -85,8 +75,12 @@ impl eframe::App for ComplexityVisualizerApp {
             });
         });
 
-        egui::SidePanel::right("my_right_panel")
-            .show(ctx, |ui| ui_sidepanel(ui, &self.selected_class));
+        egui::SidePanel::right("my_right_panel").show(ctx, |ui| {
+            let class = self
+                .selected_class
+                .map_or(None, |id| self.model.get_class(id));
+            ui_sidepanel(ui, class)
+        });
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
