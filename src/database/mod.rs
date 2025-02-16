@@ -6,7 +6,7 @@ use rmp_serde::from_slice;
 
 
 pub struct MyDatabase {
-    pub flower: CompactFlower<ComplexityClass, Vec<ComplexityClass>, String>,
+    flower: CompactFlower<ComplexityClass, Vec<ComplexityClass>, String>,
     pub classes: Vec<ComplexityClass>,
 }
 
@@ -54,7 +54,6 @@ impl MyDatabase {
         use std::io::Error;
 
         use js_sys::wasm_bindgen::JsCast;
-        use js_sys::wasm_bindgen::JsValue;
         use wasm_bindgen_futures::JsFuture;
         use web_sys::Request;
         use web_sys::RequestInit;
