@@ -21,7 +21,6 @@ eframe = { version = "0.31", default-features = false, features = [
     "wayland",       # To support Linux (and CI)
 ] }
 log = "0.4"
-tokio = { version = "1.43", features = ["full"] }
 flowync = { version = "5.1.0", features = ["compact"] }
 
 # You only need serde if you want app persistence:
@@ -34,7 +33,8 @@ env_logger = "0.11"
 # web:
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen-futures = "0.4"
-web-sys = "0.3.70"           # to access the DOM (to hide the loading text)
+web-sys = {version = "0.3.70", features = ['Request', 'RequestInit', 'Response']}           # to access the DOM (to hide the loading text)
+js-sys = "0.3.77"
 
 [profile.release]
 opt-level = 2 # fast and small wasm
