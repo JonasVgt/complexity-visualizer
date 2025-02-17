@@ -4,7 +4,6 @@ use crate::{database::MyDatabase, graph::GraphWidget, model::Model, sidepanel::u
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct ComplexityVisualizerApp {
-
     selected_class: Option<u32>,
 
     model: Model,
@@ -43,6 +42,7 @@ impl eframe::App for ComplexityVisualizerApp {
 
     /// Called each time the UI needs repainting, which may be many times per second.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        self.model.fetch();
         // Put your widgets into a `SidePanel`, `TopBottomPanel`, `CentralPanel`, `Window` or `Area`.
         // For inspiration and more examples, go to https://emilk.github.io/egui
 
@@ -80,7 +80,7 @@ impl eframe::App for ComplexityVisualizerApp {
 
             ui.add(GraphWidget {
                 selected_class: &mut self.selected_class,
-                model: &mut self.model,
+                model: &self.model,
             });
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {

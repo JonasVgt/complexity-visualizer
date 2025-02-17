@@ -9,7 +9,7 @@ mod relation;
 
 pub struct GraphWidget<'a> {
     pub selected_class: &'a mut Option<u32>,
-    pub model: &'a mut Model,
+    pub model: &'a Model,
 }
 
 impl Widget for GraphWidget<'_> {
@@ -24,11 +24,12 @@ impl Widget for GraphWidget<'_> {
                 },
             ),
             |ui| {
-                let mut i = 1;
                 for class in self.model.classes() {
-                    let pos = egui::pos2((200 * i) as f32, (100 * i) as f32);
                     let response = ui.put(
-                        egui::Rect::from_center_size(pos, egui::vec2(50.0, 50.0)),
+                        egui::Rect::from_center_size(
+                            self.model.get_position(&class.id).unwrap().clone(),
+                            egui::vec2(50.0, 50.0),
+                        ),
                         NodeWidget {
                             label: class.name.clone(),
                         },
@@ -36,13 +37,19 @@ impl Widget for GraphWidget<'_> {
                     if response.clicked() {
                         *self.selected_class = Some(class.id);
                     }
-                    i += 1;
                 }
                 for relation in self.model.relations() {
-                    let pos = |i| egui::pos2((200 * i) as f32, (100 * i) as f32);
                     ui.add(RelationWidget {
-                        from: pos(relation.id_subset),
-                        to: pos(relation.id_superset),
+                        from: self
+                            .model
+                            .get_position(&relation.id_subset)
+                            .unwrap()
+                            .clone(),
+                        to: self
+                            .model
+                            .get_position(&relation.id_superset)
+                            .unwrap()
+                            .clone(),
                     });
                 }
             },

@@ -1,7 +1,11 @@
+use std::collections::HashMap;
+
+use egui::Pos2;
 use serde::{Deserialize, Serialize};
 
-use crate::database::{
-    complexity_class::ComplexityClass, data::Data, relation::Relation, MyDatabase,
+use crate::{
+    database::{complexity_class::ComplexityClass, data::Data, relation::Relation, MyDatabase},
+    visualization_controller::VisualizationController,
 };
 
 #[derive(Serialize, Deserialize)]
@@ -9,6 +13,7 @@ pub struct Model {
     #[serde(skip)]
     db: Option<MyDatabase>,
     data: Data,
+    positions: Option<HashMap<u32, Pos2>>,
 }
 
 impl Model {
@@ -16,17 +21,11 @@ impl Model {
         return Model {
             data: Data::new(),
             db: Some(db),
+            positions: None,
         };
     }
 
-    pub fn classes(&mut self) -> &Vec<ComplexityClass> {
-        if let Some(mut db) = self.db.take() {
-            if db.finish() {
-                self.data = db.data;
-            } else {
-                self.db = Some(db);
-            }
-        }
+    pub fn classes(&self) -> &Vec<ComplexityClass> {
         return &self.data.classes;
     }
 
@@ -34,14 +33,22 @@ impl Model {
         self.data.classes.iter().find(|e| e.id == id)
     }
 
-    pub fn relations(&mut self) -> &Vec<Relation> {
+    pub fn relations(&self) -> &Vec<Relation> {
+        return &self.data.relations;
+    }
+
+    pub fn get_position(&self, id: &u32) -> Option<&Pos2> {
+        self.positions.as_ref()?.get(id)
+    }
+
+    pub fn fetch(&mut self) {
         if let Some(mut db) = self.db.take() {
             if db.finish() {
                 self.data = db.data;
+                self.positions = Some(VisualizationController::new(&self.data).arrange());
             } else {
                 self.db = Some(db);
             }
         }
-        return &self.data.relations;
     }
 }
