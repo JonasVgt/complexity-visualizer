@@ -4,10 +4,9 @@ use crate::{database::MyDatabase, graph::GraphWidget, model::Model, sidepanel::u
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct ComplexityVisualizerApp {
-    #[serde(skip)]
+
     selected_class: Option<u32>,
 
-    #[serde(skip)]
     model: Model,
 }
 

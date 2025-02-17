@@ -1,8 +1,12 @@
+use serde::{Deserialize, Serialize};
+
 use crate::database::{
     complexity_class::ComplexityClass, data::Data, relation::Relation, MyDatabase,
 };
 
+#[derive(Serialize, Deserialize)]
 pub struct Model {
+    #[serde(skip)]
     db: Option<MyDatabase>,
     data: Data,
 }
