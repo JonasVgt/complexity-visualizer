@@ -22,6 +22,7 @@ eframe = { version = "0.31", default-features = false, features = [
 ] }
 log = "0.4"
 flowync = { version = "5.1.0", features = ["compact"] }
+petgraph ={ version = "0.7" }
 
 # You only need serde if you want app persistence:
 serde = { version = "1", features = ["derive"] }
