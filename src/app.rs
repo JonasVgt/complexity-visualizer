@@ -4,12 +4,6 @@ use crate::{database::MyDatabase, graph::GraphWidget, model::Model, sidepanel::u
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct ComplexityVisualizerApp {
-    // Example stuff:
-    label: String,
-
-    #[serde(skip)] // This how you opt-out of serialization of a field
-    value: f32,
-
     #[serde(skip)]
     selected_class: Option<u32>,
 
@@ -20,9 +14,6 @@ pub struct ComplexityVisualizerApp {
 impl Default for ComplexityVisualizerApp {
     fn default() -> Self {
         Self {
-            // Example stuff:
-            label: "Hello World!".to_owned(),
-            value: 2.7,
             selected_class: None,
             model: Model::new(MyDatabase::new()),
         }
