@@ -1,29 +1,30 @@
 pub mod complexity_class;
+pub mod data;
+pub mod relation;
 
-use complexity_class::ComplexityClass;
+use data::Data;
 use flowync::CompactFlower;
 use rmp_serde::from_slice;
 
-
 pub struct MyDatabase {
-    flower: CompactFlower<ComplexityClass, Vec<ComplexityClass>, String>,
-    pub classes: Vec<ComplexityClass>,
+    flower: CompactFlower<u8, Data, String>,
+    pub data: Data,
 }
 
 impl MyDatabase {
     pub fn new() -> Self {
         let r = Self {
             flower: CompactFlower::new(1),
-            classes: vec![],
+            data: Data::new(),
         };
         r.spawn_fetch();
         return r;
     }
 
     #[cfg(not(target_arch = "wasm32"))]
-    pub fn fetch_complexity_classes() -> Result<Vec<ComplexityClass>, std::io::Error> {
+    pub fn fetch_complexity_classes() -> Result<Data, std::io::Error> {
         use std::{fs::File, io::Read};
-        
+
         let mut file = File::open("./assets/classes.msgpack")?;
 
         // Read the file contents into a buffer
@@ -31,8 +32,7 @@ impl MyDatabase {
         file.read_to_end(&mut buffer)?;
 
         // Deserialize MessagePack data into Rust struct
-        let data: Vec<ComplexityClass> =
-            from_slice(&buffer).expect("Failed to deserialize msgpack");
+        let data: Data = from_slice(&buffer).expect("Failed to deserialize msgpack");
 
         Ok(data)
     }
@@ -40,7 +40,6 @@ impl MyDatabase {
     #[cfg(not(target_arch = "wasm32"))]
     pub fn spawn_fetch(&self) {
         let handle = self.flower.handle();
-        println!("spawn_fetch");
 
         handle.activate();
         match Self::fetch_complexity_classes() {
@@ -50,7 +49,7 @@ impl MyDatabase {
     }
 
     #[cfg(target_arch = "wasm32")]
-    pub async fn fetch_complexity_classes() -> Result<Vec<ComplexityClass>, std::io::Error> {
+    pub async fn fetch_complexity_classes() -> Result<Data, std::io::Error> {
         use std::io::Error;
 
         use js_sys::wasm_bindgen::JsCast;
@@ -93,8 +92,7 @@ impl MyDatabase {
             .map_err(|_| Error::new(std::io::ErrorKind::Other, "Failed to read buffer"))?;
         let buffer: Vec<u8> = js_sys::Uint8Array::new(&array_buffer).to_vec();
 
-        let data: Vec<ComplexityClass> =
-            from_slice(&buffer).expect("Failed to deserialize msgpack");
+        let data: Data = from_slice(&buffer).expect("Failed to deserialize msgpack");
 
         Ok(data)
     }
@@ -115,9 +113,9 @@ impl MyDatabase {
         let mut res = false;
         if self.flower.result_is_ready() {
             self.flower.poll(|_| {}).finalize(|result| match result {
-                Ok(cc) => {
+                Ok(data) => {
                     res = true;
-                    self.classes = cc
+                    self.data = data
                 }
                 Err(err) => {
                     res = false;

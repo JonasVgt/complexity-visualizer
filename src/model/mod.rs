@@ -1,14 +1,14 @@
-use crate::database::{complexity_class::ComplexityClass, MyDatabase};
+use crate::database::{complexity_class::ComplexityClass, data::Data, MyDatabase};
 
 pub struct Model {
     db: Option<MyDatabase>,
-    classes: Vec<ComplexityClass>,
+    data: Data,
 }
 
 impl Model {
     pub fn new(db: MyDatabase) -> Self {
         return Model {
-            classes: vec![],
+            data: Data::new(),
             db: Some(db),
         };
     }
@@ -16,15 +16,15 @@ impl Model {
     pub fn classes(&mut self) -> &Vec<ComplexityClass> {
         if let Some(mut db) = self.db.take() {
             if db.finish() {
-                self.classes = db.classes;
+                self.data = db.data;
             } else {
                 self.db = Some(db);
             }
         }
-        return &self.classes;
+        return &self.data.classes;
     }
 
     pub fn get_class(&self, id: u32) -> Option<&ComplexityClass> {
-        self.classes.iter().find(|e| e.id == id)
+        self.data.classes.iter().find(|e| e.id == id)
     }
 }
