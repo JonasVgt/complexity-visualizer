@@ -1,8 +1,6 @@
 use egui::{pos2, Rect};
 
-use crate::{
-    database::MyDatabase, graph::GraphWidget, model::Model, sidepanel::ui_sidepanel,
-};
+use crate::{database::MyDatabase, graph::GraphWidget, model::Model, sidepanel::ui_sidepanel};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -88,8 +86,6 @@ impl eframe::App for ComplexityVisualizerApp {
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
             ui.heading("Complexity Classes");
-
-            ui.separator();
 
             ui.add(GraphWidget {
                 selected_class: &mut self.selected_class,
