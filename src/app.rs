@@ -1,4 +1,8 @@
-use crate::{database::MyDatabase, graph::GraphWidget, model::Model, sidepanel::ui_sidepanel};
+use egui::{pos2, Rect};
+
+use crate::{
+    database::MyDatabase, graph::GraphWidget, model::Model, sidepanel::ui_sidepanel,
+};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -7,6 +11,8 @@ pub struct ComplexityVisualizerApp {
     selected_class: Option<u32>,
 
     model: Model,
+
+    scene_rect: Rect,
 }
 
 impl Default for ComplexityVisualizerApp {
@@ -14,6 +20,13 @@ impl Default for ComplexityVisualizerApp {
         Self {
             selected_class: None,
             model: Model::new(MyDatabase::new()),
+            scene_rect: Rect::from_min_size(
+                pos2(0.0, 0.0),
+                egui::Vec2 {
+                    x: 1000.0,
+                    y: 1000.0,
+                },
+            ),
         }
     }
 }
@@ -81,6 +94,7 @@ impl eframe::App for ComplexityVisualizerApp {
             ui.add(GraphWidget {
                 selected_class: &mut self.selected_class,
                 model: &self.model,
+                scene_rect: &mut self.scene_rect,
             });
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
