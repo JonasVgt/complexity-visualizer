@@ -10,31 +10,31 @@ use petgraph::{
 use crate::database::data::Data;
 
 pub struct VisualizationController {
-    graph: Graph<u32, String, Directed>,
+    graph: Graph<u64, String, Directed>,
 }
 
 impl<'a> VisualizationController {
     pub fn new(data: &'a Data) -> Self {
-        let mut graph: Graph<u32, String> =
+        let mut graph: Graph<u64, String> =
             Graph::with_capacity(data.classes.len(), data.relations.len());
-        let node_indices: HashMap<u32, usize> = data
+        let node_indices: HashMap<u64, usize> = data
             .classes
             .iter()
-            .map(|class| class.id)
+            .map(|class| class.calculate_id_hash())
             .map(|id| (id, graph.add_node(id).index()))
             .collect();
 
         data.relations.iter().for_each(|relation| {
             graph.add_edge(
-                node_index(node_indices.get(&relation.id_subset).unwrap().clone()),
-                node_index(node_indices.get(&relation.id_superset).unwrap().clone()),
+                node_index(node_indices.get(&relation.calculate_id_subset_hash()).unwrap().clone()),
+                node_index(node_indices.get(&relation.calculate_id_superset_hash()).unwrap().clone()),
                 relation.relation_type.clone(),
             );
         });
 
         Self { graph }
     }
-    pub fn arrange(&self) -> HashMap<u32, Pos2> {
+    pub fn arrange(&self) -> HashMap<u64, Pos2> {
         let mut levels = tarjan_scc(&self.graph);
         levels.sort_unstable_by(|nodes1, nodes2| {
             let node1 = nodes1.get(0).unwrap();
@@ -48,7 +48,7 @@ impl<'a> VisualizationController {
             }
         });
 
-        let mut map: HashMap<u32, Pos2> = HashMap::new();
+        let mut map: HashMap<u64, Pos2> = HashMap::new();
 
         let mut pos = pos2(0.0, 0.0);
         for level in levels {

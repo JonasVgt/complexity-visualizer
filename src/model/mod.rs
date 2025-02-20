@@ -13,7 +13,7 @@ pub struct Model {
     #[serde(skip)]
     db: Option<MyDatabase>,
     data: Data,
-    positions: Option<HashMap<u32, Pos2>>,
+    positions: Option<HashMap<u64, Pos2>>,
 }
 
 impl Model {
@@ -29,15 +29,15 @@ impl Model {
         return &self.data.classes;
     }
 
-    pub fn get_class(&self, id: u32) -> Option<&ComplexityClass> {
-        self.data.classes.iter().find(|e| e.id == id)
+    pub fn get_class(&self, id: u64) -> Option<&ComplexityClass> {
+        self.data.classes.iter().find(|e| e.calculate_id_hash() == id)
     }
 
     pub fn relations(&self) -> &Vec<Relation> {
         return &self.data.relations;
     }
 
-    pub fn get_position(&self, id: &u32) -> Option<&Pos2> {
+    pub fn get_position(&self, id: &u64) -> Option<&Pos2> {
         self.positions.as_ref()?.get(id)
     }
 

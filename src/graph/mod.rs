@@ -8,7 +8,7 @@ mod node;
 mod relation;
 
 pub struct GraphWidget<'a> {
-    pub selected_class: &'a mut Option<u32>,
+    pub selected_class: &'a mut Option<u64>,
     pub model: &'a Model,
     pub scene_rect: &'a mut Rect,
 }
@@ -27,7 +27,7 @@ impl Widget for GraphWidget<'_> {
                         for class in self.model.classes() {
                             let response = ui.put(
                                 egui::Rect::from_center_size(
-                                    self.model.get_position(&class.id).unwrap().clone(),
+                                    self.model.get_position(&class.calculate_id_hash()).unwrap().clone(),
                                     egui::vec2(50.0, 50.0),
                                 ),
                                 NodeWidget {
@@ -35,19 +35,19 @@ impl Widget for GraphWidget<'_> {
                                 },
                             );
                             if response.clicked() {
-                                *self.selected_class = Some(class.id);
+                                *self.selected_class = Some(class.calculate_id_hash());
                             }
                         }
                         for relation in self.model.relations() {
                             ui.add(RelationWidget {
                                 from: self
                                     .model
-                                    .get_position(&relation.id_subset)
+                                    .get_position(&relation.calculate_id_subset_hash())
                                     .unwrap()
                                     .clone(),
                                 to: self
                                     .model
-                                    .get_position(&relation.id_superset)
+                                    .get_position(&relation.calculate_id_superset_hash())
                                     .unwrap()
                                     .clone(),
                             });
