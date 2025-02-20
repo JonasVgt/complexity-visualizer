@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ComplexityClass {
     pub id: String,
-    pub name: String,
+    pub names: Vec<String>,
     pub description: String,
     pub wikipedia: String,
 }

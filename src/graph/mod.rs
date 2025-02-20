@@ -31,7 +31,7 @@ impl Widget for GraphWidget<'_> {
                                     egui::vec2(50.0, 50.0),
                                 ),
                                 NodeWidget {
-                                    label: class.name.clone(),
+                                    label: class.names.first().unwrap().clone(),
                                 },
                             );
                             if response.clicked() {

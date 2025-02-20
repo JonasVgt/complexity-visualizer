@@ -1,50 +1,74 @@
 [
     {
         "id": "LSPACE",
-        "name": "LSPACE",
+        "names": [
+            "LSPACE",
+            "L",
+            "LOGSPACE",
+            "DLOGSPACE"
+        ],
         "description": "In computational complexity theory, L (also known as LSPACE, LOGSPACE or DLOGSPACE) is the complexity class containing decision problems that can be solved by a deterministic Turing machine using a logarithmic amount of writable memory space.[1][2] Formally, the Turing machine has two tapes, one of which encodes the input and can only be read,[3] whereas the other tape has logarithmic size but can be read as well as written. Logarithmic space is sufficient to hold a constant number of pointers into the input[1] and a logarithmic number of Boolean flags, and many basic logspace algorithms use the memory in this way. ",
         "wikipedia": "https://en.wikipedia.org/wiki/L_(complexity)"
     },
     {
         "id": "NLSPACE",
-        "name": "NLSPACE",
+        "names": [
+            "NLSPACE",
+            "NL"
+        ],
         "description": "In computational complexity theory, NL (Nondeterministic Logarithmic-space) is the complexity class containing decision problems that can be solved by a nondeterministic Turing machine using a logarithmic amount of memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/NL_(complexity)"
     },
     {
         "id": "PTIME",
-        "name": "PTIME",
+        "names": [
+            "PTIME",
+            "P"
+        ],
         "description": "In computational complexity theory, P, also known as PTIME or DTIME(nO(1)), is a fundamental complexity class. It contains all decision problems that can be solved by a deterministic Turing machine using a polynomial amount of computation time, or polynomial time. ",
         "wikipedia": "https://en.wikipedia.org/wiki/P_(complexity)"
     },
     {
         "id": "NP",
-        "name": "NP",
+        "names": [
+            "NP"
+        ],
         "description": "In computational complexity theory, NP (nondeterministic polynomial time) is a complexity class used to classify decision problems. NP is the set of decision problems for which the problem instances, where the answer is yes, have proofs verifiable in polynomial time by a deterministic Turing machine, or alternatively the set of problems that can be solved in polynomial time by a nondeterministic Turing machine.[2][Note 1]",
         "wikipedia": "https://en.wikipedia.org/wiki/NP_(complexity)"
     },
     {
         "id": "PSPACE",
-        "name": "PSPACE",
+        "names": [
+            "PSPACE"
+        ],
         "description": "In computational complexity theory, PSPACE is the set of all decision problems that can be solved by a Turing machine using a polynomial amount of space. ",
         "wikipedia": "https://en.wikipedia.org/wiki/PSPACE"
     },
     {
         "id": "EXPTIME",
-        "name": "EXPTIME",
+        "names": [
+            "EXPTIME",
+            "EXP",
+            "DEXPTIME"
+        ],
         "description": "In computational complexity theory, the complexity class EXPTIME (sometimes called EXP or DEXPTIME) is the set of all decision problems that are solvable by a deterministic Turing machine in exponential time, i.e., in O(2p(n)) time, where p(n) is a polynomial function of n. ",
         "wikipedia": "https://en.wikipedia.org/wiki/EXPTIME"
     },
     {
         "id": "NEXPTIME",
-        "name": "NEXPTIME",
+        "names": [
+            "NEXPTIME",
+            "NEXP"
+        ],
         "description": "In computational complexity theory, the complexity class NEXPTIME (sometimes called NEXP) is the set of decision problems that can be solved by a non-deterministic Turing machine using time 2 n O ( 1 ) {displaystyle 2^{n^{O(1)}}}",
         "wikipedia": "https://en.wikipedia.org/wiki/NEXPTIME"
     },
     {
         "id": "EXPSPACE",
-        "name": "EXPSPACE",
+        "names": [
+            "EXPSPACE"
+        ],
         "description": "In computational complexity theory, EXPSPACE is the set of all decision problems solvable by a deterministic Turing machine in exponential space, i.e., in O ( 2 p ( n ) ) {isplaystyle O(2^{p(n)})} space, where p ( n ) {displaystyle p(n)} is a polynomial function of n {isplaystyle n}. Some authors restrict p ( n ) {displaystyle p(n)} to be a linear function, but most authors instead call the resulting class ESPACE. If we use a nondeterministic machine instead, we get the class NEXPSPACE, which is equal to EXPSPACE by Savitch's theorem. ",
-        "wikipedia": "https://en.wikipedia.org/wiki/EXPSPACE)"
+        "wikipedia": "https://en.wikipedia.org/wiki/EXPSPACE"
     }
 ]
