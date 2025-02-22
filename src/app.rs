@@ -76,12 +76,17 @@ impl eframe::App for ComplexityVisualizerApp {
             });
         });
 
-        egui::SidePanel::right("my_right_panel").show(ctx, |ui| {
-            let class = self
-                .selected_class
-                .map_or(None, |id| self.model.get_class(id));
-            ui_sidepanel(ui, class)
-        });
+        if self.selected_class.is_some() {
+            let sidepanel_width = f32::min(ctx.available_rect().width() * 0.33, 300.0);
+            egui::SidePanel::right("my_right_panel")
+                .default_width(sidepanel_width)
+                .show(ctx, |ui| {
+                    let class = self
+                        .selected_class
+                        .map_or(None, |id| self.model.get_class(id));
+                    ui_sidepanel(ui, class)
+                });
+        }
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
