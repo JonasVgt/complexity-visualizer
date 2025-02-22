@@ -48,5 +48,15 @@
         "from": "NEXPTIME",
         "to": "EXPSPACE",
         "relation_type": "subset"
+    },
+    {
+        "from": "EXPSPACE",
+        "to": "NEXPSPACE",
+        "relation_type": "subset"
+    },
+    {
+        "from": "NEXPSPACE",
+        "to": "EXPSPACE",
+        "relation_type": "subset"
     }
 ]

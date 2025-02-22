@@ -95,5 +95,13 @@
         ],
         "description": "Deterministic Exponential-space is the complexity class of decision problems that can be solved by a deterministic Turing machine, using only an exponential amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/EXPSPACE"
+    },
+    {
+        "id": "NEXPSPACE",
+        "names": [
+            "NEXPSPACE"
+        ],
+        "description": "Nondeterministic Exponential-space is the complexity class of decision problems that can be solved by a nondeterministic Turing machine, using only an exponential amount of writable memory space.",
+        "wikipedia": "https://en.wikipedia.org/wiki/NEXPSPACE"
     }
 ]
