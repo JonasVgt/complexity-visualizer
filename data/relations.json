@@ -15,6 +15,21 @@
         "relation_type": "subset"
     },
     {
+        "from": "PTIME",
+        "to": "ZPP",
+        "relation_type": "subset"
+    },
+    {
+        "from": "ZPP",
+        "to": "RP",
+        "relation_type": "subset"
+    },
+    {
+        "from": "RP",
+        "to": "BPP",
+        "relation_type": "subset"
+    },
+    {
         "from": "NP",
         "to": "PSPACE",
         "relation_type": "subset"

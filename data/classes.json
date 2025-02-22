@@ -29,6 +29,31 @@
         "wikipedia": "https://en.wikipedia.org/wiki/P_(complexity)"
     },
     {
+        "id": "BPP",
+        "names": [
+            "BPP"
+        ],
+        "description": "Bounded-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine in a polyomial amount of computation time with an error probability bounded by 1/3.",
+        "wikipedia": "https://en.wikipedia.org/wiki/BPP_(complexity)"
+    },
+    {
+        "id": "ZPP",
+        "names": [
+            "ZPP"
+        ],
+        "description": "Zero-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine in a polyomial amount of computation time without error.",
+        "wikipedia": "https://en.wikipedia.org/wiki/ZPP_(complexity)"
+    },
+    {
+        "id": "RP",
+        "names": [
+            "RP",
+            "R"
+        ],
+        "description": "Randomized Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine in a polyomial amount of computation time with 1-sided bounded error.",
+        "wikipedia": "https://en.wikipedia.org/wiki/ZPP_(complexity)"
+    },
+    {
         "id": "NP",
         "names": [
             "NP"
