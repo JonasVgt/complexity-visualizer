@@ -42,12 +42,12 @@ impl Widget for GraphWidget<'_> {
                             ui.add(RelationWidget {
                                 from: self
                                     .model
-                                    .get_position(&relation.calculate_id_subset_hash())
+                                    .get_position(&relation.calculate_from_hash())
                                     .unwrap()
                                     .clone(),
                                 to: self
                                     .model
-                                    .get_position(&relation.calculate_id_superset_hash())
+                                    .get_position(&relation.calculate_to_hash())
                                     .unwrap()
                                     .clone(),
                             });

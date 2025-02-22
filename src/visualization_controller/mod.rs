@@ -26,8 +26,8 @@ impl<'a> VisualizationController {
 
         data.relations.iter().for_each(|relation| {
             graph.add_edge(
-                node_index(node_indices.get(&relation.calculate_id_subset_hash()).unwrap().clone()),
-                node_index(node_indices.get(&relation.calculate_id_superset_hash()).unwrap().clone()),
+                node_index(node_indices.get(&relation.calculate_from_hash()).unwrap().clone()),
+                node_index(node_indices.get(&relation.calculate_to_hash()).unwrap().clone()),
                 relation.relation_type.clone(),
             );
         });

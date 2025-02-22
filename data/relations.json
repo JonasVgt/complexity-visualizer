@@ -1,37 +1,37 @@
 [
     {
-        "id_subset": "LSPACE",
-        "id_superset": "NLSPACE",
+        "from": "LSPACE",
+        "to": "NLSPACE",
         "relation_type": "subset"
     },
     {
-        "id_subset": "NLSPACE",
-        "id_superset": "PTIME",
+        "from": "NLSPACE",
+        "to": "PTIME",
         "relation_type": "subset"
     },
     {
-        "id_subset": "PTIME",
-        "id_superset": "NP",
+        "from": "PTIME",
+        "to": "NP",
         "relation_type": "subset"
     },
     {
-        "id_subset": "NP",
-        "id_superset": "PSPACE",
+        "from": "NP",
+        "to": "PSPACE",
         "relation_type": "subset"
     },
     {
-        "id_subset": "PSPACE",
-        "id_superset": "EXPTIME",
+        "from": "PSPACE",
+        "to": "EXPTIME",
         "relation_type": "subset"
     },
     {
-        "id_subset": "EXPTIME",
-        "id_superset": "NEXPTIME",
+        "from": "EXPTIME",
+        "to": "NEXPTIME",
         "relation_type": "subset"
     },
     {
-        "id_subset": "NEXPTIME",
-        "id_superset": "EXPSPACE",
+        "from": "NEXPTIME",
+        "to": "EXPSPACE",
         "relation_type": "subset"
     }
 ]
