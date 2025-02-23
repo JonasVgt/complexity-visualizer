@@ -7,15 +7,15 @@ use petgraph::{
     Directed, Graph,
 };
 
-use crate::database::data::Data;
+use crate::database::{data::Data, relation::RelationType};
 
 pub struct VisualizationController {
-    graph: Graph<u64, String, Directed>,
+    graph: Graph<u64, RelationType, Directed>,
 }
 
 impl<'a> VisualizationController {
     pub fn new(data: &'a Data) -> Self {
-        let mut graph: Graph<u64, String> =
+        let mut graph: Graph<u64, RelationType> =
             Graph::with_capacity(data.classes.len(), data.relations.len());
         let node_indices: HashMap<u64, usize> = data
             .classes
@@ -28,7 +28,7 @@ impl<'a> VisualizationController {
             graph.add_edge(
                 node_index(node_indices.get(&relation.calculate_from_hash()).unwrap().clone()),
                 node_index(node_indices.get(&relation.calculate_to_hash()).unwrap().clone()),
-                relation.relation_type.clone(),
+                relation.relation_type,
             );
         });
 

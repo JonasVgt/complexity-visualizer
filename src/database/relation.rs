@@ -2,12 +2,19 @@ use std::hash::{DefaultHasher, Hash, Hasher};
 
 use serde::{Deserialize, Serialize};
 
+#[derive(Debug,Deserialize, Serialize, Clone, Copy)]
+pub enum RelationType {
+    Subset,
+    Unknown
+}
+
+
 #[allow(dead_code)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Relation {
     pub from: String,
     pub to: String,
-    pub relation_type: String,
+    pub relation_type: RelationType,
 }
 
 impl Relation {
