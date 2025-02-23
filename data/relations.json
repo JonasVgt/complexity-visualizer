@@ -2,61 +2,61 @@
     {
         "from": "LSPACE",
         "to": "NLSPACE",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     },
     {
         "from": "NLSPACE",
         "to": "PTIME",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     },
     {
         "from": "PTIME",
         "to": "NP",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     },
     {
         "from": "PTIME",
         "to": "ZPP",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     },
     {
         "from": "ZPP",
         "to": "RP",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     },
     {
         "from": "RP",
         "to": "BPP",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     },
     {
         "from": "NP",
         "to": "PSPACE",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     },
     {
         "from": "PSPACE",
         "to": "EXPTIME",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     },
     {
         "from": "EXPTIME",
         "to": "NEXPTIME",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     },
     {
         "from": "NEXPTIME",
         "to": "EXPSPACE",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     },
     {
         "from": "EXPSPACE",
         "to": "NEXPSPACE",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     },
     {
         "from": "NEXPSPACE",
         "to": "EXPSPACE",
-        "relation_type": "subset"
+        "relation_type": "Subset"
     }
 ]
