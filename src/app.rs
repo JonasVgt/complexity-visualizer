@@ -1,4 +1,4 @@
-use egui::{pos2, Rect};
+use egui::{pos2, FontData, FontDefinitions, FontFamily, Rect};
 
 use crate::{database::MyDatabase, graph::GraphWidget, model::Model, sidepanel::ui_sidepanel};
 
@@ -54,8 +54,36 @@ impl eframe::App for ComplexityVisualizerApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         self.model.fetch();
-        // Put your widgets into a `SidePanel`, `TopBottomPanel`, `CentralPanel`, `Window` or `Area`.
-        // For inspiration and more examples, go to https://emilk.github.io/egui
+
+        // Set fonts
+        let mut fonts = FontDefinitions::default();
+
+        // Install my own font (maybe supporting non-latin characters):
+        fonts.font_data.insert(
+            "JetBrainsMono".to_owned(),
+            std::sync::Arc::new(
+                // .ttf and .otf supported
+                FontData::from_static(include_bytes!(
+                    "../assets/fonts/JetBrainsMonoNerdFont-Medium.ttf"
+                )),
+            ),
+        );
+
+        // Put my font first (highest priority):
+        fonts
+            .families
+            .get_mut(&FontFamily::Proportional)
+            .unwrap()
+            .insert(0, "JetBrainsMono".to_owned());
+
+        // Put my font as last fallback for monospace:
+        fonts
+            .families
+            .get_mut(&FontFamily::Monospace)
+            .unwrap()
+            .push("JetBrainsMono".to_owned());
+
+        ctx.set_fonts(fonts);
 
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
             // The top panel is often a good place for a menu bar:
