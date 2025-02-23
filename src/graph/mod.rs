@@ -20,7 +20,7 @@ impl Widget for GraphWidget<'_> {
             .show(ui, |ui| {
                 let scene = Scene::new()
                     .max_inner_size([10000.0, 10000.0])
-                    .zoom_range(egui::Rangef::new(0.0, 100.00));
+                    .zoom_range(egui::Rangef::new(0.0, 1.0));
 
                 scene
                     .show(ui, self.scene_rect, |ui| {
