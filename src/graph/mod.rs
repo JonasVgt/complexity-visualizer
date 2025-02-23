@@ -24,20 +24,6 @@ impl Widget for GraphWidget<'_> {
 
                 scene
                     .show(ui, self.scene_rect, |ui| {
-                        for class in self.model.classes() {
-                            let response = ui.put(
-                                egui::Rect::from_center_size(
-                                    self.model.get_position(&class.calculate_id_hash()).unwrap().clone(),
-                                    egui::vec2(50.0, 50.0),
-                                ),
-                                NodeWidget {
-                                    label: class.names.first().unwrap().clone(),
-                                },
-                            );
-                            if response.clicked() {
-                                *self.selected_class = Some(class.calculate_id_hash());
-                            }
-                        }
                         for relation in self.model.relations() {
                             ui.add(RelationWidget {
                                 from: self
@@ -51,6 +37,20 @@ impl Widget for GraphWidget<'_> {
                                     .unwrap()
                                     .clone(),
                             });
+                        }
+                        for class in self.model.classes() {
+                            let response = ui.put(
+                                egui::Rect::from_center_size(
+                                    self.model.get_position(&class.calculate_id_hash()).unwrap().clone(),
+                                    egui::vec2(50.0, 50.0),
+                                ),
+                                NodeWidget {
+                                    label: class.names.first().unwrap().clone(),
+                                },
+                            );
+                            if response.clicked() {
+                                *self.selected_class = Some(class.calculate_id_hash());
+                            }
                         }
                     })
                     .response
