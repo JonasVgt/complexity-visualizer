@@ -7,7 +7,7 @@ pub struct NodeWidget {
 impl Widget for NodeWidget {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
         // 1. Deciding widget size:
-        let desired_size = ui.spacing().interact_size.y * egui::vec2(2.0, 2.0);
+        let desired_size = ui.spacing().interact_size.y * egui::vec2(5.0, 5.0);
         let (rect, response) = ui.allocate_exact_size(desired_size, egui::Sense::click());
 
         // Attach some meta-data to the response which can be used by screen readers:
