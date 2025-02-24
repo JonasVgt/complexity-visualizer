@@ -1,4 +1,7 @@
-use egui::{Align2, Color32, FontId, Pos2, Stroke, Widget};
+use egui::{
+    emath::Rot2, epaint::TextShape, Color32, FontSelection, Pos2, Rect,
+    Stroke, Widget,
+};
 
 use crate::database::relation::RelationType;
 
@@ -21,13 +24,26 @@ impl Widget for RelationWidget {
             RelationType::Subset => "⊆",
             _ => "",
         };
-        ui.painter().text(
-            Pos2::from(0.5 * self.from + 0.5 * self.to.to_vec2()),
-            Align2::CENTER_CENTER,
-            relation_label,
-            FontId::default(),
-            Color32::WHITE,
-        );
+
+        let galley = {
+            let color = ui.style().visuals.text_color();
+            let font_id = FontSelection::Default.resolve(ui.style());
+            ui.painter()
+                .layout_no_wrap(relation_label.to_string(), font_id, color)
+        };
+
+        let text_angle =  (self.to - self.from).angle();
+
+        let bounding_rect = Rect::from_center_size(Pos2::ZERO, galley.size())
+            .rotate_bb(Rot2::from_angle(text_angle))
+            .translate(0.5 * self.from.to_vec2() + 0.5 * self.to.to_vec2());
+
+        if ui.is_rect_visible(bounding_rect) {
+            let pos = bounding_rect.center() - (Rot2::from_angle(text_angle) * (galley.size() / 2.0));
+            ui.painter()
+                .add(TextShape::new(pos, galley, Color32::default()).with_angle(text_angle));
+        }
+
         ui.response()
     }
 }
