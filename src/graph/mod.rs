@@ -36,6 +36,7 @@ impl Widget for GraphWidget<'_> {
                                     .get_position(&relation.calculate_to_hash())
                                     .unwrap()
                                     .clone(),
+                                relation_type: relation.relation_type
                             });
                         }
                         for class in self.model.classes() {
