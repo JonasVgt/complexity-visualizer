@@ -47,6 +47,7 @@ impl Widget for GraphWidget<'_> {
                                 ),
                                 NodeWidget {
                                     label: class.names.first().unwrap().clone(),
+                                    selected: self.selected_class.is_some_and(|c| c == class.calculate_id_hash())
                                 },
                             );
                             if response.clicked() {

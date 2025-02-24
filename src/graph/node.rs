@@ -2,6 +2,7 @@ use egui::{Align2, Widget};
 
 pub struct NodeWidget {
     pub label: String,
+    pub selected: bool,
 }
 
 impl Widget for NodeWidget {
@@ -16,7 +17,7 @@ impl Widget for NodeWidget {
 
         // Paint:
         if ui.is_rect_visible(rect) {
-            let visuals = ui.style().interact(&response);
+            let visuals = ui.style().interact_selectable(&response, self.selected);
             let radius = 0.5 * rect.height();
             ui.painter().circle(
                 rect.center(),
