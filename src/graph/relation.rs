@@ -1,4 +1,4 @@
-use egui::{emath::Rot2, epaint::TextShape, Color32, FontSelection, Pos2, Rect, Stroke, Widget};
+use egui::{emath::Rot2, epaint::TextShape, FontSelection, Pos2, Rect, Widget};
 
 use crate::database::relation::RelationType;
 
