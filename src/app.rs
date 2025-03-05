@@ -8,6 +8,7 @@ use crate::{database::MyDatabase, graph::GraphWidget, model::Model, sidepanel::u
 pub struct ComplexityVisualizerApp {
     selected_class: Option<u64>,
 
+    #[serde(skip)]
     model: Model,
 
     scene_rect: Rect,
