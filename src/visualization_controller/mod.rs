@@ -110,13 +110,6 @@ impl<'a> VisualizationController {
 
         for i in 1..levels.len() {
             let (done, unsorted) = levels.split_at_mut(i);
-            println!(
-                "{:?}",
-                unsorted[0]
-                    .iter()
-                    .map(|node| (node.clone(), heur(node.clone(), done.last().unwrap())))
-                    .collect::<Vec<_>>()
-            );
             unsorted[0].sort_by_key(|node| heur(node.clone(), done.last().unwrap()));
         }
 
