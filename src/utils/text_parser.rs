@@ -1,4 +1,11 @@
-use egui::{text::LayoutJob, Align, FontSelection, RichText, Style};
+use egui::{text::LayoutJob, Align, FontSelection, Label, RichText, Style};
+
+#[macro_export]
+macro_rules! rich_label {
+    ($input:expr) => {
+        RichTextParser::new().parse($input).to_label()
+    };
+}
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 enum RichTextToken {
@@ -66,5 +73,9 @@ impl RichTextParser {
             );
         }
         return layout_job;
+    }
+
+    pub fn to_label(self) -> Label {
+        Label::new(self.to_layout())
     }
 }
