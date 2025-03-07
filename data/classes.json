@@ -103,5 +103,21 @@
         ],
         "description": "Nondeterministic Exponential-space is the complexity class of decision problems that can be solved by a nondeterministic Turing machine, using only an exponential amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/NEXPSPACE"
+    },
+    {
+        "id" : "NC",
+        "names": [
+            "NC"
+        ],
+        "description": "Nick's Class is the complexity class of decision problems that can be solved by a parallel computer with a polynomial number of processors in a polylogarithmic amount of computation time.",
+        "wikipedia": "https://en.wikipedia.org/wiki/NC_(complexity)"
+    },
+    {
+        "id" : "NC1",
+        "names": [
+            "NC^1"
+        ],
+        "description": "NC^1 is the complexity class of decision problems that can be solved by a parallel computer with a polynomial number of processors in a O((log n)^1) amount of computation time.",
+        "wikipedia": "https:// en.wikipedia.org/wiki/NC_(complexity)#The_NC_hierarchy"
     }
 ]

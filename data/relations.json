@@ -58,5 +58,10 @@
         "from": "NEXPSPACE",
         "to": "EXPSPACE",
         "relation_type": "Subset"
+    },
+    {
+        "from": "NC1",
+        "to": "LSPACE",
+        "relation_type": "Subset"
     }
 ]
