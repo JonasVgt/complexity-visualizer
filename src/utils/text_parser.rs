@@ -1,4 +1,4 @@
-use egui::{text::LayoutJob, Align, FontSelection, Label, RichText, Style};
+use egui::{text::LayoutJob, Align, FontSelection, Label, RichText, Style, TextStyle};
 
 #[macro_export]
 macro_rules! rich_label {
@@ -15,11 +15,20 @@ enum RichTextToken {
 
 pub struct RichTextParser {
     tokens: Vec<(RichTextToken, String)>,
+    text_style: Option<TextStyle>,
 }
 
 impl RichTextParser {
     pub fn new() -> Self {
-        Self { tokens: Vec::new() }
+        Self {
+            tokens: Vec::new(),
+            text_style: None,
+        }
+    }
+
+    pub fn text_syle(mut self, text_style: TextStyle) -> Self {
+        self.text_style = Some(text_style);
+        self
     }
 
     pub fn parse(mut self, input: String) -> Self {
@@ -63,6 +72,9 @@ impl RichTextParser {
         for token in self.tokens {
             match token {
                 (RichTextToken::SUPERSCRIPT, s) => RichText::new(s).small_raised(),
+                (RichTextToken::NORMAL, s) if self.text_style.is_some() => {
+                    RichText::new(s).text_style(self.text_style.clone().unwrap())
+                }
                 (RichTextToken::NORMAL, s) => RichText::new(s),
             }
             .append_to(
