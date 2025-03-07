@@ -7,6 +7,13 @@ macro_rules! rich_label {
     };
 }
 
+#[macro_export]
+macro_rules! rich_label_heading {
+    ($input:expr) => {
+        RichTextParser::new().parse($input).text_style(egui::TextStyle::Heading).to_label()
+    };
+}
+
 #[derive(PartialEq, Eq, Clone, Debug)]
 enum RichTextToken {
     NORMAL,
