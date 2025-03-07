@@ -6,4 +6,5 @@ mod graph;
 mod model;
 mod sidepanel;
 mod visualization_controller;
+mod utils;
 pub use app::ComplexityVisualizerApp;

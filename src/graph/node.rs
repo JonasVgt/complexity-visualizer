@@ -1,4 +1,6 @@
-use egui::{Align2, Widget};
+use egui::{epaint::TextShape, Widget};
+
+use crate::utils::text_parser::RichTextParser;
 
 pub struct NodeWidget {
     pub label: String,
@@ -25,17 +27,13 @@ impl Widget for NodeWidget {
                 visuals.bg_fill,
                 visuals.fg_stroke,
             );
-            ui.painter().text(
-                rect.center(),
-                Align2::CENTER_CENTER,
-                self.label,
-                ui.style()
-                    .text_styles
-                    .get(&egui::TextStyle::Button)
-                    .cloned()
-                    .unwrap(),
+            let label_layout = RichTextParser::new().parse(self.label).to_layout();
+            let galley = ui.painter().layout_job(label_layout);
+            ui.painter().add(TextShape::new(
+                rect.center() - galley.size() * 0.5,
+                galley,
                 visuals.text_color(),
-            );
+            ));
         }
         response
     }
