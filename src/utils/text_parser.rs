@@ -26,7 +26,7 @@ impl RichTextParser {
         }
     }
 
-    pub fn text_syle(mut self, text_style: TextStyle) -> Self {
+    pub fn text_style(mut self, text_style: TextStyle) -> Self {
         self.text_style = Some(text_style);
         self
     }
