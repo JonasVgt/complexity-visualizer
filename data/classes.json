@@ -33,7 +33,7 @@
         "names": [
             "BPP"
         ],
-        "description": "Bounded-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine in a polyomial amount of computation time with an error probability bounded by 1/3.",
+        "description": "Bounded-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine with two-sided error in a polyomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/BPP_(complexity)"
     },
     {
@@ -41,7 +41,7 @@
         "names": [
             "ZPP"
         ],
-        "description": "Zero-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine in a polyomial amount of computation time without error.",
+        "description": "Zero-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine without error in a polyomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/ZPP_(complexity)"
     },
     {
@@ -50,7 +50,7 @@
             "RP",
             "R"
         ],
-        "description": "Randomized Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine in a polyomial amount of computation time with 1-sided bounded error.",
+        "description": "Randomized Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine with 1-sided bounded error in a polyomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/ZPP_(complexity)"
     },
     {
@@ -105,7 +105,7 @@
         "wikipedia": "https://en.wikipedia.org/wiki/NEXPSPACE"
     },
     {
-        "id" : "NC",
+        "id": "NC",
         "names": [
             "NC"
         ],
@@ -113,11 +113,71 @@
         "wikipedia": "https://en.wikipedia.org/wiki/NC_(complexity)"
     },
     {
-        "id" : "NC1",
+        "id": "NC1",
         "names": [
             "NC^1"
         ],
-        "description": "NC^1 is the complexity class of decision problems that can be solved by a parallel computer with a polynomial number of processors in a O((log n)^1) amount of computation time.",
-        "wikipedia": "https:// en.wikipedia.org/wiki/NC_(complexity)#The_NC_hierarchy"
+        "description": "NC^1 is the complexity class of decision problems that can be solved by a parallel computer with a polynomial number of processors in a O(log n) amount of computation time.",
+        "wikipedia": "https://en.wikipedia.org/wiki/NC_(complexity)#The_NC_hierarchy"
+    },
+    {
+        "id": "L/POLY",
+        "names": [
+            "L/poly"
+        ],
+        "description": "L/poly is the complexity class of decision problems that can be solved by a deterministic Turing machine, using only an logarithmic amount of writable memory space and with advice strings of polynomial length.",
+        "wikipedia": "https://en.wikipedia.org/wiki/L/poly"
+    },
+    {
+        "id": "P/POLY",
+        "names": [
+            "P/poly"
+        ],
+        "description": "P/poly is the complexity class of decision problems that can be solved by a deterministic Turing machine in a polynomial amount of time with advice strings of polynomial length.",
+        "wikipedia": "https://en.wikipedia.org/wiki/P/poly"
+    },
+    {
+        "id": "NP/POLY",
+        "names": [
+            "NP/poly"
+        ],
+        "description": "P/poly is the complexity class of decision problems that can be solved by a nondeterministic Turing machine in a polynomial amount of time with advice strings of polynomial length.",
+        "wikipedia": "https://en.wikipedia.org/wiki/NP/poly"
+    },
+    {
+        "id": "BPL",
+        "names": [
+            "BPL",
+            "BPLP"
+        ],
+        "description": "Bounded-error Probabilistic Logarithmic-space is the complexity class of decision problems that can be solved by a probalistic Turing machine with two-sided error, using only an logarithmic amount of writable memory space.",
+        "wikipedia": "https://en.wikipedia.org/wiki/BPL_(complexity)"
+    },
+    {
+        "id": "RL",
+        "names": [
+            "RL",
+            "RLP"
+        ],
+        "description": "Randomized Logarithmic-space is the complexity class of decision problems that can be solved by a probalistic Turing machine with 1-sided error, using only an logarithmic amount of writable memory space.",
+        "wikipedia": "https://en.wikipedia.org/wiki/RL_(complexity)"
+    },
+    {
+        "id": "PL",
+        "names": [
+            "RL"
+        ],
+        "description": "Probabilistic Logarithmic-space  is the complexity class of decision problems that can be solved by a probalistic Turing machine with unbounded error, using only an logarithmic amount of writable memory space.",
+        "wikipedia": "https://en.wikipedia.org/wiki/PL_(complexity)"
+    },
+    {
+        "id": "PP",
+        "names": [
+            "PP",
+            "PPT"
+        ],
+        "description": "Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine with unbounded error  in a polynomial amount of time.",
+        "wikipedia": "https://en.wikipedia.org/wiki/PP_(complexity)"
     }
+
 ]

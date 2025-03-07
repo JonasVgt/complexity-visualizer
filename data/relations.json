@@ -63,5 +63,65 @@
         "from": "NC1",
         "to": "LSPACE",
         "relation_type": "Subset"
+    },
+    {
+        "from": "BPP",
+        "to": "P/POLY",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "RP",
+        "to": "P/POLY",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "RL",
+        "to": "BPL",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "BPL",
+        "to": "PL",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "BPL",
+        "to": "NC",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "BPL",
+        "to": "L/POLY",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "LSPACE",
+        "to": "RL",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "BPP",
+        "to": "PP",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "NP",
+        "to": "PP",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "PP",
+        "to": "PSPACE",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "P/POLY",
+        "to": "NP/POLY",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "L/POLY",
+        "to": "P/POLY",
+        "relation_type": "Subset"
     }
 ]
