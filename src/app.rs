@@ -1,6 +1,6 @@
 use egui::{pos2, FontData, FontDefinitions, FontFamily, Rect};
 
-use crate::{database::MyDatabase, graph::GraphWidget, model::Model, sidepanel::ui_sidepanel};
+use crate::{graph::GraphWidget, model::Model, sidepanel::ui_sidepanel};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -18,7 +18,7 @@ impl Default for ComplexityVisualizerApp {
     fn default() -> Self {
         Self {
             selected_class: None,
-            model: Model::new(MyDatabase::new()),
+            model: Model::new(),
             scene_rect: Rect::from_min_size(
                 pos2(0.0, 0.0),
                 egui::Vec2 {
@@ -54,8 +54,6 @@ impl eframe::App for ComplexityVisualizerApp {
 
     /// Called each time the UI needs repainting, which may be many times per second.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        self.model.fetch();
-
         // Set fonts
         let mut fonts = FontDefinitions::default();
 
