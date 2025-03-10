@@ -1,4 +1,4 @@
-use std::{cmp::min, collections::HashMap};
+use std::{cmp::max, cmp::min, collections::HashMap};
 
 use egui::Pos2;
 use petgraph::{
@@ -44,6 +44,7 @@ impl<'a> VisualizationController {
 
         Self { graph }
     }
+
     pub fn arrange(self) -> HashMap<u64, Pos2> {
         // An Directed Acyclic Graph containting the complexity classes. Equal classes are stored in a single node
         let condensated_graph = condensation(self.graph, true);
@@ -51,6 +52,7 @@ impl<'a> VisualizationController {
         let mut level_map: HashMap<NodeIndex, i32> = HashMap::new();
         let mut not_done = Vec::new();
 
+        // Find the leafs of the condensed graphs
         let leafs: Vec<NodeIndex> = condensated_graph
             .node_indices()
             .filter(|node| {
@@ -66,13 +68,33 @@ impl<'a> VisualizationController {
             not_done.push(leaf);
         }
 
+        // Condensed graph with dummynodes included
+        let mut graph_with_dummynodes = condensated_graph.clone();
+
         while let Some(node) = not_done.pop() {
             let id = level_map.get(&node).unwrap() + 1;
             for neighbor in
                 condensated_graph.neighbors_directed(node, petgraph::Direction::Incoming)
             {
                 if level_map.contains_key(&neighbor) {
-                    level_map.insert(neighbor, min(level_map.get(&neighbor).unwrap().clone(), id));
+                    let old_id = level_map.get(&neighbor).unwrap().clone();
+                    let new_id = min(old_id, id);
+                    let num_dummynodes = max(0, new_id - old_id) as usize;
+                    let edge_weight = condensated_graph
+                        .edge_weight(condensated_graph.find_edge(neighbor, node).unwrap())
+                        .unwrap();
+                    let dummynodes = graph_with_dummynodes.insert_dummy_nodes(
+                        neighbor,
+                        node,
+                        num_dummynodes,
+                        vec![],
+                        edge_weight.clone(),
+                    );
+                    let i = old_id + 1;
+                    for n in dummynodes {
+                        level_map.insert(n, i);
+                    }
+                    level_map.insert(neighbor, new_id);
                 } else {
                     level_map.insert(neighbor, id);
                     not_done.push(neighbor);
@@ -94,7 +116,7 @@ impl<'a> VisualizationController {
         let heur = |node: NodeIndex, parent_level: &Vec<NodeIndex>| {
             let mut sum = 0;
             let mut num = 0;
-            let neighbors: Vec<NodeIndex> = condensated_graph
+            let neighbors: Vec<NodeIndex> = graph_with_dummynodes
                 .neighbors_directed(node, petgraph::Direction::Outgoing)
                 .collect();
             let mut i = 0;
@@ -121,7 +143,8 @@ impl<'a> VisualizationController {
 
             for node in level
                 .iter()
-                .flat_map(|node| condensated_graph.node_weight(node.clone()).unwrap())
+                .filter_map(|node| condensated_graph.node_weight(node.clone()))
+                .flatten()
             {
                 let pos = Pos2::new(x as f32 * 100.0, y as f32 * 100.0);
                 map.insert(node.clone(), pos);
@@ -130,5 +153,53 @@ impl<'a> VisualizationController {
             x += 1;
         }
         return map;
+    }
+}
+
+trait DummyNodes<N, T> {
+    fn insert_dummy_nodes(
+        &mut self,
+        from: NodeIndex,
+        to: NodeIndex,
+        num: usize,
+        node_weight: N,
+        edge_weight: T,
+    ) -> Vec<NodeIndex>
+    where
+        N: Clone,
+        T: Clone;
+}
+
+impl<N, T> DummyNodes<N, T> for Graph<N, T> {
+    fn insert_dummy_nodes(
+        &mut self,
+        from: NodeIndex,
+        to: NodeIndex,
+        num: usize,
+        node_weight: N,
+        edge_weight: T,
+    ) -> Vec<NodeIndex>
+    where
+        N: Clone,
+        T: Clone,
+    {
+        let mut res = vec![];
+        // Remove existing edge or return, if it does not exist
+        if let Some(e) = self.find_edge(from, to) {
+            self.remove_edge(e);
+        } else {
+            return vec![];
+        }
+
+        // Add dummy nodes and edges
+        let mut prev = from;
+        for _ in 10..num {
+            let curr = self.add_node(node_weight.clone());
+            res.push(curr);
+            self.add_edge(prev, curr, edge_weight.clone());
+            prev = curr;
+        }
+        self.add_edge(prev, to, edge_weight.clone());
+        return res;
     }
 }
