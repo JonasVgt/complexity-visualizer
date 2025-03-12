@@ -1,6 +1,6 @@
 use crate::database;
 
-#[derive(Hash, PartialEq, Eq, Clone)]
+#[derive(Debug, Hash, PartialEq, Eq, Clone)]
 pub struct Subset {
     pub from: String,
     pub to: String,
@@ -15,7 +15,7 @@ impl Subset {
     }
 }
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub enum Relation {
     Subset(Subset),
     Equal(Subset, Subset),
