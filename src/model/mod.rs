@@ -9,7 +9,10 @@ use crate::{
     visualization_controller::VisualizationController,
 };
 use complexity_class::ComplexityClass as ModelComplexityClass;
-use egui::Pos2;
+use egui::{
+    ahash::{HashSet, HashSetExt},
+    Pos2,
+};
 use relation::Relation as ModelRelation;
 use std::collections::HashMap;
 
@@ -49,16 +52,25 @@ impl Model {
     }
 
     fn convert_relations(input: Vec<DBRelation>) -> Vec<ModelRelation> {
-        input
+        let converted: Vec<ModelRelation> = input
             .into_iter()
-            .map(|r| match r.relation_type {
-                crate::database::relation::RelationType::Subset => ModelRelation::Subset {
-                    from: r.from,
-                    to: r.to,
-                },
-                crate::database::relation::RelationType::Unknown => ModelRelation::Unknown,
-            })
-            .collect()
+            .map(|db_rel| ModelRelation::from(db_rel))
+            .collect();
+        let mut res = HashSet::new();
+
+        for relation in converted {
+            match relation {
+                ModelRelation::Subset(s)
+                    if res.contains(&ModelRelation::Subset(s.clone().inversed())) =>
+                {
+                    res.insert(ModelRelation::Equal(s.clone(), s.clone().inversed()));
+                }
+                a => {
+                    res.insert(a);
+                }
+            };
+        }
+        return res.into_iter().collect();
     }
 
     fn convert_nodes(input: Vec<DBComplexityClass>) -> Vec<ModelComplexityClass> {

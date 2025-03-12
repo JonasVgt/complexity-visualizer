@@ -15,8 +15,9 @@ impl<'a> Widget for RelationWidget<'a> {
         ui.painter()
             .line_segment([self.from, self.to], visuals.fg_stroke);
         let relation_label = match self.relation {
-            Relation::Subset { .. } => "⊆",
-            Relation::Unknown => "",
+            Relation::Subset(_) => "⊆",
+            Relation::Equal(_, _) => "=",
+            Relation::Unknown => "Ukn",
         };
 
         let galley = {

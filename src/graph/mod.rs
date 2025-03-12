@@ -2,7 +2,11 @@ use egui::{Rect, Scene, Widget};
 use node::NodeWidget;
 use relation::RelationWidget;
 
-use crate::model::{complexity_class::ComplexityClass, relation::Relation, Model};
+use crate::model::{
+    complexity_class::ComplexityClass,
+    relation::{Relation, Subset},
+    Model,
+};
 
 mod node;
 mod relation;
@@ -25,7 +29,7 @@ impl Widget for GraphWidget<'_> {
                 scene
                     .show(ui, self.scene_rect, |ui| {
                         for relation in self.model.relations() {
-                            if let Relation::Subset { from, to } = relation {
+                            if let Relation::Subset(Subset { from, to }) = relation {
                                 ui.add(RelationWidget {
                                     from: self
                                         .model
