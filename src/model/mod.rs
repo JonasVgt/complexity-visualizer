@@ -61,7 +61,7 @@ impl Model {
         for relation in converted {
             match relation {
                 ModelRelation::Subset(s)
-                    if res.contains(&ModelRelation::Subset(s.clone().inversed())) =>
+                    if res.remove(&ModelRelation::Subset(s.clone().inversed())) =>
                 {
                     res.insert(ModelRelation::Equal(s.clone(), s.clone().inversed()));
                 }
