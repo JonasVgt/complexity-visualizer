@@ -2,7 +2,7 @@ use egui::{Rect, Scene, Widget};
 use node::NodeWidget;
 use relation::RelationWidget;
 
-use crate::model::Model;
+use crate::model::{complexity_class::ComplexityClass, relation::Relation, Model};
 
 mod node;
 mod relation;
@@ -25,29 +25,36 @@ impl Widget for GraphWidget<'_> {
                 scene
                     .show(ui, self.scene_rect, |ui| {
                         for relation in self.model.relations() {
-                            ui.add(RelationWidget {
-                                from: self
-                                    .model
-                                    .get_position(&relation.calculate_from_hash())
-                                    .unwrap()
-                                    .clone(),
-                                to: self
-                                    .model
-                                    .get_position(&relation.calculate_to_hash())
-                                    .unwrap()
-                                    .clone(),
-                                relation_type: relation.relation_type
-                            });
+                            if let Relation::Subset { from, to } = relation {
+                                ui.add(RelationWidget {
+                                    from: self
+                                        .model
+                                        .get_position(&ComplexityClass::hash_id(&from))
+                                        .unwrap()
+                                        .clone(),
+                                    to: self
+                                        .model
+                                        .get_position(&ComplexityClass::hash_id(&to))
+                                        .unwrap()
+                                        .clone(),
+                                    relation,
+                                });
+                            }
                         }
                         for class in self.model.classes() {
                             let response = ui.put(
                                 egui::Rect::from_center_size(
-                                    self.model.get_position(&class.calculate_id_hash()).unwrap().clone(),
+                                    self.model
+                                        .get_position(&class.calculate_id_hash())
+                                        .unwrap()
+                                        .clone(),
                                     egui::vec2(100.0, 100.0),
                                 ),
                                 NodeWidget {
                                     label: class.names.first().unwrap().clone(),
-                                    selected: self.selected_class.is_some_and(|c| c == class.calculate_id_hash())
+                                    selected: self
+                                        .selected_class
+                                        .is_some_and(|c| c == class.calculate_id_hash()),
                                 },
                             );
                             if response.clicked() {

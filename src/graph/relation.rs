@@ -1,22 +1,22 @@
 use egui::{emath::Rot2, epaint::TextShape, FontSelection, Pos2, Rect, Widget};
 
-use crate::database::relation::RelationType;
+use crate::model::relation::Relation;
 
-pub struct RelationWidget {
+pub struct RelationWidget<'a> {
     pub from: Pos2,
     pub to: Pos2,
-    pub relation_type: RelationType,
+    pub relation: &'a Relation,
 }
 
-impl Widget for RelationWidget {
+impl<'a> Widget for RelationWidget<'a> {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
         let visuals = ui.style().noninteractive();
 
         ui.painter()
             .line_segment([self.from, self.to], visuals.fg_stroke);
-        let relation_label = match self.relation_type {
-            RelationType::Subset => "⊆",
-            _ => "",
+        let relation_label = match self.relation {
+            Relation::Subset { .. } => "⊆",
+            Relation::Unknown => "",
         };
 
         let galley = {
