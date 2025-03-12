@@ -29,7 +29,11 @@ impl Widget for GraphWidget<'_> {
                 scene
                     .show(ui, self.scene_rect, |ui| {
                         for relation in self.model.relations() {
-                            if let Relation::Subset(Subset { from, to }) = relation {
+                            if let Some((from, to)) = match relation {
+                                Relation::Subset(Subset { from, to }) => Some((from, to)),
+                                Relation::Equal(Subset { from, to },_) => Some((from, to)),
+                                Relation::Unknown => None
+                            } {
                                 ui.add(RelationWidget {
                                     from: self
                                         .model
