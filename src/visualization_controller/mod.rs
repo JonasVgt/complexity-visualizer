@@ -1,6 +1,9 @@
+mod horizontal_coordinate;
+
 use std::{cmp::max, cmp::min, collections::HashMap};
 
 use egui::Pos2;
+use horizontal_coordinate::compute_horizontal_coordinate;
 use petgraph::{
     algo::condensation,
     graph::{node_index, NodeIndex},
@@ -45,6 +48,11 @@ impl<'a> VisualizationController {
         Self { graph }
     }
 
+    /*
+     * Arranges the nodes according to hierarchical drawing algorithms
+     * See: Healy, Patrick; Nikolov, Nikola S. (2014), "Hierarchical Graph Drawing", p.409-453
+     * https://cs.brown.edu/people/rtamassi/gdhandbook/
+     */
     pub fn arrange(self) -> HashMap<u64, Pos2> {
         // An Directed Acyclic Graph containting the complexity classes. Equal classes are stored in a single node
         let condensated_graph = condensation(self.graph, true);
@@ -137,18 +145,22 @@ impl<'a> VisualizationController {
 
         let mut map: HashMap<u64, Pos2> = HashMap::new();
 
+        let hor_coordinates = compute_horizontal_coordinate(&condensated_graph, &levels);
         let mut x = 0;
         for level in levels {
-            let mut y = 0;
+            for node in level {
+                if condensated_graph.node_weight(node).is_none() {
+                    continue;
+                }
 
-            for node in level
-                .iter()
-                .filter_map(|node| condensated_graph.node_weight(node.clone()))
-                .flatten()
-            {
-                let pos = Pos2::new(x as f32 * 100.0, y as f32 * 100.0);
-                map.insert(node.clone(), pos);
-                y += 1;
+                let y = hor_coordinates.get(&node).unwrap().clone();
+                let classes = condensated_graph.node_weight(node).unwrap();
+
+                for i in 0..classes.len() {
+                    let cy = y - (classes.len() as f32 / 2.0) + i as f32;
+                    let pos = Pos2::new(x as f32 * 100.0, cy * 100.0);
+                    map.insert(classes.get(i).unwrap().clone(), pos);
+                }
             }
             x += 1;
         }
