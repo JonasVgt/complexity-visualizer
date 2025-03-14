@@ -1,6 +1,7 @@
 mod dummy_nodes;
 mod horizontal_coordinate;
 mod layer_assignment;
+mod vertex_ordering;
 
 use std::collections::HashMap;
 
@@ -13,6 +14,7 @@ use petgraph::{
     graph::{node_index, NodeIndex},
     Directed, Graph,
 };
+use vertex_ordering::order_vertices;
 
 use crate::database::{data::Data, relation::RelationType};
 
@@ -66,27 +68,7 @@ impl<'a> VisualizationController {
         let (graph_with_dummynodes, mut layers) =
             add_dummy_nodes(condensated_graph, layers, vec![]);
 
-        let heur = |node: NodeIndex, parent_level: &Vec<NodeIndex>| {
-            let mut sum = 0;
-            let mut num = 0;
-            let neighbors: Vec<NodeIndex> = graph_with_dummynodes
-                .neighbors_directed(node, petgraph::Direction::Outgoing)
-                .collect();
-            let mut i = 0;
-            for parent in parent_level {
-                if neighbors.contains(&parent) {
-                    sum += i;
-                    num += 1;
-                }
-                i += 1;
-            }
-            return (10000.0 * (sum as f32 / num as f32)) as i32;
-        };
-
-        for i in 1..layers.len() {
-            let (done, unsorted) = layers.split_at_mut(i);
-            unsorted[0].sort_by_key(|node| heur(node.clone(), done.last().unwrap()));
-        }
+        layers = order_vertices(&graph_with_dummynodes, layers);
 
         let mut map: HashMap<u64, Pos2> = HashMap::new();
 
