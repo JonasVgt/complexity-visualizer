@@ -1,17 +1,17 @@
 mod dummy_nodes;
 mod horizontal_coordinate;
 mod layer_assignment;
+mod layered_graph;
 mod vertex_ordering;
 
 use std::collections::HashMap;
 
-use dummy_nodes::add_dummy_nodes;
 use egui::Pos2;
 use horizontal_coordinate::compute_horizontal_coordinate;
 use layer_assignment::assign_layers;
 use petgraph::{
     algo::condensation,
-    graph::{node_index, NodeIndex},
+    graph::node_index,
     Directed, Graph,
 };
 use vertex_ordering::order_vertices;
@@ -62,21 +62,19 @@ impl<'a> VisualizationController {
     pub fn arrange(self) -> HashMap<u64, Pos2> {
         // An Directed Acyclic Graph containting the complexity classes. Equal classes are stored in a single node
         let condensated_graph = condensation(self.graph, true);
+        let layered_graph = assign_layers(condensated_graph);
 
-        let layers: Vec<Vec<NodeIndex>> = assign_layers(&condensated_graph);
-
-        let (graph_with_dummynodes, mut layers) =
-            add_dummy_nodes(condensated_graph, layers, vec![]);
-
-        layers = order_vertices(&graph_with_dummynodes, layers);
+        let mut graph_with_dummynodes = layered_graph.add_dummy_nodes(vec![]);
+        order_vertices(&mut graph_with_dummynodes);
 
         let mut map: HashMap<u64, Pos2> = HashMap::new();
 
-        let hor_coordinates = compute_horizontal_coordinate(&graph_with_dummynodes, &layers);
+        let hor_coordinates = compute_horizontal_coordinate(&graph_with_dummynodes);
         let mut x = 0;
-        for level in layers {
-            for node in level {
+        for layer in graph_with_dummynodes.layers {
+            for node in layer {
                 if graph_with_dummynodes
+                    .graph
                     .node_weight(node)
                     .unwrap_or(&vec![])
                     .is_empty()
@@ -85,7 +83,7 @@ impl<'a> VisualizationController {
                 }
 
                 let y = hor_coordinates.get(&node).unwrap().clone();
-                let classes = graph_with_dummynodes.node_weight(node).unwrap();
+                let classes = graph_with_dummynodes.graph.node_weight(node).unwrap();
 
                 for i in 0..classes.len() {
                     let cy = y - (classes.len() as f32 / 2.0) + i as f32;

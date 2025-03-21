@@ -3,7 +3,9 @@ use std::collections::HashMap;
 use petgraph::{graph::NodeIndex, Graph};
 use std::cmp::min;
 
-pub fn assign_layers<N,E>(graph: &Graph<N,E>) -> Vec<Vec<NodeIndex>> {
+use super::layered_graph::LayeredGraph;
+
+pub fn assign_layers<N,E>(graph: Graph<N,E>) -> LayeredGraph<N,E> {
     let mut level_map: HashMap<NodeIndex, i32> = HashMap::new();
     let mut not_done = Vec::new();
 
@@ -48,5 +50,5 @@ pub fn assign_layers<N,E>(graph: &Graph<N,E>) -> Vec<Vec<NodeIndex>> {
                 accu[level as usize].push(node);
                 accu
             });
-            return levels;
+    return LayeredGraph::new(graph, levels);
 }

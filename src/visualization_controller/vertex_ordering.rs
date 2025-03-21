@@ -1,10 +1,12 @@
-use petgraph::{graph::NodeIndex, Graph};
+use petgraph::graph::NodeIndex;
 
-pub fn order_vertices<N, E>(graph: &Graph<N, E>, mut layers: Vec<Vec<NodeIndex>>) -> Vec<Vec<NodeIndex>> {
+use super::layered_graph::LayeredGraph;
+
+pub fn order_vertices<N, E>(graph: &mut LayeredGraph<N, E>) {
     let heur = |node: NodeIndex, parent_level: &Vec<NodeIndex>| {
         let mut sum = 0;
         let mut num = 0;
-        let neighbors: Vec<NodeIndex> = graph
+        let neighbors: Vec<NodeIndex> = graph.graph
             .neighbors_directed(node, petgraph::Direction::Outgoing)
             .collect();
         let mut i = 0;
@@ -18,9 +20,8 @@ pub fn order_vertices<N, E>(graph: &Graph<N, E>, mut layers: Vec<Vec<NodeIndex>>
         return (10000.0 * (sum as f32 / num as f32)) as i32;
     };
 
-    for i in 1..layers.len() {
-        let (done, unsorted) = layers.split_at_mut(i);
+    for i in 1..graph.layers.len() {
+        let (done, unsorted) = graph.layers.split_at_mut(i);
         unsorted[0].sort_by_key(|node| heur(node.clone(), done.last().unwrap()));
     }
-    return layers
 }
