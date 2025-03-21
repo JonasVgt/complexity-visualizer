@@ -9,11 +9,7 @@ use std::collections::HashMap;
 use egui::Pos2;
 use horizontal_coordinate::compute_horizontal_coordinate;
 use layer_assignment::assign_layers;
-use petgraph::{
-    algo::condensation,
-    graph::node_index,
-    Directed, Graph,
-};
+use petgraph::{algo::condensation, graph::node_index, Directed, Graph};
 use vertex_ordering::order_vertices;
 
 use crate::database::{data::Data, relation::RelationType};
@@ -71,10 +67,10 @@ impl<'a> VisualizationController {
 
         let hor_coordinates = compute_horizontal_coordinate(&graph_with_dummynodes);
         let mut x = 0;
-        for layer in graph_with_dummynodes.layers {
+        for layer in graph_with_dummynodes.layers.clone() {
             for node in layer {
                 if graph_with_dummynodes
-                    .graph
+                    .graph()
                     .node_weight(node)
                     .unwrap_or(&vec![])
                     .is_empty()
@@ -83,7 +79,7 @@ impl<'a> VisualizationController {
                 }
 
                 let y = hor_coordinates.get(&node).unwrap().clone();
-                let classes = graph_with_dummynodes.graph.node_weight(node).unwrap();
+                let classes = graph_with_dummynodes.graph().node_weight(node).unwrap();
 
                 for i in 0..classes.len() {
                     let cy = y - (classes.len() as f32 / 2.0) + i as f32;

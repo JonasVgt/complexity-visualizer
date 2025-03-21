@@ -9,7 +9,8 @@ trait DummyNodes<N, T> {
         &mut self,
         from: NodeIndex,
         to: NodeIndex,
-        num: usize,
+        from_layer: usize,
+        to_layer: usize,
         node_weight: N,
         edge_weight: T,
     ) -> Vec<NodeIndex>
@@ -23,7 +24,8 @@ impl<N, T> DummyNodes<N, T> for LayeredGraph<N, T> {
         &mut self,
         from: NodeIndex,
         to: NodeIndex,
-        num: usize,
+        from_layer: usize,
+        to_layer: usize,
         node_weight: N,
         edge_weight: T,
     ) -> Vec<NodeIndex>
@@ -33,8 +35,8 @@ impl<N, T> DummyNodes<N, T> for LayeredGraph<N, T> {
     {
         let mut res = vec![];
         // Remove existing edge or return, if it does not exist
-        if let Some(e) = self.graph.find_edge(from, to) {
-            self.graph.remove_edge(e);
+        if let Some(e) = self.graph().find_edge(from, to) {
+            self.remove_edge(e);
         } else {
             println!("ERROR, no edge");
             return vec![];
@@ -42,13 +44,13 @@ impl<N, T> DummyNodes<N, T> for LayeredGraph<N, T> {
 
         // Add dummy nodes and edges
         let mut prev = from;
-        for _ in 0..num {
-            let curr = self.graph.add_node(node_weight.clone());
+        for layer in (from_layer + 1)..to_layer {
+            let curr = self.add_node(node_weight.clone(), layer);
             res.push(curr);
-            self.graph.add_edge(prev, curr, edge_weight.clone());
+            self.add_edge(prev, curr, edge_weight.clone());
             prev = curr;
         }
-        self.graph.add_edge(prev, to, edge_weight.clone());
+        self.add_edge(prev, to, edge_weight.clone());
         return res;
     }
 }
@@ -59,51 +61,38 @@ impl<N, E> LayeredGraph<N, E> {
         E: Clone,
         N: Clone,
     {
-        let mut layer_map: HashMap<NodeIndex, usize> = self
+        let layer_map: HashMap<NodeIndex, usize> = self
             .layers
             .iter()
             .enumerate()
             .flat_map(|(id, layer)| layer.into_iter().map(move |x| (x.clone(), id)))
             .collect();
 
-        for edge in self.graph.edge_indices() {
-            let (from, to) = self.graph.edge_endpoints(edge).unwrap();
+        let edges = self
+            .graph()
+            .edge_indices()
+            .filter_map(|e| self.graph().edge_endpoints(e))
+            .collect::<Vec<_>>();
 
+        for (from, to) in edges {
             let from_layer = layer_map.get(&from).unwrap().clone();
             let to_layer = layer_map.get(&to).unwrap().clone();
 
             if to_layer <= from_layer + 1 {
                 continue;
             }
-            let num_dummynodes = to_layer - from_layer - 1;
+            let edge = self.graph().find_edge(from, to).unwrap();
+            let edge_weight = self.graph().edge_weight(edge).unwrap();
 
-            let edge_weight = self.graph.edge_weight(edge).unwrap();
-
-            let mut dummynodes = self.insert_dummy_nodes(
+            self.insert_dummy_nodes(
                 from,
                 to,
-                num_dummynodes,
+                from_layer,
+                to_layer,
                 dummy_node_weight.clone(),
                 edge_weight.clone(),
             );
-
-            for i in 0..dummynodes.len() {
-                layer_map.insert(dummynodes.remove(0), from_layer + 1 + i);
-            }
         }
-        let layers: Vec<Vec<NodeIndex>> =
-            layer_map
-                .into_iter()
-                .fold(vec![], |mut accu, (node, level)| {
-                    if accu.len() < level as usize + 1 {
-                        accu.resize(level as usize + 1, vec![]);
-                    }
-                    accu[level as usize].push(node);
-                    accu
-                });
-        return Self {
-            graph: self.graph,
-            layers,
-        };
+        return self;
     }
 }

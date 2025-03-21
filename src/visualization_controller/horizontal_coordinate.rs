@@ -14,7 +14,7 @@ pub fn compute_horizontal_coordinate<N, E>(
     for layer_idx in 1..graph.layers.len() {
         let layer = graph.layers.get(layer_idx).unwrap();
         for node in layer {
-            let neighbors = graph.graph.neighbors_directed(*node, petgraph::Direction::Incoming);
+            let neighbors = graph.graph().neighbors_directed(*node, petgraph::Direction::Incoming);
             let mut sum = 0;
             let mut num = 0;
             for neighbor in neighbors {
