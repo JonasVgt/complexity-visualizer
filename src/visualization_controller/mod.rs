@@ -61,7 +61,7 @@ impl<'a> VisualizationController {
         let layered_graph = assign_layers(condensated_graph);
 
         let mut graph_with_dummynodes = layered_graph.add_dummy_nodes(vec![]);
-        order_vertices(&mut graph_with_dummynodes);
+        graph_with_dummynodes = order_vertices(graph_with_dummynodes);
 
         let mut map: HashMap<u64, Pos2> = HashMap::new();
 

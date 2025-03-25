@@ -2,7 +2,7 @@ use petgraph::graph::NodeIndex;
 
 use super::layered_graph::LayeredGraph;
 
-pub fn order_vertices<N, E>(graph: &mut LayeredGraph<N, E>) -> LayeredGraph<N, E>
+pub fn order_vertices<N, E>(graph: LayeredGraph<N, E>) -> LayeredGraph<N, E>
 where
     N: Clone,
     E: Clone,
@@ -12,7 +12,7 @@ where
         let mut num = 0;
         let neighbors: Vec<NodeIndex> = graph
             .graph()
-            .neighbors_directed(node, petgraph::Direction::Outgoing)
+            .neighbors_directed(node, petgraph::Direction::Incoming)
             .collect();
         let mut i = 0;
         for parent in parent_level {
