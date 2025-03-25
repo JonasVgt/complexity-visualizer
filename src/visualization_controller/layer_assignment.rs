@@ -6,10 +6,10 @@ use std::cmp::min;
 use super::layered_graph::LayeredGraph;
 
 pub fn assign_layers<N,E>(graph: Graph<N,E>) -> LayeredGraph<N,E> {
-    let mut level_map: HashMap<NodeIndex, i32> = HashMap::new();
+    let mut layer_map: HashMap<NodeIndex, i32> = HashMap::new();
     let mut not_done = Vec::new();
 
-    // Find the leafs of the condensed graphs
+    // Find the roots of the condensed graphs
     let roots: Vec<NodeIndex> = graph
         .node_indices()
         .filter(|node| {
@@ -21,27 +21,25 @@ pub fn assign_layers<N,E>(graph: Graph<N,E>) -> LayeredGraph<N,E> {
         .collect();
 
     for root in roots {
-        level_map.insert(root, 0);
+        layer_map.insert(root, 0);
         not_done.push(root);
     }
 
     while let Some(node) = not_done.pop() {
-        let id = level_map.get(&node).unwrap() + 1;
+        let layer = layer_map.get(&node).unwrap().clone();
         for neighbor in graph.neighbors_directed(node, petgraph::Direction::Outgoing) {
-            if level_map.contains_key(&neighbor) {
-                let old_id = level_map.get(&neighbor).unwrap().clone();
-                let new_id = min(old_id, id);
-
-                level_map.insert(neighbor, new_id);
+            let mut new_layer=layer + 1;
+            if let Some(old_layer) = layer_map.get(&neighbor) {
+                new_layer = min(old_layer.clone(), new_layer);
             } else {
-                level_map.insert(neighbor, id);
                 not_done.push(neighbor);
             }
+            layer_map.insert(neighbor, new_layer);
         }
     }
 
-    let levels: Vec<Vec<NodeIndex>> =
-        level_map
+    let layers: Vec<Vec<NodeIndex>> =
+        layer_map
             .into_iter()
             .fold(vec![], |mut accu, (node, level)| {
                 if accu.len() < level as usize + 1 {
@@ -50,5 +48,5 @@ pub fn assign_layers<N,E>(graph: Graph<N,E>) -> LayeredGraph<N,E> {
                 accu[level as usize].push(node);
                 accu
             });
-    return LayeredGraph::new(graph, levels);
+    return LayeredGraph::new(graph, layers);
 }
