@@ -7,7 +7,7 @@ use petgraph::{
 
 pub struct LayeredGraph<N, E> {
     graph: Graph<N, E>,
-    pub layers: Vec<Vec<NodeIndex>>,
+    layers: Vec<Vec<NodeIndex>>,
 }
 
 impl<N, E> LayeredGraph<N, E> {
@@ -17,6 +17,10 @@ impl<N, E> LayeredGraph<N, E> {
 
     pub fn graph(&self) -> &Graph<N, E> {
         &self.graph
+    }
+
+    pub fn layers(&self) -> &Vec<Vec<NodeIndex>> {
+        &self.layers
     }
 
     pub fn add_node(&mut self, weight: N, layer: usize) -> NodeIndex {

@@ -45,7 +45,7 @@ impl<N, E> LayeredGraph<N, E> {
         N: Clone,
     {
         let layer_map: HashMap<NodeIndex, usize> = self
-            .layers
+            .layers()
             .iter()
             .enumerate()
             .flat_map(|(id, layer)| layer.into_iter().map(move |x| (x.clone(), id)))

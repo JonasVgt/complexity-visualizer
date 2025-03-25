@@ -67,7 +67,7 @@ impl<'a> VisualizationController {
 
         let hor_coordinates = compute_horizontal_coordinate(&graph_with_dummynodes);
         let mut x = 0;
-        for layer in graph_with_dummynodes.layers.clone() {
+        for layer in graph_with_dummynodes.layers().clone() {
             for node in layer {
                 if graph_with_dummynodes
                     .graph()
