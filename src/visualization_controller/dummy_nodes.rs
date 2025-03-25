@@ -4,7 +4,7 @@ use petgraph::graph::NodeIndex;
 
 use super::layered_graph::LayeredGraph;
 
-trait DummyNodes<N, T> {
+impl<N, E> LayeredGraph<N, E> {
     fn insert_dummy_nodes(
         &mut self,
         from: NodeIndex,
@@ -12,26 +12,11 @@ trait DummyNodes<N, T> {
         from_layer: usize,
         to_layer: usize,
         node_weight: N,
-        edge_weight: T,
+        edge_weight: E,
     ) -> Vec<NodeIndex>
     where
         N: Clone,
-        T: Clone;
-}
-
-impl<N, T> DummyNodes<N, T> for LayeredGraph<N, T> {
-    fn insert_dummy_nodes(
-        &mut self,
-        from: NodeIndex,
-        to: NodeIndex,
-        from_layer: usize,
-        to_layer: usize,
-        node_weight: N,
-        edge_weight: T,
-    ) -> Vec<NodeIndex>
-    where
-        N: Clone,
-        T: Clone,
+        E: Clone,
     {
         let mut res = vec![];
         // Remove existing edge or return, if it does not exist
@@ -53,9 +38,7 @@ impl<N, T> DummyNodes<N, T> for LayeredGraph<N, T> {
         self.add_edge(prev, to, edge_weight.clone());
         return res;
     }
-}
 
-impl<N, E> LayeredGraph<N, E> {
     pub fn add_dummy_nodes(mut self, dummy_node_weight: N) -> Self
     where
         E: Clone,
