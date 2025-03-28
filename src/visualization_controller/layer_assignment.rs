@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use petgraph::{graph::NodeIndex, Graph};
-use std::cmp::min;
 
 use super::layered_graph::LayeredGraph;
 
@@ -30,10 +29,14 @@ pub fn assign_layers<N,E>(graph: Graph<N,E>) -> LayeredGraph<N,E> {
         for neighbor in graph.neighbors_directed(node, petgraph::Direction::Outgoing) {
             let mut new_layer=layer + 1;
             if let Some(old_layer) = layer_map.get(&neighbor) {
-                new_layer = min(old_layer.clone(), new_layer);
+                if old_layer < &new_layer {
+                    not_done.push(neighbor);
+                }
+                new_layer = i32::max(old_layer.clone(), new_layer);
             } else {
                 not_done.push(neighbor);
             }
+            
             layer_map.insert(neighbor, new_layer);
         }
     }
