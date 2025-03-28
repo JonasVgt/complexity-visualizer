@@ -1,20 +1,24 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Debug};
 
 use petgraph::graph::NodeIndex;
 
 use super::layered_graph::LayeredGraph;
 
-pub fn compute_horizontal_coordinate<N, E>(
-    graph: &LayeredGraph<N, E>,
-) -> HashMap<NodeIndex, f32> {
-    let mut pos = HashMap::new();
-    for i in 0..graph.layers().get(0).unwrap().len() {
-        pos.insert(graph.layers().get(0).unwrap().get(i).unwrap().clone(), i as f32);
+pub fn compute_horizontal_coordinate<N, E>(graph: &LayeredGraph<N, E>) -> HashMap<NodeIndex, f32> where N:Debug{
+    let mut pos: HashMap<NodeIndex, f32> = HashMap::new();
+    // Assign coordinates to first layer
+    for (i, n) in graph.layers()[0].iter().enumerate() {
+        pos.insert(n.clone(), i as f32);
     }
-    for layer_idx in 1..graph.layers().len() {
-        let layer = graph.layers().get(layer_idx).unwrap();
+
+    for (layer_idx, layer) in graph.layers().iter().enumerate().skip(1) {
+        // Assign node pos to average position of parents
+        //println!("{:?}", layer);
+        let mut prev_node = None;
         for node in layer {
-            let neighbors = graph.graph().neighbors_directed(*node, petgraph::Direction::Incoming);
+            let neighbors = graph
+                .graph()
+                .neighbors_directed(*node, petgraph::Direction::Incoming);
             let mut sum = 0;
             let mut num = 0;
             for neighbor in neighbors {
@@ -23,17 +27,17 @@ pub fn compute_horizontal_coordinate<N, E>(
                     num += 1;
                 }
             }
-            pos.insert(node.clone(), sum as f32 / num as f32);
+            let x_pos = match (prev_node, num) {
+                (Some(p), 0) =>  pos.get(p).unwrap().clone() + 1.0,
+                (None, 0) => 0.0,
+                (Some(p), _) => f32::max(pos.get(p).unwrap().clone() + 1.0, 0.0),
+                (None, _) =>  sum as f32 / num as f32,
+            };
+        
+            pos.insert(node.clone(), x_pos as f32);
+            prev_node = Some(node);
         }
-        for node in layer {
-            if pos.get(node).unwrap().is_nan() {
-                let p = find_pos(layer, node.clone()).unwrap();
-                let left_pos = if p >= 1 {pos.get(layer.get(p-1).unwrap()).unwrap().clone()} else {0.0};
-                let right_pos = if p+1 < layer.len() {pos.get(layer.get(p+1).unwrap()).unwrap().clone()} else {left_pos+2.0};
 
-                pos.insert(node.clone(), 0.5 * left_pos + 0.5 * right_pos);
-            }
-        }
     }
     return pos;
 }
