@@ -1,10 +1,24 @@
-use egui::{epaint::TextShape, Widget};
+use egui::{epaint::TextShape, text::TAB_SIZE, vec2, Align2, FontSelection, Widget};
 
-use crate::utils::text_parser::RichTextParser;
+use crate::{database::complexity_class::Tag, utils::text_parser::RichTextParser};
 
 pub struct NodeWidget {
     pub label: String,
     pub selected: bool,
+    pub tags: Vec<Tag>,
+}
+
+fn tags_str(tags: &Vec<Tag>) -> String {
+    tags.iter()
+        .map(|tag| match tag {
+            Tag::PROBABILISTIC => "",
+            Tag::NONDETERMINISTIC => "",
+            Tag::DETERMINISTIC => "󰁔",
+            Tag::SPACE => "",
+            Tag::TIME => "",
+        })
+        .collect::<Vec<&str>>()
+        .join(" ")
 }
 
 impl Widget for NodeWidget {
@@ -29,11 +43,23 @@ impl Widget for NodeWidget {
             );
             let label_layout = RichTextParser::new().parse(self.label).to_layout();
             let galley = ui.painter().layout_job(label_layout);
+            let galley_size = galley.size().clone();
             ui.painter().add(TextShape::new(
                 rect.center() - galley.size() * 0.5,
                 galley,
                 visuals.text_color(),
             ));
+
+            // Paint Tags
+            let font_id = FontSelection::Default.resolve(ui.style());
+            let text = tags_str(&self.tags);
+            ui.painter().text(
+                rect.center() + vec2(0.0, galley_size.y * 0.5),
+                Align2::CENTER_TOP,
+                text,
+                font_id,
+                visuals.text_color(),
+            );
         }
         response
     }

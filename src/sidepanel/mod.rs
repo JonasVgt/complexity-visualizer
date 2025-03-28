@@ -1,6 +1,6 @@
 use crate::{
-    model::complexity_class::ComplexityClass, rich_label, rich_label_heading,
-    utils::text_parser::RichTextParser,
+    database::complexity_class::Tag, model::complexity_class::ComplexityClass, rich_label,
+    rich_label_heading, utils::text_parser::RichTextParser,
 };
 
 pub fn ui_sidepanel(ui: &mut egui::Ui, class: Option<&ComplexityClass>) {
@@ -16,5 +16,19 @@ pub fn ui_sidepanel(ui: &mut egui::Ui, class: Option<&ComplexityClass>) {
         ui.add(rich_label!(c.description.clone()));
         ui.separator();
         ui.hyperlink(&c.wikipedia);
+        ui.separator();
+        let text = c
+            .tags
+            .iter()
+            .map(|tag| match tag {
+                Tag::DETERMINISTIC => "Deterministic",
+                Tag::NONDETERMINISTIC => "Non-deterministic",
+                Tag::PROBABILISTIC => "Probabilistic",
+                Tag::SPACE => "Space",
+                Tag::TIME => "Time",
+            })
+            .collect::<Vec<&str>>()
+            .join(", ");
+        ui.label(text);
     }
 }

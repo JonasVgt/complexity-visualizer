@@ -63,6 +63,7 @@ impl Widget for GraphWidget<'_> {
                                     selected: self
                                         .selected_class
                                         .is_some_and(|c| c == class.calculate_id_hash()),
+                                    tags: class.tags.clone()
                                 },
                             );
                             if response.clicked() {

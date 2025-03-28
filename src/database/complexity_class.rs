@@ -2,11 +2,21 @@ use std::hash::{DefaultHasher, Hash, Hasher};
 
 use serde::{Deserialize, Serialize};
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum Tag{
+    TIME,
+    SPACE,
+    DETERMINISTIC,
+    NONDETERMINISTIC,
+    PROBABILISTIC
+}
+
 #[allow(dead_code)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ComplexityClass {
     pub id: String,
     pub names: Vec<String>,
+    pub tags: Vec<Tag>,
     pub description: String,
     pub wikipedia: String,
 }

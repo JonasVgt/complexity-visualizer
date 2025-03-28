@@ -7,6 +7,10 @@
             "LOGSPACE",
             "DLOGSPACE"
         ],
+        "tags": [
+            "SPACE",
+            "DETERMINISTIC"
+        ],
         "description": "Deterministic Logarithmic-space is the complexity class of decision problems that can be solved by a deterministic Turing machine, using only a logarithmic amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/L_(complexity)"
     },
@@ -15,6 +19,10 @@
         "names": [
             "NL",
             "NLSPACE"
+        ],
+        "tags": [
+            "SPACE",
+            "NONDETERMINISTIC"
         ],
         "description": "Nondeterministic Logarithmic-space is the complexity class of decision problems that can be solved by a nondeterministic Turing machine, using only a logarithmic amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/NL_(complexity)"
@@ -25,6 +33,10 @@
             "P",
             "PTIME"
         ],
+        "tags": [
+            "TIME",
+            "DETERMINISTIC"
+        ],
         "description": "Deterministic Polynomial Time is the complexity class of decision problems that can be solved by a deterministic Turing machine in a polyomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/P_(complexity)"
     },
@@ -33,6 +45,10 @@
         "names": [
             "BPP"
         ],
+        "tags": [
+            "TIME",
+            "PROBABILISTIC"
+        ],
         "description": "Bounded-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine with two-sided error in a polyomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/BPP_(complexity)"
     },
@@ -40,6 +56,10 @@
         "id": "ZPP",
         "names": [
             "ZPP"
+        ],
+        "tags": [
+            "TIME",
+            "PROBABILISTIC"
         ],
         "description": "Zero-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine without error in a polyomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/ZPP_(complexity)"
@@ -50,6 +70,10 @@
             "RP",
             "R"
         ],
+        "tags": [
+            "TIME",
+            "PROBABILISTIC"
+        ],
         "description": "Randomized Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine with 1-sided bounded error in a polyomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/ZPP_(complexity)"
     },
@@ -58,6 +82,10 @@
         "names": [
             "NP"
         ],
+        "tags": [
+            "TIME",
+            "NONDETERMINISTIC"
+        ],
         "description": "Nodeterministic Polynomial Time is the complexity class of decision problems that can be solved by a nondeterministic Turing machine in a polyomial amount of computation time. It is also defined as the complexity class of decision problems that can be verified by a deterministic Turing machine in a polynomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/NP_(complexity)"
     },
@@ -65,6 +93,10 @@
         "id": "PSPACE",
         "names": [
             "PSPACE"
+        ],
+        "tags": [
+            "SPACE",
+            "DETERMINISTIC"
         ],
         "description": "Deterministic Polynomial-space is the complexity class of decision problems that can be solved by a deterministic Turing machine, using only a polynomial amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/PSPACE"
@@ -76,6 +108,10 @@
             "EXP",
             "DEXPTIME"
         ],
+        "tags": [
+            "TIME",
+            "DETERMINISTIC"
+        ],
         "description": "Deterministic Exponential Time is the complexity class of decision problems that can be solved by a deterministic Turing machine in an exponential amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/EXPTIME"
     },
@@ -85,6 +121,10 @@
             "NEXPTIME",
             "NEXP"
         ],
+        "tags": [
+            "TIME",
+            "NONDETERMINISTIC"
+        ],
         "description": "Nondeterministic Exponential Time is the complexity class of decision problems that can be solved by a nondeterministic Turing machine in an exponential amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/NEXPTIME"
     },
@@ -92,6 +132,10 @@
         "id": "EXPSPACE",
         "names": [
             "EXPSPACE"
+        ],
+        "tags": [
+            "SPACE",
+            "DETERMINISTIC"
         ],
         "description": "Deterministic Exponential-space is the complexity class of decision problems that can be solved by a deterministic Turing machine, using only an exponential amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/EXPSPACE"
@@ -101,6 +145,10 @@
         "names": [
             "NEXPSPACE"
         ],
+        "tags": [
+            "SPACE",
+            "NONDETERMINISTIC"
+        ],
         "description": "Nondeterministic Exponential-space is the complexity class of decision problems that can be solved by a nondeterministic Turing machine, using only an exponential amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/NEXPSPACE"
     },
@@ -108,6 +156,10 @@
         "id": "NC",
         "names": [
             "NC"
+        ],
+        "tags": [
+            "TIME",
+            "DETERMINISTIC"
         ],
         "description": "Nick's Class is the complexity class of decision problems that can be solved by a parallel computer with a polynomial number of processors in a polylogarithmic amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/NC_(complexity)"
@@ -117,6 +169,10 @@
         "names": [
             "NC^1"
         ],
+        "tags": [
+            "TIME",
+            "DETERMINISTIC"
+        ],
         "description": "NC^1 is the complexity class of decision problems that can be solved by a parallel computer with a polynomial number of processors in a O(log n) amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/NC_(complexity)#The_NC_hierarchy"
     },
@@ -124,6 +180,10 @@
         "id": "L/POLY",
         "names": [
             "L/poly"
+        ],
+        "tags": [
+            "SPACE",
+            "DETERMINISTIC"
         ],
         "description": "L/poly is the complexity class of decision problems that can be solved by a deterministic Turing machine, using only an logarithmic amount of writable memory space and with advice strings of polynomial length.",
         "wikipedia": "https://en.wikipedia.org/wiki/L/poly"
@@ -133,6 +193,10 @@
         "names": [
             "P/poly"
         ],
+        "tags": [
+            "TIME",
+            "DETERMINISTIC"
+        ],
         "description": "P/poly is the complexity class of decision problems that can be solved by a deterministic Turing machine in a polynomial amount of time with advice strings of polynomial length.",
         "wikipedia": "https://en.wikipedia.org/wiki/P/poly"
     },
@@ -140,6 +204,10 @@
         "id": "NP/POLY",
         "names": [
             "NP/poly"
+        ],
+        "tags": [
+            "TIME",
+            "NONDETERMINISTIC"
         ],
         "description": "P/poly is the complexity class of decision problems that can be solved by a nondeterministic Turing machine in a polynomial amount of time with advice strings of polynomial length.",
         "wikipedia": "https://en.wikipedia.org/wiki/NP/poly"
@@ -150,6 +218,10 @@
             "BPL",
             "BPLP"
         ],
+        "tags": [
+            "SPACE",
+            "PROBABILISTIC"
+        ],
         "description": "Bounded-error Probabilistic Logarithmic-space is the complexity class of decision problems that can be solved by a probabilistic Turing machine with two-sided error, using only an logarithmic amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/BPL_(complexity)"
     },
@@ -159,6 +231,10 @@
             "RL",
             "RLP"
         ],
+        "tags": [
+            "SPACE",
+            "PROBABILISTIC"
+        ],
         "description": "Randomized Logarithmic-space is the complexity class of decision problems that can be solved by a probabilistic Turing machine with 1-sided error, using only an logarithmic amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/RL_(complexity)"
     },
@@ -166,6 +242,10 @@
         "id": "PL",
         "names": [
             "PL"
+        ],
+        "tags": [
+            "SPACE",
+            "PROBABILISTIC"
         ],
         "description": "Probabilistic Logarithmic-space  is the complexity class of decision problems that can be solved by a probabilistic Turing machine with unbounded error, using only an logarithmic amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/PL_(complexity)"
@@ -175,6 +255,10 @@
         "names": [
             "PP",
             "PPT"
+        ],
+        "tags": [
+            "TIME",
+            "PROBABILISTIC"
         ],
         "description": "Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine with unbounded error  in a polynomial amount of time.",
         "wikipedia": "https://en.wikipedia.org/wiki/PP_(complexity)"

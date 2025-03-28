@@ -79,6 +79,7 @@ impl Model {
             .map(|a| ModelComplexityClass {
                 id: a.id,
                 names: a.names,
+                tags: a.tags,
                 description: a.description,
                 wikipedia: a.wikipedia,
             })

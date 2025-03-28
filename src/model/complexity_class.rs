@@ -1,9 +1,12 @@
 use std::hash::{DefaultHasher, Hash, Hasher};
 
+use crate::database::complexity_class::Tag;
+
 #[allow(dead_code)]
 pub struct ComplexityClass {
     pub id: String,
     pub names: Vec<String>,
+    pub tags: Vec<Tag>,
     pub description: String,
     pub wikipedia: String,
 }
