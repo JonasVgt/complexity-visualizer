@@ -33,7 +33,7 @@
         "names": [
             "BPP"
         ],
-        "description": "Bounded-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine with two-sided error in a polyomial amount of computation time.",
+        "description": "Bounded-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine with two-sided error in a polyomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/BPP_(complexity)"
     },
     {
@@ -41,7 +41,7 @@
         "names": [
             "ZPP"
         ],
-        "description": "Zero-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine without error in a polyomial amount of computation time.",
+        "description": "Zero-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine without error in a polyomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/ZPP_(complexity)"
     },
     {
@@ -50,7 +50,7 @@
             "RP",
             "R"
         ],
-        "description": "Randomized Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine with 1-sided bounded error in a polyomial amount of computation time.",
+        "description": "Randomized Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine with 1-sided bounded error in a polyomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/ZPP_(complexity)"
     },
     {
@@ -150,7 +150,7 @@
             "BPL",
             "BPLP"
         ],
-        "description": "Bounded-error Probabilistic Logarithmic-space is the complexity class of decision problems that can be solved by a probalistic Turing machine with two-sided error, using only an logarithmic amount of writable memory space.",
+        "description": "Bounded-error Probabilistic Logarithmic-space is the complexity class of decision problems that can be solved by a probabilistic Turing machine with two-sided error, using only an logarithmic amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/BPL_(complexity)"
     },
     {
@@ -159,7 +159,7 @@
             "RL",
             "RLP"
         ],
-        "description": "Randomized Logarithmic-space is the complexity class of decision problems that can be solved by a probalistic Turing machine with 1-sided error, using only an logarithmic amount of writable memory space.",
+        "description": "Randomized Logarithmic-space is the complexity class of decision problems that can be solved by a probabilistic Turing machine with 1-sided error, using only an logarithmic amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/RL_(complexity)"
     },
     {
@@ -167,7 +167,7 @@
         "names": [
             "PL"
         ],
-        "description": "Probabilistic Logarithmic-space  is the complexity class of decision problems that can be solved by a probalistic Turing machine with unbounded error, using only an logarithmic amount of writable memory space.",
+        "description": "Probabilistic Logarithmic-space  is the complexity class of decision problems that can be solved by a probabilistic Turing machine with unbounded error, using only an logarithmic amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/PL_(complexity)"
     },
     {
@@ -176,7 +176,7 @@
             "PP",
             "PPT"
         ],
-        "description": "Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probalistic Turing machine with unbounded error  in a polynomial amount of time.",
+        "description": "Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine with unbounded error  in a polynomial amount of time.",
         "wikipedia": "https://en.wikipedia.org/wiki/PP_(complexity)"
     }
 
