@@ -165,7 +165,7 @@
     {
         "id": "PL",
         "names": [
-            "RL"
+            "PL"
         ],
         "description": "Probabilistic Logarithmic-space  is the complexity class of decision problems that can be solved by a probalistic Turing machine with unbounded error, using only an logarithmic amount of writable memory space.",
         "wikipedia": "https://en.wikipedia.org/wiki/PL_(complexity)"
