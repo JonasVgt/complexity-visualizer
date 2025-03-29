@@ -61,6 +61,10 @@ impl<N, E> LayeredGraph<N, E> {
         &self.graph
     }
 
+    pub fn into_graph(self) -> Graph<N,E> {
+        self.graph
+    }
+
     pub fn layers(&self) -> &Vec<Vec<NodeIndex>> {
         &self.layers
     }
