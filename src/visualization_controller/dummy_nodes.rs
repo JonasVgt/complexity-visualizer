@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use petgraph::graph::NodeIndex;
 
 use super::layered_graph::LayeredGraph;
@@ -44,13 +42,6 @@ impl<N, E> LayeredGraph<N, E> {
         E: Clone,
         N: Clone,
     {
-        let layer_map: HashMap<NodeIndex, usize> = self
-            .layers()
-            .iter()
-            .enumerate()
-            .flat_map(|(id, layer)| layer.into_iter().map(move |x| (x.clone(), id)))
-            .collect();
-
         let edges = self
             .graph()
             .edge_indices()
@@ -58,8 +49,8 @@ impl<N, E> LayeredGraph<N, E> {
             .collect::<Vec<_>>();
 
         for (from, to) in edges {
-            let from_layer = layer_map.get(&from).unwrap().clone();
-            let to_layer = layer_map.get(&to).unwrap().clone();
+            let from_layer = self.layer_map().get(&from).unwrap().clone();
+            let to_layer = self.layer_map().get(&to).unwrap().clone();
 
             if to_layer <= from_layer + 1 {
                 continue;

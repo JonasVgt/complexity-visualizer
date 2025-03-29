@@ -5,7 +5,7 @@ use petgraph::{graph::NodeIndex, Graph};
 use super::layered_graph::LayeredGraph;
 
 pub fn assign_layers<N,E>(graph: Graph<N,E>) -> LayeredGraph<N,E> {
-    let mut layer_map: HashMap<NodeIndex, i32> = HashMap::new();
+    let mut layer_map: HashMap<NodeIndex, usize> = HashMap::new();
     let mut not_done = Vec::new();
 
     // Find the roots of the condensed graphs
@@ -32,7 +32,7 @@ pub fn assign_layers<N,E>(graph: Graph<N,E>) -> LayeredGraph<N,E> {
                 if old_layer < &new_layer {
                     not_done.push(neighbor);
                 }
-                new_layer = i32::max(old_layer.clone(), new_layer);
+                new_layer = usize::max(old_layer.clone(), new_layer);
             } else {
                 not_done.push(neighbor);
             }
@@ -41,15 +41,5 @@ pub fn assign_layers<N,E>(graph: Graph<N,E>) -> LayeredGraph<N,E> {
         }
     }
 
-    let layers: Vec<Vec<NodeIndex>> =
-        layer_map
-            .into_iter()
-            .fold(vec![], |mut accu, (node, level)| {
-                if accu.len() < level as usize + 1 {
-                    accu.resize(level as usize + 1, vec![]);
-                }
-                accu[level as usize].push(node);
-                accu
-            });
-    return LayeredGraph::new(graph, layers);
+    return LayeredGraph::with_layer_map(graph, layer_map);
 }

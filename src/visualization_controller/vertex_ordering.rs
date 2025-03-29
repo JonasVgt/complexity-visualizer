@@ -30,5 +30,5 @@ where
         let (done, unsorted) = layers.split_at_mut(i);
         unsorted[0].sort_by_key(|node| heur(node.clone(), done.last().unwrap()));
     }
-    return LayeredGraph::new(graph.graph().clone(), layers);
+    return LayeredGraph::with_layer_vec(graph.graph().clone(), layers);
 }
