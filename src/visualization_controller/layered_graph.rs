@@ -26,10 +26,7 @@ impl<N, E> LayeredGraph<N, E> {
         }
     }
 
-    pub fn with_layer_map(
-        graph: Graph<N, E>,
-        mut layer_map: HashMap<NodeIndex, usize>,
-    ) -> Self {
+    pub fn with_layer_map(graph: Graph<N, E>, mut layer_map: HashMap<NodeIndex, usize>) -> Self {
         let min_layer = layer_map.values().min().map_or(0, |u| u.clone());
         let max_layer = layer_map.values().max().map_or(0, |u| u.clone());
 
@@ -42,13 +39,13 @@ impl<N, E> LayeredGraph<N, E> {
         }
 
         // Convert layer_map to layers
-        let layers: Vec<Vec<NodeIndex>> =
-            layer_map
-                .iter()
-                .fold(vec![vec![]; max_layer-min_layer +1], |mut accu, (node, level)| {
-                    accu[*level].push(*node);
-                    accu
-                });
+        let layers: Vec<Vec<NodeIndex>> = layer_map.iter().fold(
+            vec![vec![]; max_layer - min_layer + 1],
+            |mut accu, (node, level)| {
+                accu[*level].push(*node);
+                accu
+            },
+        );
 
         Self {
             graph,
@@ -61,7 +58,7 @@ impl<N, E> LayeredGraph<N, E> {
         &self.graph
     }
 
-    pub fn into_graph(self) -> Graph<N,E> {
+    pub fn into_graph(self) -> Graph<N, E> {
         self.graph
     }
 
@@ -71,6 +68,25 @@ impl<N, E> LayeredGraph<N, E> {
 
     pub fn layer_map(&self) -> &HashMap<NodeIndex, usize> {
         &self.layer_map
+    }
+
+    pub fn parents(&self, node: NodeIndex) -> Vec<NodeIndex> {
+        if let Some(layer) = self.get_layer(node) {
+            self.graph
+                .neighbors_directed(node, petgraph::Direction::Incoming)
+                .filter(|n| self.in_layer(*n, layer - 1))
+                .collect()
+        } else {
+            return vec![];
+        }
+    }
+
+    pub fn in_layer(&self, node: NodeIndex, layer: usize) -> bool {
+        self.get_layer(node).is_some_and(|l| l == layer)
+    }
+
+    pub fn get_layer(&self, node: NodeIndex) -> Option<usize> {
+        self.layer_map.get(&node).copied()
     }
 
     pub fn add_node(&mut self, weight: N, layer: usize) -> NodeIndex {
