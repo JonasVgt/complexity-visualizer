@@ -1,4 +1,4 @@
-use egui::{epaint::TextShape, text::TAB_SIZE, vec2, Align2, FontSelection, Widget};
+use egui::{epaint::TextShape, vec2, Align2, FontSelection, Widget};
 
 use crate::{database::complexity_class::Tag, utils::text_parser::RichTextParser};
 
