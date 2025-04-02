@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4 # repo checkout
+      - name: "Display Python version"
+        run: python -c "import sys; print(sys.version)"
       - name: Setup toolchain for wasm
         run: |
           rustup update stable
