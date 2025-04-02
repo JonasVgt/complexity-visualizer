@@ -5,6 +5,7 @@ use petgraph::{
     Graph,
 };
 
+#[derive(Clone)]
 pub struct LayeredGraph<N, E> {
     graph: Graph<N, E>,
     layers: Vec<Vec<NodeIndex>>,
@@ -87,6 +88,18 @@ impl<N, E> LayeredGraph<N, E> {
 
     pub fn get_layer(&self, node: NodeIndex) -> Option<usize> {
         self.layer_map.get(&node).copied()
+    }
+
+    pub fn is_long_edge(&self, edge: EdgeIndex) -> bool {
+        self.graph
+            .edge_endpoints(edge)
+            .map_or(false, |(n1, n2)| self.get_layer(n1).unwrap() + 1 < self.get_layer(n2).unwrap())
+    }
+
+    pub fn is_short_edge(&self, edge: EdgeIndex) -> bool {
+        self.graph
+            .edge_endpoints(edge)
+            .map_or(false, |(n1, n2)| self.get_layer(n1).unwrap() + 1 == self.get_layer(n2).unwrap())
     }
 
     pub fn add_node(&mut self, weight: N, layer: usize) -> NodeIndex {
