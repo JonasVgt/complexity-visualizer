@@ -37,7 +37,7 @@
             "TIME",
             "DETERMINISTIC"
         ],
-        "description": "Deterministic Polynomial Time is the complexity class of decision problems that can be solved by a deterministic Turing machine in a polyomial amount of computation time.",
+        "description": "Deterministic Polynomial Time is the complexity class of decision problems that can be solved by a deterministic Turing machine in a polynomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/P_(complexity)"
     },
     {
@@ -49,7 +49,7 @@
             "TIME",
             "PROBABILISTIC"
         ],
-        "description": "Bounded-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine with two-sided error in a polyomial amount of computation time.",
+        "description": "Bounded-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine with two-sided error in a polynomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/BPP_(complexity)"
     },
     {
@@ -61,7 +61,7 @@
             "TIME",
             "PROBABILISTIC"
         ],
-        "description": "Zero-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine without error in a polyomial amount of computation time.",
+        "description": "Zero-error Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine without error in a polynomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/ZPP_(complexity)"
     },
     {
@@ -74,7 +74,7 @@
             "TIME",
             "PROBABILISTIC"
         ],
-        "description": "Randomized Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine with 1-sided bounded error in a polyomial amount of computation time.",
+        "description": "Randomized Probabilistic Polynomial Time is the complexity class of decision problems that can be solved by a probabilistic Turing machine with 1-sided bounded error in a polynomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/ZPP_(complexity)"
     },
     {
@@ -86,7 +86,7 @@
             "TIME",
             "NONDETERMINISTIC"
         ],
-        "description": "Nodeterministic Polynomial Time is the complexity class of decision problems that can be solved by a nondeterministic Turing machine in a polyomial amount of computation time. It is also defined as the complexity class of decision problems that can be verified by a deterministic Turing machine in a polynomial amount of computation time.",
+        "description": "Nondeterministic Polynomial Time is the complexity class of decision problems that can be solved by a nondeterministic Turing machine in a polynomial amount of computation time. It is also defined as the complexity class of decision problems that can be verified by a deterministic Turing machine in a polynomial amount of computation time.",
         "wikipedia": "https://en.wikipedia.org/wiki/NP_(complexity)"
     },
     {

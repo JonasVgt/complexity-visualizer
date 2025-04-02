@@ -99,7 +99,7 @@ mod tests {
                 .count();
             assert!(
                 num_occ == 1,
-                "Node with index {} has {} occurences in layers, but should only have one",
+                "Node with index {} has {} occurrences in layers, but should only have one",
                 node.index(),
                 num_occ
             );

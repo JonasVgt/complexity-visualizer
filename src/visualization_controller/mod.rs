@@ -56,7 +56,7 @@ impl<'a> VisualizationController {
      * https://cs.brown.edu/people/rtamassi/gdhandbook/
      */
     pub fn arrange(self) -> HashMap<u64, Pos2> {
-        // An Directed Acyclic Graph containting the complexity classes. Equal classes are stored in a single node
+        // An Directed Acyclic Graph containing the complexity classes. Equal classes are stored in a single node
         let condensated_graph = condensation(self.graph, true);
         let layered_graph = assign_layers(condensated_graph);
 
