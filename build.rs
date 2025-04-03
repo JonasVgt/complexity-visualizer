@@ -9,18 +9,13 @@ fn main() {
     let output_filename = Path::new("assets/classes.msgpack");
 
     // Read the JSON files for Complexity Classes
-    let json_data = fs::read_to_string(classes_filename).expect(&format!(
-        "Failed to read JSON file: {}",
-        classes_filename.to_str().unwrap()
-    ));
+    let json_data = fs::read_to_string(classes_filename).expect("Failed to read classes JSON file");
     let classes_data: serde_json::Value =
         serde_json::from_str(&json_data).expect("Failed to parse JSON");
 
     // Read the JSON files for Relations
-    let json_data = fs::read_to_string(relations_filename).expect(&format!(
-        "Failed to read JSON file: {}",
-        relations_filename.to_str().unwrap()
-    ));
+    let json_data =
+        fs::read_to_string(relations_filename).expect("Failed to read relations JSON file");
     let relations_data: serde_json::Value =
         serde_json::from_str(&json_data).expect("Failed to parse JSON");
 
