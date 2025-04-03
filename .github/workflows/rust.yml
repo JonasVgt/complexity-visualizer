@@ -25,6 +25,8 @@ jobs:
         with:
           command: check
           args: --all-features
+      - name: "ls"
+        run: ls -la data
 
   check_wasm:
     name: Check wasm32
