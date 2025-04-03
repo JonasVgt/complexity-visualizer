@@ -2,12 +2,11 @@ use std::hash::{DefaultHasher, Hash, Hasher};
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug,Deserialize, Serialize, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Deserialize, Serialize, Clone, Copy, PartialEq, Eq)]
 pub enum RelationType {
     Subset,
-    Unknown
+    Unknown,
 }
-
 
 #[allow(dead_code)]
 #[derive(Debug, Serialize, Deserialize)]

@@ -3,12 +3,12 @@ use std::hash::{DefaultHasher, Hash, Hasher};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub enum Tag{
+pub enum Tag {
     TIME,
     SPACE,
     DETERMINISTIC,
     NONDETERMINISTIC,
-    PROBABILISTIC
+    PROBABILISTIC,
 }
 
 #[allow(dead_code)]

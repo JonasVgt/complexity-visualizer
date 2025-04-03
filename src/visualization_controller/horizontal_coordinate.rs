@@ -19,7 +19,6 @@ where
         // Assign node pos to average position of parents
         let mut prev_node = None;
         for node in layer {
-
             let mut sum = 0;
             let mut num = 0;
             for parent in graph.parents(*node) {

@@ -31,8 +31,8 @@ impl Widget for GraphWidget<'_> {
                         for relation in self.model.relations() {
                             if let Some((from, to)) = match relation {
                                 Relation::Subset(Subset { from, to }) => Some((from, to)),
-                                Relation::Equal(Subset { from, to },_) => Some((from, to)),
-                                Relation::Unknown => None
+                                Relation::Equal(Subset { from, to }, _) => Some((from, to)),
+                                Relation::Unknown => None,
                             } {
                                 ui.add(RelationWidget {
                                     from: self
@@ -63,7 +63,7 @@ impl Widget for GraphWidget<'_> {
                                     selected: self
                                         .selected_class
                                         .is_some_and(|c| c == class.calculate_id_hash()),
-                                    tags: class.tags.clone()
+                                    tags: class.tags.clone(),
                                 },
                             );
                             if response.clicked() {
