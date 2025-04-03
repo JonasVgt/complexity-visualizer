@@ -121,6 +121,7 @@ jobs:
           python-version: '3.13'
           cache: 'pip'
       - run: pip install -r requirements.txt
+      - run: python data/gen_msgpack.py
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
