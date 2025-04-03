@@ -1,7 +1,7 @@
 use std::{fs, io::Write, path::Path};
 
-use serde_json::json;
 use rmp_serde::to_vec;
+use serde_json::json;
 
 fn main() {
     let classes_filename = Path::new("data/classes.json");
@@ -25,8 +25,10 @@ fn main() {
         serde_json::from_str(&json_data).expect("Failed to parse JSON");
 
     // Combine data
-    let data = to_vec(&json!({"classes": classes_data, "relations": relations_data})).expect("Failed to serialize MessagePack");
+    let data = to_vec(&json!({"classes": classes_data, "relations": relations_data}))
+        .expect("Failed to serialize MessagePack");
 
+    // Write to file
     let mut file: fs::File =
         fs::File::create(output_filename).expect("Failed to create MessagePack file");
     file.write_all(&data)
