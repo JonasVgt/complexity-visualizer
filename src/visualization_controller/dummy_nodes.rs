@@ -73,7 +73,7 @@ impl<N, E> LayeredGraph<N, E> {
 
 #[cfg(test)]
 mod tests {
-    use petgraph::algo::{self, condensation, has_path_connecting};
+    use petgraph::algo::{condensation, has_path_connecting};
 
     use crate::{
         database::{self, MyDatabase},

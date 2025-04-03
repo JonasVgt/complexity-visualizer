@@ -90,12 +90,14 @@ impl<N, E> LayeredGraph<N, E> {
         self.layer_map.get(&node).copied()
     }
 
+    #[cfg(test)]
     pub fn is_long_edge(&self, edge: EdgeIndex) -> bool {
         self.graph
             .edge_endpoints(edge)
             .map_or(false, |(n1, n2)| self.get_layer(n1).unwrap() + 1 < self.get_layer(n2).unwrap())
     }
 
+    #[cfg(test)]
     pub fn is_short_edge(&self, edge: EdgeIndex) -> bool {
         self.graph
             .edge_endpoints(edge)
