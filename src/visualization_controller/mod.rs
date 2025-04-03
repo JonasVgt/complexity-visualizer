@@ -18,8 +18,8 @@ pub struct VisualizationController {
     graph: Graph<u64, RelationType, Directed>,
 }
 
-impl<'a> VisualizationController {
-    pub fn new(data: &'a Data) -> Self {
+impl VisualizationController {
+    pub fn new(data: &Data) -> Self {
         let mut graph: Graph<u64, RelationType> =
             Graph::with_capacity(data.classes.len(), data.relations.len());
         let node_indices: HashMap<u64, usize> = data
@@ -31,18 +31,8 @@ impl<'a> VisualizationController {
 
         data.relations.iter().for_each(|relation| {
             graph.add_edge(
-                node_index(
-                    node_indices
-                        .get(&relation.calculate_from_hash())
-                        .unwrap()
-                        .clone(),
-                ),
-                node_index(
-                    node_indices
-                        .get(&relation.calculate_to_hash())
-                        .unwrap()
-                        .clone(),
-                ),
+                node_index(*node_indices.get(&relation.calculate_from_hash()).unwrap()),
+                node_index(*node_indices.get(&relation.calculate_to_hash()).unwrap()),
                 relation.relation_type,
             );
         });
@@ -78,18 +68,18 @@ impl<'a> VisualizationController {
                     continue;
                 }
 
-                let y = hor_coordinates.get(&node).unwrap().clone();
+                let y = *hor_coordinates.get(&node).unwrap();
                 let classes = graph_with_dummynodes.graph().node_weight(node).unwrap();
 
                 for i in 0..classes.len() {
                     let cy = y - (classes.len() as f32 / 2.0) + i as f32;
                     let pos = Pos2::new(x as f32 * 100.0, cy * 100.0);
-                    map.insert(classes.get(i).unwrap().clone(), pos);
+                    map.insert(*classes.get(i).unwrap(), pos);
                 }
             }
             x += 1;
         }
 
-        return map;
+        map
     }
 }

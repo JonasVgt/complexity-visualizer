@@ -3,7 +3,7 @@ use egui::{text::LayoutJob, Align, FontSelection, Label, RichText, Style, TextSt
 #[macro_export]
 macro_rules! rich_label {
     ($input:expr) => {
-        RichTextParser::new().parse($input).to_label()
+        RichTextParser::new().parse($input).into_label()
     };
 }
 
@@ -13,14 +13,14 @@ macro_rules! rich_label_heading {
         RichTextParser::new()
             .parse($input)
             .text_style(egui::TextStyle::Heading)
-            .to_label()
+            .into_label()
     };
 }
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 enum RichTextToken {
-    NORMAL,
-    SUPERSCRIPT,
+    Normal,
+    Superscript,
 }
 
 pub struct RichTextParser {
@@ -48,13 +48,13 @@ impl RichTextParser {
             match c {
                 '\\' => {
                     // Escape next character
-                    self.push_char(RichTextToken::NORMAL, Some(c))
+                    self.push_char(RichTextToken::Normal, Some(c))
                 }
                 '^' => {
                     // Super script
-                    self.push_char(RichTextToken::SUPERSCRIPT, chars.next());
+                    self.push_char(RichTextToken::Superscript, chars.next());
                 }
-                c => self.push_char(RichTextToken::NORMAL, Some(c)),
+                c => self.push_char(RichTextToken::Normal, Some(c)),
             }
         }
         self
@@ -76,16 +76,16 @@ impl RichTextParser {
         self.tokens.push((token, String::from(c.unwrap())));
     }
 
-    pub fn to_layout(self) -> LayoutJob {
+    pub fn into_layout(self) -> LayoutJob {
         let mut layout_job = LayoutJob::default();
         let style = Style::default();
         for token in self.tokens {
             match token {
-                (RichTextToken::SUPERSCRIPT, s) => RichText::new(s).small_raised(),
-                (RichTextToken::NORMAL, s) if self.text_style.is_some() => {
+                (RichTextToken::Superscript, s) => RichText::new(s).small_raised(),
+                (RichTextToken::Normal, s) if self.text_style.is_some() => {
                     RichText::new(s).text_style(self.text_style.clone().unwrap())
                 }
-                (RichTextToken::NORMAL, s) => RichText::new(s),
+                (RichTextToken::Normal, s) => RichText::new(s),
             }
             .append_to(
                 &mut layout_job,
@@ -94,10 +94,10 @@ impl RichTextParser {
                 Align::Center,
             );
         }
-        return layout_job;
+        layout_job
     }
 
-    pub fn to_label(self) -> Label {
-        Label::new(self.to_layout())
+    pub fn into_label(self) -> Label {
+        Label::new(self.into_layout())
     }
 }

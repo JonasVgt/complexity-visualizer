@@ -8,14 +8,14 @@ pub struct NodeWidget {
     pub tags: Vec<Tag>,
 }
 
-fn tags_str(tags: &Vec<Tag>) -> String {
+fn tags_str(tags: &[Tag]) -> String {
     tags.iter()
         .map(|tag| match tag {
-            Tag::PROBABILISTIC => "",
-            Tag::NONDETERMINISTIC => "",
-            Tag::DETERMINISTIC => "󰁔",
-            Tag::SPACE => "",
-            Tag::TIME => "",
+            Tag::Probabilistic => "",
+            Tag::Nondeterministic => "",
+            Tag::Deterministic => "󰁔",
+            Tag::Space => "",
+            Tag::Time => "",
         })
         .collect::<Vec<&str>>()
         .join(" ")
@@ -41,9 +41,9 @@ impl Widget for NodeWidget {
                 visuals.bg_fill,
                 visuals.fg_stroke,
             );
-            let label_layout = RichTextParser::new().parse(self.label).to_layout();
+            let label_layout = RichTextParser::new().parse(self.label).into_layout();
             let galley = ui.painter().layout_job(label_layout);
-            let galley_size = galley.size().clone();
+            let galley_size = galley.size();
             ui.painter().add(TextShape::new(
                 rect.center() - galley.size() * 0.5,
                 galley,

@@ -34,7 +34,7 @@ impl<N, E> LayeredGraph<N, E> {
             prev = curr;
         }
         self.add_edge(prev, to, edge_weight.clone());
-        return res;
+        res
     }
 
     pub fn add_dummy_nodes(mut self, dummy_node_weight: N) -> Self
@@ -49,8 +49,8 @@ impl<N, E> LayeredGraph<N, E> {
             .collect::<Vec<_>>();
 
         for (from, to) in edges {
-            let from_layer = self.layer_map().get(&from).unwrap().clone();
-            let to_layer = self.layer_map().get(&to).unwrap().clone();
+            let from_layer = *self.layer_map().get(&from).unwrap();
+            let to_layer = *self.layer_map().get(&to).unwrap();
 
             if to_layer <= from_layer + 1 {
                 continue;
@@ -67,7 +67,7 @@ impl<N, E> LayeredGraph<N, E> {
                 edge_weight.clone(),
             );
         }
-        return self;
+        self
     }
 }
 

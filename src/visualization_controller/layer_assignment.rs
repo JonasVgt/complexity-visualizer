@@ -36,7 +36,7 @@ pub fn assign_layers<N, E>(graph: Graph<N, E>) -> LayeredGraph<N, E> {
         }
     }
 
-    return LayeredGraph::with_layer_map(graph, layer_map);
+    LayeredGraph::with_layer_map(graph, layer_map)
 }
 
 #[cfg(test)]

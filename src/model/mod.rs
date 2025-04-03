@@ -28,15 +28,15 @@ impl Model {
         let positions = VisualizationController::new(&data).arrange();
         let relations = Self::convert_relations(data.relations);
         let classes = Self::convert_nodes(data.classes);
-        return Model {
+        Model {
             relations,
             classes,
             positions,
-        };
+        }
     }
 
     pub fn classes(&self) -> &Vec<ModelComplexityClass> {
-        return &self.classes;
+        &self.classes
     }
 
     pub fn get_class(&self, id: u64) -> Option<&ModelComplexityClass> {
@@ -44,7 +44,7 @@ impl Model {
     }
 
     pub fn relations(&self) -> &Vec<ModelRelation> {
-        return &self.relations;
+        &self.relations
     }
 
     pub fn get_position(&self, id: &u64) -> Option<&Pos2> {
@@ -52,10 +52,7 @@ impl Model {
     }
 
     fn convert_relations(input: Vec<DBRelation>) -> Vec<ModelRelation> {
-        let converted: Vec<ModelRelation> = input
-            .into_iter()
-            .map(|db_rel| ModelRelation::from(db_rel))
-            .collect();
+        let converted: Vec<ModelRelation> = input.into_iter().map(ModelRelation::from).collect();
         let mut res = HashSet::new();
 
         for relation in converted {
@@ -70,7 +67,7 @@ impl Model {
                 }
             };
         }
-        return res.into_iter().collect();
+        res.into_iter().collect()
     }
 
     fn convert_nodes(input: Vec<DBComplexityClass>) -> Vec<ModelComplexityClass> {

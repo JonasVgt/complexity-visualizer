@@ -108,9 +108,7 @@ impl eframe::App for ComplexityVisualizerApp {
             egui::SidePanel::right("my_right_panel")
                 .default_width(sidepanel_width)
                 .show(ctx, |ui| {
-                    let class = self
-                        .selected_class
-                        .map_or(None, |id| self.model.get_class(id));
+                    let class = self.selected_class.and_then(|id| self.model.get_class(id));
                     ui_sidepanel(ui, class)
                 });
         }

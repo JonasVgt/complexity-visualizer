@@ -4,11 +4,20 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum Tag {
-    TIME,
-    SPACE,
-    DETERMINISTIC,
-    NONDETERMINISTIC,
-    PROBABILISTIC,
+    #[serde(rename = "TIME")]
+    Time,
+
+    #[serde(rename = "SPACE")]
+    Space,
+
+    #[serde(rename = "DETERMINISTIC")]
+    Deterministic,
+
+    #[serde(rename = "NONDETERMINISTIC")]
+    Nondeterministic,
+
+    #[serde(rename = "PROBABILISTIC")]
+    Probabilistic,
 }
 
 #[allow(dead_code)]

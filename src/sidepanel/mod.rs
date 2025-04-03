@@ -21,11 +21,11 @@ pub fn ui_sidepanel(ui: &mut egui::Ui, class: Option<&ComplexityClass>) {
             .tags
             .iter()
             .map(|tag| match tag {
-                Tag::DETERMINISTIC => "Deterministic",
-                Tag::NONDETERMINISTIC => "Non-deterministic",
-                Tag::PROBABILISTIC => "Probabilistic",
-                Tag::SPACE => "Space",
-                Tag::TIME => "Time",
+                Tag::Deterministic => "Deterministic",
+                Tag::Nondeterministic => "Non-deterministic",
+                Tag::Probabilistic => "Probabilistic",
+                Tag::Space => "Space",
+                Tag::Time => "Time",
             })
             .collect::<Vec<&str>>()
             .join(", ");

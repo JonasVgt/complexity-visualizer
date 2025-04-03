@@ -35,16 +35,14 @@ impl Widget for GraphWidget<'_> {
                                 Relation::Unknown => None,
                             } {
                                 ui.add(RelationWidget {
-                                    from: self
+                                    from: *self
                                         .model
-                                        .get_position(&ComplexityClass::hash_id(&from))
-                                        .unwrap()
-                                        .clone(),
-                                    to: self
+                                        .get_position(&ComplexityClass::hash_id(from))
+                                        .unwrap(),
+                                    to: *self
                                         .model
-                                        .get_position(&ComplexityClass::hash_id(&to))
-                                        .unwrap()
-                                        .clone(),
+                                        .get_position(&ComplexityClass::hash_id(to))
+                                        .unwrap(),
                                     relation,
                                 });
                             }
@@ -52,10 +50,7 @@ impl Widget for GraphWidget<'_> {
                         for class in self.model.classes() {
                             let response = ui.put(
                                 egui::Rect::from_center_size(
-                                    self.model
-                                        .get_position(&class.calculate_id_hash())
-                                        .unwrap()
-                                        .clone(),
+                                    *self.model.get_position(&class.calculate_id_hash()).unwrap(),
                                     egui::vec2(100.0, 100.0),
                                 ),
                                 NodeWidget {

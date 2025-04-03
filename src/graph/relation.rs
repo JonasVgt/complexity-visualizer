@@ -8,7 +8,7 @@ pub struct RelationWidget<'a> {
     pub relation: &'a Relation,
 }
 
-impl<'a> Widget for RelationWidget<'a> {
+impl Widget for RelationWidget<'_> {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
         let visuals = ui.style().noninteractive();
 

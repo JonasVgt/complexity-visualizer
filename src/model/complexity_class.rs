@@ -19,6 +19,6 @@ impl ComplexityClass {
     }
 
     pub fn calculate_id_hash(&self) -> u64 {
-        return Self::hash_id(&self.id);
+        Self::hash_id(&self.id)
     }
 }

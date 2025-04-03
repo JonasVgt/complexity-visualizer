@@ -14,21 +14,19 @@ where
             .graph()
             .neighbors_directed(node, petgraph::Direction::Incoming)
             .collect();
-        let mut i = 0;
-        for parent in parent_level {
-            if neighbors.contains(&parent) {
+        for (i, parent) in parent_level.iter().enumerate() {
+            if neighbors.contains(parent) {
                 sum += i;
                 num += 1;
             }
-            i += 1;
         }
-        return (10000.0 * (sum as f32 / num as f32)) as i32;
+        (10000.0 * (sum as f32 / num as f32)) as i32
     };
 
     let mut layers = graph.layers().clone();
     for i in 1..graph.layers().len() {
         let (done, unsorted) = layers.split_at_mut(i);
-        unsorted[0].sort_by_key(|node| heur(node.clone(), done.last().unwrap()));
+        unsorted[0].sort_by_key(|node| heur(*node, done.last().unwrap()));
     }
-    return LayeredGraph::with_layer_vec(graph.into_graph(), layers);
+    LayeredGraph::with_layer_vec(graph.into_graph(), layers)
 }

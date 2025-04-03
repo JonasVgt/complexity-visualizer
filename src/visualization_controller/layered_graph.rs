@@ -1,4 +1,4 @@
-use std::{collections::HashMap, usize};
+use std::collections::HashMap;
 
 use petgraph::{
     graph::{EdgeIndex, NodeIndex},
@@ -17,7 +17,7 @@ impl<N, E> LayeredGraph<N, E> {
         let layer_map: HashMap<NodeIndex, usize> = layers
             .iter()
             .enumerate()
-            .flat_map(|(id, layer)| layer.into_iter().map(move |x| (x.clone(), id)))
+            .flat_map(|(id, layer)| layer.iter().map(move |x| (*x, id)))
             .collect();
 
         Self {
@@ -28,8 +28,8 @@ impl<N, E> LayeredGraph<N, E> {
     }
 
     pub fn with_layer_map(graph: Graph<N, E>, mut layer_map: HashMap<NodeIndex, usize>) -> Self {
-        let min_layer = layer_map.values().min().map_or(0, |u| u.clone());
-        let max_layer = layer_map.values().max().map_or(0, |u| u.clone());
+        let min_layer = layer_map.values().min().map_or(0, |u| *u);
+        let max_layer = layer_map.values().max().map_or(0, |u| *u);
 
         // remove empty layers in the beginning from layer_map
         if min_layer > 0 {
@@ -78,7 +78,7 @@ impl<N, E> LayeredGraph<N, E> {
                 .filter(|n| self.in_layer(*n, layer - 1))
                 .collect()
         } else {
-            return vec![];
+            vec![]
         }
     }
 
@@ -108,7 +108,7 @@ impl<N, E> LayeredGraph<N, E> {
         let idx = self.graph.add_node(weight);
         self.layers[layer].push(idx);
         self.layer_map.insert(idx, layer);
-        return idx;
+        idx
     }
 
     pub fn add_edge(
