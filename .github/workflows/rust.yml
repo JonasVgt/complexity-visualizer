@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -27,6 +32,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -43,6 +53,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -59,6 +74,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -75,6 +95,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -91,6 +116,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -145,6 +175,12 @@ jobs:
       if: ${{ !contains(matrix.TARGET, 'linux') }}
       run: |
         cargo install cross
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+        cache: 'pip'
+    - run: pip install -r requirements.txt
 
     - name: Build
       run: |
