@@ -19,9 +19,6 @@ pub struct GraphWidget<'a> {
 
 impl Widget for GraphWidget<'_> {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
-        egui::Frame::group(ui.style())
-            .inner_margin(0.0)
-            .show(ui, |ui| {
                 let scene = Scene::new()
                     .max_inner_size([10000.0, 10000.0])
                     .zoom_range(egui::Rangef::new(0.0, 1.0));
@@ -67,7 +64,5 @@ impl Widget for GraphWidget<'_> {
                         }
                     })
                     .response
-            })
-            .response
     }
 }
