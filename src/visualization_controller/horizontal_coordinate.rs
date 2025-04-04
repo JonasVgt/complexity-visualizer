@@ -49,3 +49,60 @@ fn find_pos(layer: &[NodeIndex], node: NodeIndex) -> Option<usize> {
     }
     None
 }
+
+#[cfg(test)]
+mod tests {
+    use petgraph::algo::condensation;
+
+    use crate::{
+        database::{self, MyDatabase},
+        visualization_controller::{
+            layer_assignment::assign_layers, vertex_ordering::order_vertices,
+            VisualizationController,
+        },
+    };
+
+    use super::*;
+
+    fn get_graph() -> LayeredGraph<Vec<u64>, database::relation::RelationType> {
+        let data = MyDatabase::get_data();
+        let vc = VisualizationController::new(&data);
+        let graph = vc.graph;
+        let condensated_graph = condensation(graph, true);
+        let graph_with_dummy_nodes = assign_layers(condensated_graph).add_dummy_nodes(vec![]);
+        order_vertices(graph_with_dummy_nodes)
+    }
+
+    #[test]
+    fn all_nodes_assigned() {
+        let lg = get_graph();
+        let hor_coord = compute_horizontal_coordinate(&lg);
+
+        for node in lg.graph().node_indices() {
+            assert!(
+                hor_coord.contains_key(&node),
+                "There is no horizontal coordinate assigned to node {}",
+                node.index()
+            )
+        }
+    }
+
+    #[test]
+    fn does_not_change_vertex_ordering() {
+        let lg = get_graph();
+        let positions = compute_horizontal_coordinate(&lg);
+
+        for layer in lg.layers() {
+            let mut prev_pos = f32::MIN;
+            for node in layer {
+                let npos = *positions.get(node).unwrap();
+                assert!(
+                    npos > prev_pos,
+                    "Position of node {} is smaller (or equal) to its neighbor",
+                    node.index()
+                );
+                prev_pos = npos;
+            }
+        }
+    }
+}
