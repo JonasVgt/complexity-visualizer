@@ -82,6 +82,17 @@ impl<N, E> LayeredGraph<N, E> {
         }
     }
 
+    pub fn children(&self, node: NodeIndex) -> Vec<NodeIndex> {
+        if let Some(layer) = self.get_layer(node) {
+            self.graph
+                .neighbors_directed(node, petgraph::Direction::Outgoing)
+                .filter(|n| self.in_layer(*n, layer + 1))
+                .collect()
+        } else {
+            vec![]
+        }
+    }
+
     pub fn in_layer(&self, node: NodeIndex, layer: usize) -> bool {
         self.get_layer(node).is_some_and(|l| l == layer)
     }

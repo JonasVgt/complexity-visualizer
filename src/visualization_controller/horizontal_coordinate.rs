@@ -4,10 +4,77 @@ use petgraph::graph::NodeIndex;
 
 use super::layered_graph::LayeredGraph;
 
-pub fn compute_horizontal_coordinate<N, E>(graph: &LayeredGraph<N, E>) -> HashMap<NodeIndex, f32>
-where
-    N: Debug,
-{
+struct HorizontalCoordinates(HashMap<NodeIndex, f32>);
+
+impl HorizontalCoordinates {
+
+    fn align_to(mut self, node: NodeIndex, value : f32) -> Self{
+        let amount = value-self.0.get(&node).unwrap();
+        self.shift(amount)
+    }
+
+    fn shift(mut self, amount: f32) -> Self {
+        self.0 = self.0.into_iter().map(|(n, v)| (n, v + amount)).collect();
+        self
+    }
+
+    fn min(&self) -> (NodeIndex, f32) {
+        self
+            .0
+            .iter()
+            .map(|(n,v)| (*n, *v))
+            .min_by(|(_,v1), (_, v2)| f32::total_cmp(v1, v2))
+            .unwrap()
+    }
+
+    fn max(&self) -> (NodeIndex, f32) {
+        self
+            .0
+            .iter()
+            .map(|(n,v)| (*n, *v))
+            .max_by(|(_,v1), (_, v2)| f32::total_cmp(v1, v2))
+            .unwrap()
+    }
+
+
+
+    fn width(&self) -> f32 {
+        self.max().1 - self.min().1
+    }
+}
+
+impl From<HashMap<NodeIndex, f32>> for HorizontalCoordinates {
+    fn from(value: HashMap<NodeIndex, f32>) -> Self {
+        Self(value)
+    }
+}
+
+impl Into<HashMap<NodeIndex, f32>> for HorizontalCoordinates {
+    fn into(self) -> HashMap<NodeIndex, f32> {
+        self.0
+    }
+}
+
+pub fn compute_horizontal_coordinate<N, E>(graph: &LayeredGraph<N, E>) -> HashMap<NodeIndex, f32> where N: Debug, E:Debug{
+    let mut upper_assingment = compute_upper_assignment(graph);
+    let mut lower_assingment = compute_lower_assignment(graph);
+
+    let width_upper = upper_assingment.width();
+    let width_lower = lower_assingment.width();
+
+    let (min_node_upper, min_val_upper) = upper_assingment.min();
+    let (min_node_lower, min_val_lower) = lower_assingment.min();
+
+    if width_upper > width_lower {
+        upper_assingment = upper_assingment.align_to(min_node_lower, min_val_lower);
+    }else {
+        lower_assingment = lower_assingment.align_to(min_node_upper, min_val_upper);
+    }
+
+    graph.graph().node_indices().map(|n| (n, upper_assingment.0.get(&n).unwrap() * 0.5 + lower_assingment.0.get(&n).unwrap() * 0.5)).collect()
+}
+
+fn compute_upper_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoordinates {
     let mut pos: HashMap<NodeIndex, f32> = HashMap::new();
 
     // Assign coordinates to first layer
@@ -38,7 +105,41 @@ where
             prev_node = Some(node);
         }
     }
-    pos
+    pos.into()
+}
+
+fn compute_lower_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoordinates where N : Debug, E: Debug {
+    let mut pos: HashMap<NodeIndex, f32> = HashMap::new();
+
+    // Assign coordinates to first layer
+    for (i, n) in graph.layers().last().unwrap().iter().enumerate() {
+        pos.insert(*n, i as f32);
+    }
+
+    for (layer_idx, layer) in graph.layers().iter().enumerate().rev().skip(1) {
+        // Assign node pos to average position of parents
+        let mut prev_node = None;
+        for node in layer {
+            let mut sum = 0;
+            let mut num = 0;
+            for child in graph.children(*node) {
+                if let Some(pos) = find_pos(graph.layers().get(layer_idx + 1).unwrap(), child) {
+                    sum += pos;
+                    num += 1;
+                }
+            }
+            let x_pos = match (prev_node, num) {
+                (Some(p), 0) => *pos.get(p).unwrap() + 1.0,
+                (None, 0) => 0.0,
+                (Some(p), _) => f32::max(*pos.get(p).unwrap() + 1.0, 0.0),
+                (None, _) => sum as f32 / num as f32,
+            };
+
+            pos.insert(*node, x_pos);
+            prev_node = Some(node);
+        }
+    }
+    pos.into()
 }
 
 fn find_pos(layer: &[NodeIndex], node: NodeIndex) -> Option<usize> {
