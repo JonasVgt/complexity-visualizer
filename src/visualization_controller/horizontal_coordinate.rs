@@ -7,9 +7,8 @@ use super::layered_graph::LayeredGraph;
 struct HorizontalCoordinates(HashMap<NodeIndex, f32>);
 
 impl HorizontalCoordinates {
-
-    fn align_to(mut self, node: NodeIndex, value : f32) -> Self{
-        let amount = value-self.0.get(&node).unwrap();
+    fn align_to(mut self, node: NodeIndex, value: f32) -> Self {
+        let amount = value - self.0.get(&node).unwrap();
         self.shift(amount)
     }
 
@@ -19,24 +18,20 @@ impl HorizontalCoordinates {
     }
 
     fn min(&self) -> (NodeIndex, f32) {
-        self
-            .0
+        self.0
             .iter()
-            .map(|(n,v)| (*n, *v))
-            .min_by(|(_,v1), (_, v2)| f32::total_cmp(v1, v2))
+            .map(|(n, v)| (*n, *v))
+            .min_by(|(_, v1), (_, v2)| f32::total_cmp(v1, v2))
             .unwrap()
     }
 
     fn max(&self) -> (NodeIndex, f32) {
-        self
-            .0
+        self.0
             .iter()
-            .map(|(n,v)| (*n, *v))
-            .max_by(|(_,v1), (_, v2)| f32::total_cmp(v1, v2))
+            .map(|(n, v)| (*n, *v))
+            .max_by(|(_, v1), (_, v2)| f32::total_cmp(v1, v2))
             .unwrap()
     }
-
-
 
     fn width(&self) -> f32 {
         self.max().1 - self.min().1
@@ -55,7 +50,11 @@ impl Into<HashMap<NodeIndex, f32>> for HorizontalCoordinates {
     }
 }
 
-pub fn compute_horizontal_coordinate<N, E>(graph: &LayeredGraph<N, E>) -> HashMap<NodeIndex, f32> where N: Debug, E:Debug{
+pub fn compute_horizontal_coordinate<N, E>(graph: &LayeredGraph<N, E>) -> HashMap<NodeIndex, f32>
+where
+    N: Debug,
+    E: Debug,
+{
     let mut upper_assingment = compute_upper_assignment(graph);
     let mut lower_assingment = compute_lower_assignment(graph);
 
@@ -67,11 +66,21 @@ pub fn compute_horizontal_coordinate<N, E>(graph: &LayeredGraph<N, E>) -> HashMa
 
     if width_upper > width_lower {
         upper_assingment = upper_assingment.align_to(min_node_lower, min_val_lower);
-    }else {
+    } else {
         lower_assingment = lower_assingment.align_to(min_node_upper, min_val_upper);
     }
 
-    graph.graph().node_indices().map(|n| (n, upper_assingment.0.get(&n).unwrap() * 0.5 + lower_assingment.0.get(&n).unwrap() * 0.5)).collect()
+    graph
+        .graph()
+        .node_indices()
+        .map(|n| {
+            (
+                n,
+                upper_assingment.0.get(&n).unwrap() * 0.5
+                    + lower_assingment.0.get(&n).unwrap() * 0.5,
+            )
+        })
+        .collect()
 }
 
 fn compute_upper_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoordinates {
@@ -108,7 +117,11 @@ fn compute_upper_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoord
     pos.into()
 }
 
-fn compute_lower_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoordinates where N : Debug, E: Debug {
+fn compute_lower_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoordinates
+where
+    N: Debug,
+    E: Debug,
+{
     let mut pos: HashMap<NodeIndex, f32> = HashMap::new();
 
     // Assign coordinates to first layer
