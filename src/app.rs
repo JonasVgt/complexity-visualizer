@@ -157,9 +157,9 @@ fn footer(ui: &mut egui::Ui) {
         );
         ui.label(".");
         ui.add_space(10.0);
-        ui.add(egui::github_link_file!(
+        ui.hyperlink_to(
+            "Source code.",
             "https://github.com/JonasVgt/complexity-visualizer",
-            "Source code."
-        ));
+        );
     });
 }
