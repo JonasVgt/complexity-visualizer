@@ -5,14 +5,14 @@ use super::layered_graph::LayeredGraph;
 fn compute_barycenter<N, E>(
     graph: &petgraph::Graph<N, E>,
     node: NodeIndex,
-    parent_level: &Vec<NodeIndex>,
+    parent_level: &[NodeIndex],
     direction: petgraph::Direction,
 ) -> f32 {
     let neighbors: Vec<NodeIndex> = graph.neighbors_directed(node, direction).collect();
 
     let num = neighbors.len();
     let sum: usize = parent_level
-        .into_iter()
+        .iter()
         .enumerate()
         .filter(|(_, p)| neighbors.contains(p))
         .map(|(i, _)| i)
@@ -30,8 +30,8 @@ where
 
     loop {
         let mut sorted = vec![layers[0].clone()];
-        for i in 1..layers.len() {
-            let mut barycenter: Vec<(NodeIndex, f32)> = layers[i]
+        for layer in layers.iter().skip(1) {
+            let mut barycenter: Vec<(NodeIndex, f32)> = layer
                 .clone()
                 .into_iter()
                 .map(|n| {
@@ -51,8 +51,8 @@ where
         }
 
         let mut sorted2 = vec![sorted.last().unwrap().clone()];
-        for i in (0..sorted.len() - 1).rev() {
-            let mut barycenter: Vec<(NodeIndex, f32)> = sorted[i]
+        for layer in layers.iter().rev().skip(1) {
+            let mut barycenter: Vec<(NodeIndex, f32)> = layer
                 .clone()
                 .into_iter()
                 .map(|n| {

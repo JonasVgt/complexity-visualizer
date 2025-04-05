@@ -44,9 +44,9 @@ impl From<HashMap<NodeIndex, f32>> for HorizontalCoordinates {
     }
 }
 
-impl Into<HashMap<NodeIndex, f32>> for HorizontalCoordinates {
-    fn into(self) -> HashMap<NodeIndex, f32> {
-        self.0
+impl From<HorizontalCoordinates> for HashMap<NodeIndex, f32> {
+    fn from(value: HorizontalCoordinates) -> Self {
+        value.0
     }
 }
 

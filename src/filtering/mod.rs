@@ -6,7 +6,7 @@ pub struct FilterState {
     popup_pos: egui::Pos2,
 }
 
-impl<'a> FilterState {
+impl FilterState {
     pub fn new() -> Self {
         Self {
             is_open: false,

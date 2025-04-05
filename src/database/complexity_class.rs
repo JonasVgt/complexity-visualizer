@@ -23,7 +23,7 @@ pub enum Tag {
 
 impl Tag {
     pub fn tags() -> Vec<Tag> {
-        return vec![Tag::Time, Tag::Space, Tag:: Deterministic, Tag:: Nondeterministic, Tag::Probabilistic];
+        vec![Tag::Time, Tag::Space, Tag:: Deterministic, Tag:: Nondeterministic, Tag::Probabilistic]
     }
 }
 

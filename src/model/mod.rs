@@ -58,11 +58,11 @@ impl Model {
                     ModelRelation::Equal(Subset { from, to }, _) => Some((from, to)),
                     ModelRelation::Unknown => None,
                 }
-                .and_then(|(from, to)| {
-                    Some((
+                .map(|(from, to)| {
+                    (
                         self.get_class(ModelComplexityClass::hash_id(from)).unwrap(),
                         self.get_class(ModelComplexityClass::hash_id(to)).unwrap(),
-                    ))
+                    )
                 });
                 r.is_some_and(|(c1, c2)| self.filter.apply_relations(c1, c2))
             })
