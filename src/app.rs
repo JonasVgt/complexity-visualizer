@@ -1,6 +1,6 @@
 use egui::{pos2, FontData, FontDefinitions, FontFamily, Rect};
 
-use crate::{graph::GraphWidget, model::Model, sidepanel::ui_sidepanel};
+use crate::{filtering::FilterState, graph::GraphWidget, model::Model, sidepanel::ui_sidepanel};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -12,6 +12,9 @@ pub struct ComplexityVisualizerApp {
     model: Model,
 
     scene_rect: Rect,
+
+    #[serde(skip)]
+    filter_state: FilterState,
 }
 
 impl Default for ComplexityVisualizerApp {
@@ -26,6 +29,7 @@ impl Default for ComplexityVisualizerApp {
                     y: 1000.0,
                 },
             ),
+            filter_state: FilterState::new(),
         }
     }
 }
@@ -84,6 +88,8 @@ impl eframe::App for ComplexityVisualizerApp {
 
         ctx.set_fonts(fonts);
 
+        self.model.update();
+
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
             // The top panel is often a good place for a menu bar:
 
@@ -115,7 +121,12 @@ impl eframe::App for ComplexityVisualizerApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.heading("Complexity Classes");
+            ui.horizontal(|ui| {
+                ui.heading("Complexity Classes");
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::LEFT), |ui| {
+                    self.filter_state.ui_filter_window_button(ui);
+                });
+            });
 
             ui.add(GraphWidget {
                 selected_class: &mut self.selected_class,
@@ -128,6 +139,9 @@ impl eframe::App for ComplexityVisualizerApp {
                 egui::warn_if_debug_build(ui);
             });
         });
+
+        self.filter_state
+            .ui_filter_popup(ctx, self.model.filter_mut());
     }
 }
 

@@ -1,4 +1,5 @@
 pub mod complexity_class;
+pub mod filter;
 pub mod relation;
 
 use crate::{
@@ -13,13 +14,14 @@ use egui::{
     ahash::{HashSet, HashSetExt},
     Pos2,
 };
-use relation::Relation as ModelRelation;
+use relation::{Relation as ModelRelation, Subset};
 use std::collections::HashMap;
 
 pub struct Model {
     relations: Vec<ModelRelation>,
     classes: Vec<ModelComplexityClass>,
     positions: HashMap<u64, Pos2>,
+    filter: filter::Filter,
 }
 
 impl Model {
@@ -32,19 +34,43 @@ impl Model {
             relations,
             classes,
             positions,
+            filter: filter::Filter::new(),
         }
     }
 
-    pub fn classes(&self) -> &Vec<ModelComplexityClass> {
-        &self.classes
+    pub fn classes(&self) -> Vec<&ModelComplexityClass> {
+        self.classes
+            .iter()
+            .filter(|c| self.filter.apply_classes(c))
+            .collect()
     }
 
     pub fn get_class(&self, id: u64) -> Option<&ModelComplexityClass> {
         self.classes.iter().find(|e| e.calculate_id_hash() == id)
     }
 
-    pub fn relations(&self) -> &Vec<ModelRelation> {
-        &self.relations
+    pub fn relations(&self) -> Vec<&ModelRelation> {
+        self.relations
+            .iter()
+            .filter(|rel| {
+                let r = match rel {
+                    ModelRelation::Subset(Subset { from, to }) => Some((from, to)),
+                    ModelRelation::Equal(Subset { from, to }, _) => Some((from, to)),
+                    ModelRelation::Unknown => None,
+                }
+                .and_then(|(from, to)| {
+                    Some((
+                        self.get_class(ModelComplexityClass::hash_id(from)).unwrap(),
+                        self.get_class(ModelComplexityClass::hash_id(to)).unwrap(),
+                    ))
+                });
+                r.is_some_and(|(c1, c2)| self.filter.apply_relations(c1, c2))
+            })
+            .collect()
+    }
+
+    pub fn filter_mut(&mut self) -> &mut filter::Filter {
+        &mut self.filter
     }
 
     pub fn get_position(&self, id: &u64) -> Option<&Pos2> {
@@ -81,5 +107,13 @@ impl Model {
                 wikipedia: a.wikipedia,
             })
             .collect()
+    }
+
+    pub fn update(&mut self) {
+        if self.filter.should_redraw() {
+            let data = MyDatabase::get_data();
+            self.positions = VisualizationController::new(&data).arrange();
+            self.filter.redrawn();
+        }
     }
 }

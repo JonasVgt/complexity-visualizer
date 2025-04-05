@@ -1,3 +1,4 @@
+use core::fmt;
 use std::hash::{DefaultHasher, Hash, Hasher};
 
 use serde::{Deserialize, Serialize};
@@ -20,6 +21,23 @@ pub enum Tag {
     Probabilistic,
 }
 
+impl Tag {
+    pub fn tags() -> Vec<Tag> {
+        return vec![Tag::Time, Tag::Space, Tag:: Deterministic, Tag:: Nondeterministic, Tag::Probabilistic];
+    }
+}
+
+impl fmt::Display for Tag {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Tag::Deterministic => "Deterministic",
+            Tag::Nondeterministic => "Non-deterministic",
+            Tag::Probabilistic => "Probabilistic",
+            Tag::Space => "Space",
+            Tag::Time => "Time",
+        })
+    }
+}
 #[allow(dead_code)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ComplexityClass {
