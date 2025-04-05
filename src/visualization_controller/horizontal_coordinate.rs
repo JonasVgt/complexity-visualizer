@@ -7,7 +7,7 @@ use super::layered_graph::LayeredGraph;
 struct HorizontalCoordinates(HashMap<NodeIndex, f32>);
 
 impl HorizontalCoordinates {
-    fn align_to(mut self, node: NodeIndex, value: f32) -> Self {
+    fn align_to(self, node: NodeIndex, value: f32) -> Self {
         let amount = value - self.0.get(&node).unwrap();
         self.shift(amount)
     }
