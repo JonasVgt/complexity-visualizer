@@ -2,33 +2,83 @@ use petgraph::graph::NodeIndex;
 
 use super::layered_graph::LayeredGraph;
 
+fn compute_barycenter<N, E>(
+    graph: &petgraph::Graph<N, E>,
+    node: NodeIndex,
+    parent_level: &Vec<NodeIndex>,
+    direction: petgraph::Direction,
+) -> f32 {
+    let neighbors: Vec<NodeIndex> = graph.neighbors_directed(node, direction).collect();
+
+    let num = neighbors.len();
+    let sum: usize = parent_level
+        .into_iter()
+        .enumerate()
+        .filter(|(_, p)| neighbors.contains(p))
+        .map(|(i, _)| i)
+        .sum();
+
+    sum as f32 / num as f32
+}
+
 pub fn order_vertices<N, E>(graph: LayeredGraph<N, E>) -> LayeredGraph<N, E>
 where
     N: Clone,
     E: Clone,
 {
-    let heur = |node: NodeIndex, parent_level: &Vec<NodeIndex>| {
-        let mut sum = 0;
-        let mut num = 0;
-        let neighbors: Vec<NodeIndex> = graph
-            .graph()
-            .neighbors_directed(node, petgraph::Direction::Incoming)
-            .collect();
-        for (i, parent) in parent_level.iter().enumerate() {
-            if neighbors.contains(parent) {
-                sum += i;
-                num += 1;
-            }
-        }
-        (10000.0 * (sum as f32 / num as f32)) as i32
-    };
+    let (graph, mut layers) = graph.into_graph_and_layers();
 
-    let mut layers = graph.layers().clone();
-    for i in 1..graph.layers().len() {
-        let (done, unsorted) = layers.split_at_mut(i);
-        unsorted[0].sort_by_key(|node| heur(*node, done.last().unwrap()));
+    loop {
+        let mut sorted = vec![layers[0].clone()];
+        for i in 1..layers.len() {
+            let mut barycenter: Vec<(NodeIndex, f32)> = layers[i]
+                .clone()
+                .into_iter()
+                .map(|n| {
+                    (
+                        n,
+                        compute_barycenter(
+                            &graph,
+                            n,
+                            sorted.last().unwrap(),
+                            petgraph::Direction::Incoming,
+                        ),
+                    )
+                })
+                .collect();
+            barycenter.sort_by(|(_, a), (_, b)| f32::total_cmp(a, b));
+            sorted.push(barycenter.into_iter().map(|(n, _)| n).collect())
+        }
+
+        let mut sorted2 = vec![sorted.last().unwrap().clone()];
+        for i in (0..sorted.len() - 1).rev() {
+            let mut barycenter: Vec<(NodeIndex, f32)> = sorted[i]
+                .clone()
+                .into_iter()
+                .map(|n| {
+                    (
+                        n,
+                        compute_barycenter(
+                            &graph,
+                            n,
+                            sorted2.last().unwrap(),
+                            petgraph::Direction::Outgoing,
+                        ),
+                    )
+                })
+                .collect();
+            barycenter.sort_by(|(_, a), (_, b)| f32::total_cmp(a, b));
+            sorted2.push(barycenter.into_iter().map(|(n, _)| n).collect())
+        }
+        sorted2.reverse();
+        if sorted2 == layers {
+            break;
+        } else {
+            layers = sorted2;
+        }
     }
-    LayeredGraph::with_layer_vec(graph.into_graph(), layers)
+
+    LayeredGraph::with_layer_vec(graph, layers)
 }
 
 #[cfg(test)]

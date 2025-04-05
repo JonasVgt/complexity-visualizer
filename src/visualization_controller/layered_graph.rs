@@ -59,10 +59,6 @@ impl<N, E> LayeredGraph<N, E> {
         &self.graph
     }
 
-    pub fn into_graph(self) -> Graph<N, E> {
-        self.graph
-    }
-
     pub fn layers(&self) -> &Vec<Vec<NodeIndex>> {
         &self.layers
     }
@@ -133,5 +129,9 @@ impl<N, E> LayeredGraph<N, E> {
 
     pub fn remove_edge(&mut self, e: EdgeIndex) -> Option<E> {
         self.graph.remove_edge(e)
+    }
+
+    pub fn into_graph_and_layers(self) -> (Graph<N, E>, Vec<Vec<NodeIndex>>) {
+        (self.graph, self.layers)
     }
 }
