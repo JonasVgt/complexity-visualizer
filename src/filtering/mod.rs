@@ -1,10 +1,6 @@
-
 use egui::Align2;
 
 use crate::{database::complexity_class::Tag, model::filter::Filter};
-
-pub mod popup;
-
 pub struct FilterState {
     is_open: bool,
     popup_pos: egui::Pos2,
@@ -40,7 +36,10 @@ impl<'a> FilterState {
                             ui.separator();
                             ui.label("Tags:");
                             for tag in Tag::tags() {
-                                if ui.checkbox(filter.tag_get_mut(&tag), tag.to_string()).changed() {
+                                if ui
+                                    .checkbox(filter.tag_get_mut(&tag), tag.to_string())
+                                    .changed()
+                                {
                                     filter.redraw();
                                 }
                             }
