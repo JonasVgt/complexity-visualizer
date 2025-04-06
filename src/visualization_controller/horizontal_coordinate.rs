@@ -170,6 +170,7 @@ mod tests {
 
     use crate::{
         database::{self},
+        model::complexity_class::ComplexityClassId,
         visualization_controller::{
             layer_assignment::assign_layers, vertex_ordering::order_vertices,
             VisualizationController,
@@ -178,7 +179,7 @@ mod tests {
 
     use super::*;
 
-    fn get_graph() -> LayeredGraph<Vec<u64>, database::relation::RelationType> {
+    fn get_graph() -> LayeredGraph<Vec<ComplexityClassId>, database::relation::RelationType> {
         let data = database::get_data();
         let vc = VisualizationController::new(&data);
         let graph = vc.graph;

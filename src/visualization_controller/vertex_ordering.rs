@@ -87,12 +87,13 @@ mod tests {
 
     use crate::{
         database::{self},
+        model::complexity_class::ComplexityClassId,
         visualization_controller::{layer_assignment::assign_layers, VisualizationController},
     };
 
     use super::*;
 
-    fn get_graph() -> LayeredGraph<Vec<u64>, database::relation::RelationType> {
+    fn get_graph() -> LayeredGraph<Vec<ComplexityClassId>, database::relation::RelationType> {
         let data = database::get_data();
         let vc = VisualizationController::new(&data);
         let graph = vc.graph;

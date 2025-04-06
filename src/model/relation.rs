@@ -1,9 +1,11 @@
 use crate::database;
 
+use super::complexity_class::ComplexityClassId;
+
 #[derive(Debug, Hash, PartialEq, Eq, Clone)]
 pub struct Subset {
-    pub from: String,
-    pub to: String,
+    pub from: ComplexityClassId,
+    pub to: ComplexityClassId,
 }
 
 impl Subset {
@@ -26,8 +28,8 @@ impl From<database::relation::Relation> for Relation {
     fn from(value: database::relation::Relation) -> Self {
         match value.relation_type {
             database::relation::RelationType::Subset => Self::Subset(Subset {
-                from: value.from,
-                to: value.to,
+                from: value.from.into(),
+                to: value.to.into(),
             }),
             database::relation::RelationType::Unknown => Self::Unknown,
         }

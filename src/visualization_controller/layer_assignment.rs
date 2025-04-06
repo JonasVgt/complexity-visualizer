@@ -42,16 +42,16 @@ pub fn assign_layers<N, E>(graph: Graph<N, E>) -> LayeredGraph<N, E> {
 #[cfg(test)]
 mod tests {
 
+
     use petgraph::algo::condensation;
 
     use crate::{
-        database::{self},
-        visualization_controller::VisualizationController,
+        database::{self}, model::complexity_class::ComplexityClassId, visualization_controller::VisualizationController
     };
 
     use super::*;
 
-    fn get_arranged_graph() -> LayeredGraph<Vec<u64>, database::relation::RelationType> {
+    fn get_arranged_graph() -> LayeredGraph<Vec<ComplexityClassId>, database::relation::RelationType> {
         let data = database::get_data();
         let vc = VisualizationController::new(&data);
         let graph = vc.graph;
@@ -65,12 +65,10 @@ mod tests {
         let lg = get_arranged_graph();
 
         for class in data.classes {
-            let hash = class.calculate_id_hash();
             assert!(
-                lg.graph().node_weights().any(|nw| { nw.contains(&hash) }),
-                "Class: {} with hash {} is not found in graph",
+                lg.graph().node_weights().any(|nw| { nw.contains(&class.id.clone().into()) }),
+                "Class: {} with is not found in graph",
                 class.id,
-                hash
             );
         }
     }

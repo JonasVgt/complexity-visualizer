@@ -1,12 +1,17 @@
 use egui::{pos2, FontData, FontDefinitions, FontFamily, Rect};
 
-use crate::{filtering::FilterState, graph::GraphWidget, model::Model, sidepanel::ui_sidepanel};
+use crate::{
+    filtering::FilterState,
+    graph::GraphWidget,
+    model::{complexity_class::ComplexityClassId, Model},
+    sidepanel::ui_sidepanel,
+};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct ComplexityVisualizerApp {
-    selected_class: Option<u64>,
+    selected_class: Option<ComplexityClassId>,
 
     #[serde(skip)]
     model: Model,

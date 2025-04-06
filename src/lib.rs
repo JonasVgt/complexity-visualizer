@@ -2,10 +2,10 @@
 
 mod app;
 mod database;
+mod filtering;
 mod graph;
 mod model;
 mod sidepanel;
 mod utils;
 mod visualization_controller;
-mod filtering;
 pub use app::ComplexityVisualizerApp;

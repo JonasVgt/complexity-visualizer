@@ -4,11 +4,12 @@ pub mod relation;
 
 use crate::{
     database::{
-        self, complexity_class::ComplexityClass as DBComplexityClass, relation::Relation as DBRelation
+        self, complexity_class::ComplexityClass as DBComplexityClass,
+        relation::Relation as DBRelation,
     },
     visualization_controller::VisualizationController,
 };
-use complexity_class::ComplexityClass as ModelComplexityClass;
+use complexity_class::{ComplexityClass as ModelComplexityClass, ComplexityClassId};
 use egui::{
     ahash::{HashSet, HashSetExt},
     Pos2,
@@ -19,7 +20,7 @@ use std::collections::HashMap;
 pub struct Model {
     relations: Vec<ModelRelation>,
     classes: Vec<ModelComplexityClass>,
-    positions: HashMap<u64, Pos2>,
+    positions: HashMap<ComplexityClassId, Pos2>,
     filter: filter::Filter,
 }
 
@@ -44,8 +45,8 @@ impl Model {
             .collect()
     }
 
-    pub fn get_class(&self, id: u64) -> Option<&ModelComplexityClass> {
-        self.classes.iter().find(|e| e.calculate_id_hash() == id)
+    pub fn get_class(&self, id: ComplexityClassId) -> Option<&ModelComplexityClass> {
+        self.classes.iter().find(|e| e.id == id)
     }
 
     pub fn relations(&self) -> Vec<&ModelRelation> {
@@ -57,12 +58,7 @@ impl Model {
                     ModelRelation::Equal(Subset { from, to }, _) => Some((from, to)),
                     ModelRelation::Unknown => None,
                 }
-                .map(|(from, to)| {
-                    (
-                        self.get_class(ModelComplexityClass::hash_id(from)).unwrap(),
-                        self.get_class(ModelComplexityClass::hash_id(to)).unwrap(),
-                    )
-                });
+                .map(|(from, to)| (self.get_class(*from).unwrap(), self.get_class(*to).unwrap()));
                 r.is_some_and(|(c1, c2)| self.filter.apply_relations(c1, c2))
             })
             .collect()
@@ -72,7 +68,7 @@ impl Model {
         &mut self.filter
     }
 
-    pub fn get_position(&self, id: &u64) -> Option<&Pos2> {
+    pub fn get_position(&self, id: &ComplexityClassId) -> Option<&Pos2> {
         self.positions.get(id)
     }
 
@@ -99,7 +95,7 @@ impl Model {
         input
             .into_iter()
             .map(|a| ModelComplexityClass {
-                id: a.id,
+                id: a.id.into(),
                 names: a.names,
                 tags: a.tags,
                 description: a.description,

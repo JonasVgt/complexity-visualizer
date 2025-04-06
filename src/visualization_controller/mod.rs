@@ -12,27 +12,30 @@ use layer_assignment::assign_layers;
 use petgraph::{algo::condensation, graph::node_index, Directed, Graph};
 use vertex_ordering::order_vertices;
 
-use crate::database::{data::Data, relation::RelationType};
+use crate::{
+    database::{data::Data, relation::RelationType},
+    model::complexity_class::ComplexityClassId,
+};
 
 pub struct VisualizationController {
-    graph: Graph<u64, RelationType, Directed>,
+    graph: Graph<ComplexityClassId, RelationType, Directed>,
 }
 
 impl VisualizationController {
     pub fn new(data: &Data) -> Self {
-        let mut graph: Graph<u64, RelationType> =
+        let mut graph: Graph<ComplexityClassId, RelationType> =
             Graph::with_capacity(data.classes.len(), data.relations.len());
-        let node_indices: HashMap<u64, usize> = data
+        let node_indices: HashMap<ComplexityClassId, usize> = data
             .classes
             .iter()
-            .map(|class| class.calculate_id_hash())
+            .map(|class| class.id.clone().into())
             .map(|id| (id, graph.add_node(id).index()))
             .collect();
 
         data.relations.iter().for_each(|relation| {
             graph.add_edge(
-                node_index(*node_indices.get(&relation.calculate_from_hash()).unwrap()),
-                node_index(*node_indices.get(&relation.calculate_to_hash()).unwrap()),
+                node_index(*node_indices.get(&relation.from.clone().into()).unwrap()),
+                node_index(*node_indices.get(&relation.to.clone().into()).unwrap()),
                 relation.relation_type,
             );
         });
@@ -45,7 +48,7 @@ impl VisualizationController {
      * See: Healy, Patrick; Nikolov, Nikola S. (2014), "Hierarchical Graph Drawing", p.409-453
      * https://cs.brown.edu/people/rtamassi/gdhandbook/
      */
-    pub fn arrange(self) -> HashMap<u64, Pos2> {
+    pub fn arrange(self) -> HashMap<ComplexityClassId, Pos2> {
         // An Directed Acyclic Graph containing the complexity classes. Equal classes are stored in a single node
         let condensated_graph = condensation(self.graph, true);
         let layered_graph = assign_layers(condensated_graph);
@@ -53,7 +56,7 @@ impl VisualizationController {
         let mut graph_with_dummynodes = layered_graph.add_dummy_nodes(vec![]);
         graph_with_dummynodes = order_vertices(graph_with_dummynodes);
 
-        let mut map: HashMap<u64, Pos2> = HashMap::new();
+        let mut map: HashMap<ComplexityClassId, Pos2> = HashMap::new();
 
         let hor_coordinates = compute_horizontal_coordinate(&graph_with_dummynodes);
         let mut x = 0;
