@@ -45,14 +45,14 @@ mod tests {
     use petgraph::algo::condensation;
 
     use crate::{
-        database::{self, MyDatabase},
+        database::{self},
         visualization_controller::VisualizationController,
     };
 
     use super::*;
 
     fn get_arranged_graph() -> LayeredGraph<Vec<u64>, database::relation::RelationType> {
-        let data = MyDatabase::get_data();
+        let data = database::get_data();
         let vc = VisualizationController::new(&data);
         let graph = vc.graph;
         let condensated_graph = condensation(graph, true);
@@ -61,7 +61,7 @@ mod tests {
 
     #[test]
     fn all_nodes_present() {
-        let data = MyDatabase::get_data();
+        let data = database::get_data();
         let lg = get_arranged_graph();
 
         for class in data.classes {

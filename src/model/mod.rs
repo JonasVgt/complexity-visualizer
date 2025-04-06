@@ -4,8 +4,7 @@ pub mod relation;
 
 use crate::{
     database::{
-        complexity_class::ComplexityClass as DBComplexityClass, relation::Relation as DBRelation,
-        MyDatabase,
+        self, complexity_class::ComplexityClass as DBComplexityClass, relation::Relation as DBRelation
     },
     visualization_controller::VisualizationController,
 };
@@ -26,7 +25,7 @@ pub struct Model {
 
 impl Model {
     pub fn new() -> Self {
-        let data = MyDatabase::get_data();
+        let data = database::get_data();
         let positions = VisualizationController::new(&data).arrange();
         let relations = Self::convert_relations(data.relations);
         let classes = Self::convert_nodes(data.classes);
@@ -111,7 +110,7 @@ impl Model {
 
     pub fn update(&mut self) {
         if self.filter.should_redraw() {
-            let data = MyDatabase::get_data();
+            let data = database::get_data();
             self.positions = VisualizationController::new(&data).arrange();
             self.filter.redrawn();
         }

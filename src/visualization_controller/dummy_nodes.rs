@@ -76,14 +76,14 @@ mod tests {
     use petgraph::algo::{condensation, has_path_connecting};
 
     use crate::{
-        database::{self, MyDatabase},
+        database::{self},
         visualization_controller::{layer_assignment::assign_layers, VisualizationController},
     };
 
     use super::*;
 
     fn get_arranged_graph() -> LayeredGraph<Vec<u64>, database::relation::RelationType> {
-        let data = MyDatabase::get_data();
+        let data = database::get_data();
         let vc = VisualizationController::new(&data);
         let graph = vc.graph;
         let condensated_graph = condensation(graph, true);
