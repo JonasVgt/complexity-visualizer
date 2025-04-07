@@ -53,8 +53,7 @@ mod tests {
 
     fn get_arranged_graph() -> LayeredGraph<Vec<ComplexityClassId>, database::relation::RelationType> {
         let data = database::get_data();
-        let vc = VisualizationController::new(&data);
-        let graph = vc.graph;
+        let graph = VisualizationController::generate_graph(&data);
         let condensated_graph = condensation(graph, true);
         assign_layers(condensated_graph)
     }

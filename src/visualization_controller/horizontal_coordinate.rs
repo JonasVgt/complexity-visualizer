@@ -181,8 +181,7 @@ mod tests {
 
     fn get_graph() -> LayeredGraph<Vec<ComplexityClassId>, database::relation::RelationType> {
         let data = database::get_data();
-        let vc = VisualizationController::new(&data);
-        let graph = vc.graph;
+        let graph = VisualizationController::generate_graph(&data);
         let condensated_graph = condensation(graph, true);
         let graph_with_dummy_nodes = assign_layers(condensated_graph).add_dummy_nodes(vec![]);
         order_vertices(graph_with_dummy_nodes)

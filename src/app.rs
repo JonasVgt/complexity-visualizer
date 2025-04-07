@@ -30,8 +30,8 @@ pub struct ComplexityVisualizerApp {
 impl Default for ComplexityVisualizerApp {
     fn default() -> Self {
         let model = Model::new();
-        let mut visualization_controller = VisualizationController::new(&database::get_data());
-        visualization_controller.arrange();
+        let mut visualization_controller = VisualizationController::new();
+        visualization_controller.arrange(&database::get_data());
         Self {
             selected_class: None,
             model,
@@ -103,7 +103,7 @@ impl eframe::App for ComplexityVisualizerApp {
         ctx.set_fonts(fonts);
 
         if self.model.update() {
-            self.visualization_controller.arrange();
+            self.visualization_controller.arrange(&database::get_data());
         }
 
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
