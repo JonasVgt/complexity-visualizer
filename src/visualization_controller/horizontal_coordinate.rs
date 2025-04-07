@@ -169,8 +169,7 @@ mod tests {
     use petgraph::algo::condensation;
 
     use crate::{
-        database::{self},
-        model::complexity_class::ComplexityClassId,
+        model::{complexity_class::ComplexityClassId, Model},
         visualization_controller::{
             layer_assignment::assign_layers, vertex_ordering::order_vertices,
             VisualizationController,
@@ -179,9 +178,9 @@ mod tests {
 
     use super::*;
 
-    fn get_graph() -> LayeredGraph<Vec<ComplexityClassId>, database::relation::RelationType> {
-        let data = database::get_data();
-        let graph = VisualizationController::generate_graph(&data);
+    fn get_graph() -> LayeredGraph<Vec<ComplexityClassId>, ()> {
+        let model = Model::new();
+        let graph = VisualizationController::generate_graph(&model);
         let condensated_graph = condensation(graph, true);
         let graph_with_dummy_nodes = assign_layers(condensated_graph).add_dummy_nodes(vec![]);
         order_vertices(graph_with_dummy_nodes)

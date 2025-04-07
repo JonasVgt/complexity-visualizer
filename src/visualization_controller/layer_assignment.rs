@@ -46,14 +46,14 @@ mod tests {
     use petgraph::algo::condensation;
 
     use crate::{
-        database::{self}, model::complexity_class::ComplexityClassId, visualization_controller::VisualizationController
+        database::{self}, model::{complexity_class::ComplexityClassId, Model}, visualization_controller::VisualizationController
     };
 
     use super::*;
 
-    fn get_arranged_graph() -> LayeredGraph<Vec<ComplexityClassId>, database::relation::RelationType> {
-        let data = database::get_data();
-        let graph = VisualizationController::generate_graph(&data);
+    fn get_arranged_graph() -> LayeredGraph<Vec<ComplexityClassId>, ()> {
+        let model = Model::new();
+        let graph = VisualizationController::generate_graph(&model);
         let condensated_graph = condensation(graph, true);
         assign_layers(condensated_graph)
     }

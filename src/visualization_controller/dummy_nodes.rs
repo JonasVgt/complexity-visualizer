@@ -18,7 +18,7 @@ impl<N, E> LayeredGraph<N, E> {
     {
         let mut res = vec![];
         // Return, if edge does not exist
-        if !self.graph().find_edge(from, to).is_some() {
+        if self.graph().find_edge(from, to).is_none() {
             return vec![];
         }
 
@@ -75,17 +75,15 @@ mod tests {
     use petgraph::algo::{condensation, has_path_connecting};
 
     use crate::{
-        database::{self},
-        model::complexity_class::ComplexityClassId,
+        model::{complexity_class::ComplexityClassId, Model},
         visualization_controller::{layer_assignment::assign_layers, VisualizationController},
     };
 
     use super::*;
 
-    fn get_arranged_graph() -> LayeredGraph<Vec<ComplexityClassId>, database::relation::RelationType>
-    {
-        let data = database::get_data();
-        let graph = VisualizationController::generate_graph(&data);
+    fn get_arranged_graph() -> LayeredGraph<Vec<ComplexityClassId>, ()> {
+        let model = Model::new();
+        let graph = VisualizationController::generate_graph(&model);
         let condensated_graph = condensation(graph, true);
         assign_layers(condensated_graph)
     }
@@ -238,8 +236,7 @@ mod tests {
     #[test]
     fn long_edges_still_connected() {
         let lg = get_arranged_graph();
-        let lg_dummy: LayeredGraph<Vec<ComplexityClassId>, database::relation::RelationType> =
-            lg.clone().add_dummy_nodes(vec![]);
+        let lg_dummy: LayeredGraph<Vec<ComplexityClassId>, ()> = lg.clone().add_dummy_nodes(vec![]);
 
         for edge in lg.graph().edge_indices() {
             if lg.is_short_edge(edge) {
@@ -254,8 +251,7 @@ mod tests {
     #[test]
     fn long_edges_connected_via_dummynodes() {
         let lg = get_arranged_graph();
-        let lg_dummy: LayeredGraph<Vec<ComplexityClassId>, database::relation::RelationType> =
-            lg.clone().add_dummy_nodes(vec![]);
+        let lg_dummy: LayeredGraph<Vec<ComplexityClassId>, ()> = lg.clone().add_dummy_nodes(vec![]);
 
         for edge in lg.graph().edge_indices() {
             if lg.is_short_edge(edge) {

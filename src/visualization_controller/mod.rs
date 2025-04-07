@@ -12,10 +12,11 @@ use layer_assignment::assign_layers;
 use petgraph::{algo::condensation, graph::node_index, Graph};
 use vertex_ordering::order_vertices;
 
-use crate::{
-    database::{data::Data, relation::RelationType},
-    model::complexity_class::ComplexityClassId,
-};
+use crate::model::{
+        complexity_class::ComplexityClassId,
+        relation::{Relation, Subset},
+        Model,
+    };
 
 pub struct VisualizationController {
     positions: HashMap<ComplexityClassId, Pos2>,
@@ -28,22 +29,29 @@ impl VisualizationController {
         }
     }
 
-    fn generate_graph(data: &Data) -> Graph<ComplexityClassId, RelationType> {
-        let mut graph: Graph<ComplexityClassId, RelationType> =
-            Graph::with_capacity(data.classes.len(), data.relations.len());
-        let node_indices: HashMap<ComplexityClassId, usize> = data
-            .classes
+    fn generate_graph(model: &Model) -> Graph<ComplexityClassId, ()> {
+        let mut graph: Graph<ComplexityClassId, ()> =
+            Graph::with_capacity(model.classes().len(), model.relations().len());
+        let node_indices: HashMap<ComplexityClassId, usize> = model
+            .classes()
             .iter()
-            .map(|class| class.id.clone().into())
+            .map(|class| class.id)
             .map(|id| (id, graph.add_node(id).index()))
             .collect();
 
-        data.relations.iter().for_each(|relation| {
-            graph.add_edge(
-                node_index(*node_indices.get(&relation.from.clone().into()).unwrap()),
-                node_index(*node_indices.get(&relation.to.clone().into()).unwrap()),
-                relation.relation_type,
-            );
+        model.relations().iter().for_each(|relation| {
+            let edges = match relation {
+                Relation::Subset(Subset { from, to }) => vec![(from, to)],
+                Relation::Equal(Subset { from, to }, _) => vec![(from, to), (to, from)],
+                Relation::Unknown => vec![],
+            };
+            for (from, to) in edges {
+                graph.add_edge(
+                    node_index(*node_indices.get(from).unwrap()),
+                    node_index(*node_indices.get(to).unwrap()),
+                    (),
+                );
+            }
         });
 
         graph
@@ -54,8 +62,8 @@ impl VisualizationController {
      * See: Healy, Patrick; Nikolov, Nikola S. (2014), "Hierarchical Graph Drawing", p.409-453
      * https://cs.brown.edu/people/rtamassi/gdhandbook/
      */
-    pub fn arrange(&mut self, data: &Data) {
-        let graph = Self::generate_graph(data);
+    pub fn arrange(&mut self, model: &Model) {
+        let graph = Self::generate_graph(model);
 
         // An Directed Acyclic Graph containing the complexity classes. Equal classes are stored in a single node
         let condensated_graph = condensation(graph, true);
