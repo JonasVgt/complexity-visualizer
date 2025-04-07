@@ -1,10 +1,12 @@
 use egui::{pos2, FontData, FontDefinitions, FontFamily, Rect};
 
 use crate::{
+    database,
     filtering::FilterState,
     graph::GraphWidget,
     model::{complexity_class::ComplexityClassId, Model},
     sidepanel::ui_sidepanel,
+    visualization_controller::VisualizationController,
 };
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
@@ -16,6 +18,9 @@ pub struct ComplexityVisualizerApp {
     #[serde(skip)]
     model: Model,
 
+    #[serde(skip)]
+    visualization_controller: VisualizationController,
+
     scene_rect: Rect,
 
     #[serde(skip)]
@@ -24,9 +29,13 @@ pub struct ComplexityVisualizerApp {
 
 impl Default for ComplexityVisualizerApp {
     fn default() -> Self {
+        let model = Model::new();
+        let mut visualization_controller = VisualizationController::new(&database::get_data());
+        visualization_controller.arrange();
         Self {
             selected_class: None,
-            model: Model::new(),
+            model,
+            visualization_controller,
             scene_rect: Rect::from_min_size(
                 pos2(0.0, 0.0),
                 egui::Vec2 {
@@ -93,7 +102,9 @@ impl eframe::App for ComplexityVisualizerApp {
 
         ctx.set_fonts(fonts);
 
-        self.model.update();
+        if self.model.update() {
+            self.visualization_controller.arrange();
+        }
 
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
             // The top panel is often a good place for a menu bar:
@@ -136,6 +147,7 @@ impl eframe::App for ComplexityVisualizerApp {
             ui.add(GraphWidget {
                 selected_class: &mut self.selected_class,
                 model: &self.model,
+                visualization_controller: &self.visualization_controller,
                 scene_rect: &mut self.scene_rect,
             });
 

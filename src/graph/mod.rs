@@ -2,11 +2,11 @@ use egui::{Rect, Scene, Widget};
 use node::NodeWidget;
 use relation::RelationWidget;
 
-use crate::model::{
+use crate::{model::{
     complexity_class::ComplexityClassId,
     relation::{Relation, Subset},
     Model,
-};
+}, visualization_controller::VisualizationController};
 
 mod node;
 mod relation;
@@ -14,6 +14,7 @@ mod relation;
 pub struct GraphWidget<'a> {
     pub selected_class: &'a mut Option<ComplexityClassId>,
     pub model: &'a Model,
+    pub visualization_controller: &'a VisualizationController,
     pub scene_rect: &'a mut Rect,
 }
 
@@ -32,8 +33,8 @@ impl Widget for GraphWidget<'_> {
                         Relation::Unknown => None,
                     } {
                         ui.add(RelationWidget {
-                            from: *self.model.get_position(from).unwrap(),
-                            to: *self.model.get_position(to).unwrap(),
+                            from: *self.visualization_controller.get_position(from).unwrap(),
+                            to: *self.visualization_controller.get_position(to).unwrap(),
                             relation,
                         });
                     }
@@ -41,7 +42,7 @@ impl Widget for GraphWidget<'_> {
                 for class in self.model.classes() {
                     let response = ui.put(
                         egui::Rect::from_center_size(
-                            *self.model.get_position(&class.id).unwrap(),
+                            *self.visualization_controller.get_position(&class.id).unwrap(),
                             egui::vec2(100.0, 100.0),
                         ),
                         NodeWidget {

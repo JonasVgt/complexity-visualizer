@@ -2,38 +2,27 @@ pub mod complexity_class;
 pub mod filter;
 pub mod relation;
 
-use crate::{
-    database::{
-        self, complexity_class::ComplexityClass as DBComplexityClass,
-        relation::Relation as DBRelation,
-    },
-    visualization_controller::VisualizationController,
+use crate::database::{
+    self, complexity_class::ComplexityClass as DBComplexityClass, relation::Relation as DBRelation,
 };
 use complexity_class::{ComplexityClass as ModelComplexityClass, ComplexityClassId};
-use egui::{
-    ahash::{HashSet, HashSetExt},
-    Pos2,
-};
+use egui::ahash::{HashSet, HashSetExt};
 use relation::{Relation as ModelRelation, Subset};
-use std::collections::HashMap;
 
 pub struct Model {
     relations: Vec<ModelRelation>,
     classes: Vec<ModelComplexityClass>,
-    positions: HashMap<ComplexityClassId, Pos2>,
     filter: filter::Filter,
 }
 
 impl Model {
     pub fn new() -> Self {
         let data = database::get_data();
-        let positions = VisualizationController::new(&data).arrange();
         let relations = Self::convert_relations(data.relations);
         let classes = Self::convert_nodes(data.classes);
         Model {
             relations,
             classes,
-            positions,
             filter: filter::Filter::new(),
         }
     }
@@ -68,10 +57,6 @@ impl Model {
         &mut self.filter
     }
 
-    pub fn get_position(&self, id: &ComplexityClassId) -> Option<&Pos2> {
-        self.positions.get(id)
-    }
-
     fn convert_relations(input: Vec<DBRelation>) -> Vec<ModelRelation> {
         let converted: Vec<ModelRelation> = input.into_iter().map(ModelRelation::from).collect();
         let mut res = HashSet::new();
@@ -104,11 +89,11 @@ impl Model {
             .collect()
     }
 
-    pub fn update(&mut self) {
+    pub fn update(&mut self) -> bool {
         if self.filter.should_redraw() {
-            let data = database::get_data();
-            self.positions = VisualizationController::new(&data).arrange();
             self.filter.redrawn();
+            return true;
         }
+        false
     }
 }

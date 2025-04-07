@@ -9,7 +9,11 @@ use std::collections::HashMap;
 use egui::Pos2;
 use horizontal_coordinate::compute_horizontal_coordinate;
 use layer_assignment::assign_layers;
-use petgraph::{algo::condensation, graph::node_index, Directed, Graph};
+use petgraph::{
+    algo::condensation,
+    graph::node_index,
+    Directed, Graph,
+};
 use vertex_ordering::order_vertices;
 
 use crate::{
@@ -19,6 +23,7 @@ use crate::{
 
 pub struct VisualizationController {
     graph: Graph<ComplexityClassId, RelationType, Directed>,
+    positions: HashMap<ComplexityClassId, Pos2>,
 }
 
 impl VisualizationController {
@@ -40,7 +45,10 @@ impl VisualizationController {
             );
         });
 
-        Self { graph }
+        Self {
+            graph,
+            positions: HashMap::new(),
+        }
     }
 
     /*
@@ -48,9 +56,9 @@ impl VisualizationController {
      * See: Healy, Patrick; Nikolov, Nikola S. (2014), "Hierarchical Graph Drawing", p.409-453
      * https://cs.brown.edu/people/rtamassi/gdhandbook/
      */
-    pub fn arrange(self) -> HashMap<ComplexityClassId, Pos2> {
+    pub fn arrange(&mut self) {
         // An Directed Acyclic Graph containing the complexity classes. Equal classes are stored in a single node
-        let condensated_graph = condensation(self.graph, true);
+        let condensated_graph = condensation(self.graph.clone(), true);
         let layered_graph = assign_layers(condensated_graph);
 
         let mut graph_with_dummynodes = layered_graph.add_dummy_nodes(vec![]);
@@ -83,6 +91,10 @@ impl VisualizationController {
             x += 1;
         }
 
-        map
+        self.positions = map;
+    }
+
+    pub fn get_position(&self, id: &ComplexityClassId) -> Option<&Pos2> {
+        self.positions.get(id)
     }
 }
