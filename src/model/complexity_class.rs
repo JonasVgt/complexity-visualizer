@@ -1,9 +1,23 @@
+use std::fmt;
+
 use serde::{Deserialize, Serialize};
 
 use crate::database::complexity_class::Tag;
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, Clone, Copy, Hash, Serialize, Deserialize)]
 pub struct ComplexityClassId([u8; 16]);
+
+impl fmt::Debug for ComplexityClassId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_tuple("ComplexityClassId")
+            .field(
+                &std::str::from_utf8(&self.0)
+                    .unwrap()
+                    .trim_matches(char::from(0)),
+            )
+            .finish()
+    }
+}
 
 impl From<String> for ComplexityClassId {
     fn from(value: String) -> Self {
