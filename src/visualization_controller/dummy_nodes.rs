@@ -17,11 +17,8 @@ impl<N, E> LayeredGraph<N, E> {
         E: Clone,
     {
         let mut res = vec![];
-        // Remove existing edge or return, if it does not exist
-        if let Some(e) = self.graph().find_edge(from, to) {
-            self.remove_edge(e);
-        } else {
-            println!("ERROR, no edge");
+        // Return, if edge does not exist
+        if !self.graph().find_edge(from, to).is_some() {
             return vec![];
         }
 
@@ -34,6 +31,7 @@ impl<N, E> LayeredGraph<N, E> {
             prev = curr;
         }
         self.add_edge(prev, to, edge_weight.clone());
+        self.remove_edge(self.graph().find_edge(from, to).unwrap());
         res
     }
 
@@ -52,7 +50,8 @@ impl<N, E> LayeredGraph<N, E> {
             let from_layer = *self.layer_map().get(&from).unwrap();
             let to_layer = *self.layer_map().get(&to).unwrap();
 
-            if to_layer <= from_layer + 1 {
+            let edge = self.graph().find_edge(from, to).unwrap();
+            if self.is_short_edge(edge) {
                 continue;
             }
             let edge = self.graph().find_edge(from, to).unwrap();
@@ -162,7 +161,7 @@ mod tests {
     }
 
     #[test]
-    fn preserves_edges() {
+    fn preserves_short_edges() {
         let lg = get_arranged_graph();
         let lg_dummy = lg.clone().add_dummy_nodes(vec![]);
 
