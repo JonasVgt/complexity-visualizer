@@ -3,8 +3,7 @@ use egui::{emath::Rot2, epaint::TextShape, FontSelection, Pos2, Rect, Widget};
 use crate::model::relation::Relation;
 
 pub struct RelationWidget<'a> {
-    pub from: Pos2,
-    pub to: Pos2,
+    pub path: Vec<Pos2>,
     pub relation: &'a Relation,
 }
 
@@ -12,8 +11,12 @@ impl Widget for RelationWidget<'_> {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
         let visuals = ui.style().noninteractive();
 
-        ui.painter()
-            .line_segment([self.from, self.to], visuals.fg_stroke);
+        for i in 0..self.path.len() - 1 {
+            let from = self.path[i];
+            let to = self.path[i+1];
+            ui.painter()
+                .line_segment([from, to], visuals.fg_stroke);
+        }
         let relation_label = match self.relation {
             Relation::Subset(_) => "⊆",
             Relation::Equal(_, _) => "=",
@@ -26,11 +29,14 @@ impl Widget for RelationWidget<'_> {
                 .layout_no_wrap(relation_label.to_string(), font_id, visuals.text_color())
         };
 
-        let text_angle = (self.to - self.from).angle();
+        let label_from = self.path[0];
+        let label_to = self.path[1];
+
+        let text_angle = (label_to - label_from).angle();
 
         let bounding_rect = Rect::from_center_size(Pos2::ZERO, galley.size())
             .rotate_bb(Rot2::from_angle(text_angle))
-            .translate(0.5 * self.from.to_vec2() + 0.5 * self.to.to_vec2());
+            .translate(0.5 * label_from.to_vec2() + 0.5 * label_to.to_vec2());
 
         if ui.is_rect_visible(bounding_rect) {
             ui.painter().circle(

@@ -33,8 +33,7 @@ impl Widget for GraphWidget<'_> {
                         Relation::Unknown => None,
                     } {
                         ui.add(RelationWidget {
-                            from: *self.visualization_controller.get_position(from).unwrap(),
-                            to: *self.visualization_controller.get_position(to).unwrap(),
+                            path: self.visualization_controller.get_edge_path(*from, *to).unwrap(),
                             relation,
                         });
                     }
