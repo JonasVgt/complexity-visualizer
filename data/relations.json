@@ -6,6 +6,16 @@
     },
     {
         "from": "NLSPACE",
+        "to": "CO-NLSPACE",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "CO-NLSPACE",
+        "to": "NLSPACE",
+        "relation_type": "Subset"
+    },
+    {
+        "from": "NLSPACE",
         "to": "PTIME",
         "relation_type": "Subset"
     },

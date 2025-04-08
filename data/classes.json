@@ -28,6 +28,20 @@
         "wikipedia": "https://en.wikipedia.org/wiki/NL_(complexity)"
     },
     {
+        "id": "CO-NLSPACE",
+        "names": [
+            "co-NL",
+            "co-NLSPACE"
+        ],
+        "tags": [
+            "SPACE",
+            "NONDETERMINISTIC",
+            "COMPLEMENT"
+        ],
+        "description": "co-NL is the complement of Nondeterministic Logarithmic-space. This is the complexity class of decision problems that can be solved by a nondeterministic Turing machine, using only a logarithmic amount of writable memory space.",
+        "wikipedia": "https://en.wikipedia.org/wiki/NL_(complexity)"
+    },
+    {
         "id": "PTIME",
         "names": [
             "P",
