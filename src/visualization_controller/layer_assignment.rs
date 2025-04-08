@@ -42,11 +42,12 @@ pub fn assign_layers<N, E>(graph: Graph<N, E>) -> LayeredGraph<N, E> {
 #[cfg(test)]
 mod tests {
 
-
     use petgraph::algo::condensation;
 
     use crate::{
-        database::{self}, model::{complexity_class::ComplexityClassId, Model}, visualization_controller::VisualizationController
+        database::{self},
+        model::{complexity_class::ComplexityClassId, Model},
+        visualization_controller::VisualizationController,
     };
 
     use super::*;
@@ -65,7 +66,9 @@ mod tests {
 
         for class in data.classes {
             assert!(
-                lg.graph().node_weights().any(|nw| { nw.contains(&class.id.clone().into()) }),
+                lg.graph()
+                    .node_weights()
+                    .any(|nw| { nw.contains(&class.id.clone().into()) }),
                 "Class: {} with is not found in graph",
                 class.id,
             );

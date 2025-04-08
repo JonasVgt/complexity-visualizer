@@ -18,6 +18,9 @@ pub enum Tag {
 
     #[serde(rename = "PROBABILISTIC")]
     Probabilistic,
+
+    #[serde(rename = "COMPLEMENT")]
+    Complement,
 }
 
 impl Tag {
@@ -28,6 +31,7 @@ impl Tag {
             Tag::Deterministic,
             Tag::Nondeterministic,
             Tag::Probabilistic,
+            Tag::Complement,
         ]
     }
 }
@@ -40,6 +44,7 @@ impl fmt::Display for Tag {
             Tag::Probabilistic => "Probabilistic",
             Tag::Space => "Space",
             Tag::Time => "Time",
+            Tag::Complement => "Complement",
         })
     }
 }

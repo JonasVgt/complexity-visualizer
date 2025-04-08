@@ -8,17 +8,15 @@ use crate::{
     visualization_controller::VisualizationController,
 };
 
-
 pub enum Selection {
     ComplexityClass(ComplexityClassId),
     Relation((ComplexityClassId, ComplexityClassId)),
-    None
+    None,
 }
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct ComplexityVisualizerApp {
-
     #[serde(skip)]
     selected: Selection,
 
@@ -132,7 +130,6 @@ impl eframe::App for ComplexityVisualizerApp {
             });
         });
 
-
         match self.selected {
             Selection::ComplexityClass(class) => {
                 let sidepanel_width = f32::min(ctx.available_rect().width() * 0.33, 300.0);
@@ -152,7 +149,6 @@ impl eframe::App for ComplexityVisualizerApp {
             }
             Selection::None => {}
         }
-
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's

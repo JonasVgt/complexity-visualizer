@@ -16,6 +16,7 @@ fn tags_str(tags: &[Tag]) -> String {
             Tag::Deterministic => "󰁔",
             Tag::Space => "",
             Tag::Time => "",
+            Tag::Complement => "󰝿",
         })
         .collect::<Vec<&str>>()
         .join(" ")

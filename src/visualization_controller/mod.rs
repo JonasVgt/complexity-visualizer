@@ -9,7 +9,11 @@ use std::{collections::HashMap, vec};
 use egui::{pos2, Pos2};
 use horizontal_coordinate::compute_horizontal_coordinate;
 use layer_assignment::assign_layers;
-use petgraph::{algo::{all_simple_paths, condensation}, graph::{node_index, NodeIndex}, Graph};
+use petgraph::{
+    algo::{all_simple_paths, condensation},
+    graph::{node_index, NodeIndex},
+    Graph,
+};
 use vertex_ordering::order_vertices;
 
 use crate::model::{
@@ -27,7 +31,7 @@ impl VisualizationController {
     pub fn new() -> Self {
         Self {
             positions: HashMap::new(),
-            edge_paths: HashMap::new()
+            edge_paths: HashMap::new(),
         }
     }
 
@@ -109,63 +113,118 @@ impl VisualizationController {
         }
         // Assign paths for relations
         self.edge_paths = HashMap::new();
-        for relation in model.relations(){
+        for relation in model.relations() {
             let edges = match relation {
                 Relation::Subset(s) => vec![s],
-                Relation::Equal(s1, s2) => vec![s1,s2],
+                Relation::Equal(s1, s2) => vec![s1, s2],
                 Relation::Unknown => vec![],
             };
 
             for Subset { from, to } in edges {
-                let from_node = graph_with_dummynodes.graph().node_indices().find(|n| graph_with_dummynodes.graph().node_weight(*n).unwrap().contains(from)).unwrap();
-                let to_node = graph_with_dummynodes.graph().node_indices().find(|n| graph_with_dummynodes.graph().node_weight(*n).unwrap().contains(to)).unwrap();
+                let from_node = graph_with_dummynodes
+                    .graph()
+                    .node_indices()
+                    .find(|n| {
+                        graph_with_dummynodes
+                            .graph()
+                            .node_weight(*n)
+                            .unwrap()
+                            .contains(from)
+                    })
+                    .unwrap();
+                let to_node = graph_with_dummynodes
+                    .graph()
+                    .node_indices()
+                    .find(|n| {
+                        graph_with_dummynodes
+                            .graph()
+                            .node_weight(*n)
+                            .unwrap()
+                            .contains(to)
+                    })
+                    .unwrap();
 
                 if from_node == to_node {
-                    self.edge_paths.insert((*from, *to), vec![*self.get_position(from).unwrap(), *self.get_position(to).unwrap()]);
+                    self.edge_paths.insert(
+                        (*from, *to),
+                        vec![
+                            *self.get_position(from).unwrap(),
+                            *self.get_position(to).unwrap(),
+                        ],
+                    );
                     continue;
                 }
 
                 // Create clone of graph that only contains "from", "to" and all dummy nodes
                 let mut gr = graph_with_dummynodes.graph().clone();
                 for edge in graph_with_dummynodes.graph().edge_indices() {
-                    let (f,t) = graph_with_dummynodes.graph().edge_endpoints(edge).unwrap();
+                    let (f, t) = graph_with_dummynodes.graph().edge_endpoints(edge).unwrap();
 
-                    if graph_with_dummynodes.graph().node_weight(f).unwrap().is_empty() && graph_with_dummynodes.graph().node_weight(t).unwrap().is_empty() {
+                    if graph_with_dummynodes
+                        .graph()
+                        .node_weight(f)
+                        .unwrap()
+                        .is_empty()
+                        && graph_with_dummynodes
+                            .graph()
+                            .node_weight(t)
+                            .unwrap()
+                            .is_empty()
+                    {
                         continue;
                     }
 
-                    if f == from_node &&  t == to_node {
+                    if f == from_node && t == to_node {
                         continue;
                     }
 
-                    if f == from_node && graph_with_dummynodes.graph().node_weight(t).unwrap().is_empty() {
+                    if f == from_node
+                        && graph_with_dummynodes
+                            .graph()
+                            .node_weight(t)
+                            .unwrap()
+                            .is_empty()
+                    {
                         continue;
                     }
-                    
-                    if graph_with_dummynodes.graph().node_weight(f).unwrap().is_empty() && t == to_node  {
+
+                    if graph_with_dummynodes
+                        .graph()
+                        .node_weight(f)
+                        .unwrap()
+                        .is_empty()
+                        && t == to_node
+                    {
                         continue;
                     }
 
                     gr.remove_edge(edge);
                 }
-                let path : Vec<NodeIndex> = all_simple_paths(&gr, from_node, to_node, 0, None).next().unwrap();
-                let mut path_pos : Vec<Pos2> = path.into_iter().map(|n| *node_positions.get(&n).unwrap() * 100.0).collect();
+                let path: Vec<NodeIndex> = all_simple_paths(&gr, from_node, to_node, 0, None)
+                    .next()
+                    .unwrap();
+                let mut path_pos: Vec<Pos2> = path
+                    .into_iter()
+                    .map(|n| *node_positions.get(&n).unwrap() * 100.0)
+                    .collect();
                 path_pos[0] = *self.get_position(from).unwrap();
                 let len = path_pos.len();
-                path_pos[len-1] = *self.get_position(to).unwrap();
+                path_pos[len - 1] = *self.get_position(to).unwrap();
 
                 self.edge_paths.insert((*from, *to), path_pos);
             }
         }
-
-
     }
 
     pub fn get_position(&self, id: &ComplexityClassId) -> Option<&Pos2> {
         self.positions.get(id)
     }
 
-    pub fn get_edge_path(&self, from: ComplexityClassId, to: ComplexityClassId) -> Option<Vec<Pos2>> {
+    pub fn get_edge_path(
+        &self,
+        from: ComplexityClassId,
+        to: ComplexityClassId,
+    ) -> Option<Vec<Pos2>> {
         self.edge_paths.get(&(from, to)).map(|v| v.to_vec())
     }
 }

@@ -45,6 +45,7 @@ pub fn ui_sidepanel_class(ui: &mut egui::Ui, class: &ComplexityClass) {
             Tag::Probabilistic => "Probabilistic",
             Tag::Space => "Space",
             Tag::Time => "Time",
+            Tag::Complement => "Complement",
         })
         .collect::<Vec<&str>>()
         .join(", ");

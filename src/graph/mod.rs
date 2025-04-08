@@ -42,7 +42,7 @@ impl Widget for GraphWidget<'_> {
                                 .unwrap(),
                             relation,
                             is_selected: match self.selected {
-                                Selection::Relation((f ,t )) => from == f && to == t,
+                                Selection::Relation((f, t)) => from == f && to == t,
                                 _ => false,
                             },
                         });
