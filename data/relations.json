@@ -2,17 +2,20 @@
     {
         "from": "LSPACE",
         "to": "NLSPACE",
-        "relation_type": "Subset"
+        "relation_type": "Subset",
+        "description": "Since a deterministic Turing machine is a special case of a nondeterministic one, any problem solvable in L can also be solved in NL using the same logarithmic space constraint. Furthermore, it is proven that DSPACE(S(n)) is always a subset of NSPACE(S(n)) for a space construcable S(n). Thus L ⊆ NL."
     },
     {
         "from": "NLSPACE",
         "to": "CO-NLSPACE",
-        "relation_type": "Subset"
+        "relation_type": "Subset",
+        "description": "The Immerman-Szelepcsényi theorem states that NSPACE(s(n)) = co-NSPACE(s(n)) for any function s(n) ≥ log(n). The theorem was independently proven by Neil Immerman and Róbert Szekepcsényi in 1987. Thus, as a special case NL = co-NL."
     },
     {
         "from": "CO-NLSPACE",
         "to": "NLSPACE",
-        "relation_type": "Subset"
+        "relation_type": "Subset",
+        "description": "The Immerman-Szelepcsényi theorem states that NSPACE(s(n)) = co-NSPACE(s(n)) for any function s(n) ≥ log(n). The theorem was independently proven by Neil Immerman and Róbert Szekepcsényi in 1987. Thus, as a special case NL = co-NL."
     },
     {
         "from": "NLSPACE",
