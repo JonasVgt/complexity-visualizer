@@ -5,18 +5,21 @@ use crate::model::relation::Relation;
 pub struct RelationWidget<'a> {
     pub path: Vec<Pos2>,
     pub relation: &'a Relation,
+    pub is_selected: bool,
 }
 
 impl Widget for RelationWidget<'_> {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
+        // Line
         let visuals = ui.style().noninteractive();
 
         for i in 0..self.path.len() - 1 {
             let from = self.path[i];
-            let to = self.path[i+1];
-            ui.painter()
-                .line_segment([from, to], visuals.fg_stroke);
+            let to = self.path[i + 1];
+            ui.painter().line_segment([from, to], visuals.fg_stroke);
         }
+
+        // Label
         let relation_label = match self.relation {
             Relation::Subset(_) => "⊆",
             Relation::Equal(_, _) => "=",
@@ -38,6 +41,10 @@ impl Widget for RelationWidget<'_> {
             .rotate_bb(Rot2::from_angle(text_angle))
             .translate(0.5 * label_from.to_vec2() + 0.5 * label_to.to_vec2());
 
+        // 1. Deciding widget size:
+        let response = ui.allocate_rect(bounding_rect, egui::Sense::click());
+        let visuals = ui.style().interact_selectable(&response, self.is_selected);
+
         if ui.is_rect_visible(bounding_rect) {
             ui.painter().circle(
                 bounding_rect.center(),
@@ -52,6 +59,6 @@ impl Widget for RelationWidget<'_> {
             );
         }
 
-        ui.response()
+        response
     }
 }

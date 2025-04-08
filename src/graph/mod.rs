@@ -2,17 +2,20 @@ use egui::{Rect, Scene, Widget};
 use node::NodeWidget;
 use relation::RelationWidget;
 
-use crate::{model::{
-    complexity_class::ComplexityClassId,
-    relation::{Relation, Subset},
-    Model,
-}, visualization_controller::VisualizationController};
+use crate::{
+    app::Selection,
+    model::{
+        relation::{Relation, Subset},
+        Model,
+    },
+    visualization_controller::VisualizationController,
+};
 
 mod node;
 mod relation;
 
 pub struct GraphWidget<'a> {
-    pub selected_class: &'a mut Option<ComplexityClassId>,
+    pub selected: &'a mut Selection,
     pub model: &'a Model,
     pub visualization_controller: &'a VisualizationController,
     pub scene_rect: &'a mut Rect,
@@ -32,26 +35,42 @@ impl Widget for GraphWidget<'_> {
                         Relation::Equal(Subset { from, to }, _) => Some((from, to)),
                         Relation::Unknown => None,
                     } {
-                        ui.add(RelationWidget {
-                            path: self.visualization_controller.get_edge_path(*from, *to).unwrap(),
+                        let response = ui.add(RelationWidget {
+                            path: self
+                                .visualization_controller
+                                .get_edge_path(*from, *to)
+                                .unwrap(),
                             relation,
+                            is_selected: match self.selected {
+                                Selection::Relation((f ,t )) => from == f && to == t,
+                                _ => false,
+                            },
                         });
+                        if response.clicked() {
+                            *self.selected = Selection::Relation((*from, *to));
+                        }
                     }
                 }
                 for class in self.model.classes() {
                     let response = ui.put(
                         egui::Rect::from_center_size(
-                            *self.visualization_controller.get_position(&class.id).unwrap(),
+                            *self
+                                .visualization_controller
+                                .get_position(&class.id)
+                                .unwrap(),
                             egui::vec2(100.0, 100.0),
                         ),
                         NodeWidget {
                             label: class.names.first().unwrap().clone(),
-                            selected: self.selected_class.is_some_and(|c| c == class.id),
+                            is_selected: match self.selected {
+                                Selection::ComplexityClass(id) => *id == class.id,
+                                _ => false,
+                            },
                             tags: class.tags.clone(),
                         },
                     );
                     if response.clicked() {
-                        *self.selected_class = Some(class.id);
+                        *self.selected = Selection::ComplexityClass(class.id);
                     }
                 }
             })

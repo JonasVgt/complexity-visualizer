@@ -4,7 +4,7 @@ use crate::{database::complexity_class::Tag, utils::text_parser::RichTextParser}
 
 pub struct NodeWidget {
     pub label: String,
-    pub selected: bool,
+    pub is_selected: bool,
     pub tags: Vec<Tag>,
 }
 
@@ -33,7 +33,7 @@ impl Widget for NodeWidget {
 
         // Paint:
         if ui.is_rect_visible(rect) {
-            let visuals = ui.style().interact_selectable(&response, self.selected);
+            let visuals = ui.style().interact_selectable(&response, self.is_selected);
             let radius = 0.5 * rect.height();
             ui.painter().circle(
                 rect.center(),

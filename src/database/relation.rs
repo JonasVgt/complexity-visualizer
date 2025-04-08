@@ -13,4 +13,5 @@ pub struct Relation {
     pub from: String,
     pub to: String,
     pub relation_type: RelationType,
+    pub description: Option<String>
 }

@@ -4,15 +4,23 @@ use crate::{
     filtering::FilterState,
     graph::GraphWidget,
     model::{complexity_class::ComplexityClassId, Model},
-    sidepanel::ui_sidepanel,
+    sidepanel::{ui_sidepanel_class, ui_sidepanel_relation},
     visualization_controller::VisualizationController,
 };
 
+
+pub enum Selection {
+    ComplexityClass(ComplexityClassId),
+    Relation((ComplexityClassId, ComplexityClassId)),
+    None
+}
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct ComplexityVisualizerApp {
-    selected_class: Option<ComplexityClassId>,
+
+    #[serde(skip)]
+    selected: Selection,
 
     #[serde(skip)]
     model: Model,
@@ -32,7 +40,7 @@ impl Default for ComplexityVisualizerApp {
         let mut visualization_controller = VisualizationController::new();
         visualization_controller.arrange(&model);
         Self {
-            selected_class: None,
+            selected: Selection::None,
             model,
             visualization_controller,
             scene_rect: Rect::from_min_size(
@@ -124,15 +132,27 @@ impl eframe::App for ComplexityVisualizerApp {
             });
         });
 
-        if self.selected_class.is_some() {
-            let sidepanel_width = f32::min(ctx.available_rect().width() * 0.33, 300.0);
-            egui::SidePanel::right("my_right_panel")
-                .default_width(sidepanel_width)
-                .show(ctx, |ui| {
-                    let class = self.selected_class.and_then(|id| self.model.get_class(id));
-                    ui_sidepanel(ui, class)
-                });
+
+        match self.selected {
+            Selection::ComplexityClass(class) => {
+                let sidepanel_width = f32::min(ctx.available_rect().width() * 0.33, 300.0);
+                egui::SidePanel::right("my_right_panel")
+                    .default_width(sidepanel_width)
+                    .show(ctx, |ui| {
+                        ui_sidepanel_class(ui, self.model.get_class(class).unwrap())
+                    });
+            }
+            Selection::Relation((from, to)) => {
+                let sidepanel_width = f32::min(ctx.available_rect().width() * 0.33, 300.0);
+                egui::SidePanel::right("my_right_panel")
+                    .default_width(sidepanel_width)
+                    .show(ctx, |ui| {
+                        ui_sidepanel_relation(ui, self.model.get_relation(from, to).unwrap())
+                    });
+            }
+            Selection::None => {}
         }
+
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
@@ -144,7 +164,7 @@ impl eframe::App for ComplexityVisualizerApp {
             });
 
             ui.add(GraphWidget {
-                selected_class: &mut self.selected_class,
+                selected: &mut self.selected,
                 model: &self.model,
                 visualization_controller: &self.visualization_controller,
                 scene_rect: &mut self.scene_rect,

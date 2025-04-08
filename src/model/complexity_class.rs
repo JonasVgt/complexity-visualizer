@@ -19,6 +19,16 @@ impl fmt::Debug for ComplexityClassId {
     }
 }
 
+impl fmt::Display for ComplexityClassId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(
+            std::str::from_utf8(&self.0)
+                .unwrap()
+                .trim_matches(char::from(0)),
+        )
+    }
+}
+
 impl From<String> for ComplexityClassId {
     fn from(value: String) -> Self {
         let mut id = [0u8; 16];

@@ -53,6 +53,20 @@ impl Model {
             .collect()
     }
 
+    pub fn get_relation(
+        &self,
+        from: ComplexityClassId,
+        to: ComplexityClassId,
+    ) -> Option<&ModelRelation> {
+        self.relations.iter().find(|e| match e {
+            ModelRelation::Equal(Subset { from: f, to: t }, _) => {
+                (from == *f && to == *t) || (from == *t && to == *f)
+            }
+            ModelRelation::Subset(Subset { from: f, to: t }) => from == *f && to == *t,
+            ModelRelation::Unknown => false,
+        })
+    }
+
     pub fn filter_mut(&mut self) -> &mut filter::Filter {
         &mut self.filter
     }
