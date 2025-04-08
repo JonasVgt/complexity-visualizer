@@ -16,6 +16,7 @@
     },
     {
         "id": "NLSPACE",
+        "definition": "NSPACE(log(n))",
         "names": [
             "NL",
             "NLSPACE"
