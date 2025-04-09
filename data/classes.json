@@ -1,6 +1,7 @@
 [
     {
         "id": "LSPACE",
+        "definition": "DSPACE(log n)",
         "names": [
             "L",
             "LSPACE",
@@ -16,7 +17,7 @@
     },
     {
         "id": "NLSPACE",
-        "definition": "NSPACE(log(n))",
+        "definition": "NSPACE(log n)",
         "names": [
             "NL",
             "NLSPACE"
@@ -44,6 +45,7 @@
     },
     {
         "id": "PTIME",
+        "definition": "DTIME(n^{O(1)})",
         "names": [
             "P",
             "PTIME"
@@ -94,6 +96,7 @@
     },
     {
         "id": "NP",
+        "definition": "NTIME(n^{O(1)})",
         "names": [
             "NP"
         ],
@@ -106,6 +109,7 @@
     },
     {
         "id": "PSPACE",
+        "definition": "DSPACE(n^{O(1)})",
         "names": [
             "PSPACE"
         ],
@@ -118,6 +122,7 @@
     },
     {
         "id": "EXPTIME",
+        "definition": "DTIME(2^{n^{O(1)}})",
         "names": [
             "EXPTIME",
             "EXP",
@@ -132,6 +137,7 @@
     },
     {
         "id": "NEXPTIME",
+        "definition": "NTIME(2^{n^{O(1)}})",
         "names": [
             "NEXPTIME",
             "NEXP"
@@ -145,6 +151,7 @@
     },
     {
         "id": "EXPSPACE",
+        "definition": "DSPACE(2^{n^{O(1)}})",
         "names": [
             "EXPSPACE"
         ],
@@ -157,6 +164,7 @@
     },
     {
         "id": "NEXPSPACE",
+        "definition": "NSPACE(2^{n^{O(1)}})",
         "names": [
             "NEXPSPACE"
         ],
@@ -193,6 +201,7 @@
     },
     {
         "id": "L/POLY",
+        "definition": "SIZE(n^{O(1)})",
         "names": [
             "L/poly"
         ],
@@ -205,6 +214,7 @@
     },
     {
         "id": "P/POLY",
+        "definition": "SIZE(n^{O(1)})",
         "names": [
             "P/poly"
         ],
