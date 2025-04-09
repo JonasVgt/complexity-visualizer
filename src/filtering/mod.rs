@@ -89,7 +89,7 @@ impl FilterState {
 
                             // Complements
                             ui.separator();
-                            ui.label("Additional CLasses");
+                            ui.label("Additional Classes");
                             if ui
                                 .checkbox(filter.tag_get_mut(&Tag::Complement), "Complements")
                                 .on_hover_text(
