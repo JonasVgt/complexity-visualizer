@@ -5,7 +5,6 @@ use super::complexity_class::ComplexityClass;
 pub struct Filter {
     has_changed: bool,
     selected_tags: Vec<bool>,
-    pub show_complements: bool,
 }
 
 impl Filter {
@@ -21,12 +20,15 @@ impl Filter {
                     + 1
             ],
             has_changed: false,
-            show_complements: false,
         }
     }
 
     pub fn tag_get_mut(&mut self, tag: &Tag) -> &mut bool {
         &mut self.selected_tags[tag.clone() as usize]
+    }
+
+    pub fn tag_get(&self, tag: &Tag) -> bool {
+        self.selected_tags[tag.clone() as usize]
     }
 
     pub fn redraw(&mut self) {
@@ -42,12 +44,30 @@ impl Filter {
     }
 
     pub fn apply_classes(&self, class: &ComplexityClass) -> bool {
-        class
-            .tags
-            .iter()
-            .filter(|a| !matches!(a, Tag::Complement))
-            .any(|tag| self.selected_tags[tag.clone() as usize])
-        && (!class.tags.contains(&Tag::Complement) || self.show_complements)
+        if vec![
+            Tag::Probabilistic,
+            Tag::Deterministic,
+            Tag::Nondeterministic,
+        ]
+        .into_iter()
+        .any(|t| class.tags.contains(&t) && !self.tag_get(&t))
+        {
+            return false;
+        }
+
+        if class.tags.contains(&Tag::Complement) && !self.tag_get(&Tag::Complement) {
+            return false;
+        }
+
+        if class.tags.contains(&Tag::Space) && !self.tag_get(&Tag::Space) {
+            return false;
+        }
+
+        if class.tags.contains(&Tag::Time) && !self.tag_get(&Tag::Time) {
+            return false;
+        }
+
+        true
     }
 
     pub fn apply_relations(&self, from: &ComplexityClass, to: &ComplexityClass) -> bool {

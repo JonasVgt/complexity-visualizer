@@ -33,22 +33,68 @@ impl FilterState {
                         .fill(ui.visuals().panel_fill)
                         .show(ui, |ui| {
                             ui.heading("Filter");
+
+                            // Computational Model (Deterministic TM, Nondeterministic TM, ...)
                             ui.separator();
-                            ui.label("Tags:");
-                            for tag in Tag::tags() {
-                                if matches!(tag, Tag::Complement) {
-                                    continue;
-                                }
-                                if ui
-                                    .checkbox(filter.tag_get_mut(&tag), tag.to_string())
-                                    .changed()
-                                {
-                                    filter.redraw();
-                                }
-                            }
-                            ui.separator();
+                            ui.label("Computational Model");
                             if ui
-                                .checkbox(&mut filter.show_complements, "Complements")
+                                .checkbox(filter.tag_get_mut(&Tag::Deterministic), "Deterministic TM")
+                                .on_hover_text(
+                                    "Show complexity classes that are defined over deterministic Turing machines (e.g. P, EXPSPACE, etc.)",
+                                )
+                                .changed()
+                            {
+                                filter.redraw();
+                            }
+                            if ui
+                                .checkbox(filter.tag_get_mut(&Tag::Nondeterministic), "Nondeterministic TM")
+                                .on_hover_text(
+                                    "Show complexity classes that are defined over deterministic Turing machines (e.g. NP, NEXPSPACE, etc.)",
+                                )
+                                .changed()
+                            {
+                                filter.redraw();
+                            }
+                            if ui
+                                .checkbox(filter.tag_get_mut(&Tag::Probabilistic), "Probabilistic TM")
+                                .on_hover_text(
+                                    "Show complexity classes that are defined over deterministic Turing machines (e.g. PP, BPP, etc.)",
+                                )
+                                .changed()
+                            {
+                                filter.redraw();
+                            }
+
+                            // Resource (Time, Space, ...)
+                            ui.separator();
+                            ui.label("Resource");
+                            if ui
+                                .checkbox(filter.tag_get_mut(&Tag::Time), "Time")
+                                .on_hover_text(
+                                    "Show complexity classes that bound the usage of runtime (e.g. P, EXPTIME, etc.)",
+                                )
+                                .changed()
+                            {
+                                filter.redraw();
+                            }
+                            if ui
+                                .checkbox(filter.tag_get_mut(&Tag::Space), "Space")
+                                .on_hover_text(
+                                    "Show complexity classes that bound the usage of memory space (e.g. L, EXPSPACE, etc.)",
+                                )
+                                .changed()
+                            {
+                                filter.redraw();
+                            }
+
+                            // Complements
+                            ui.separator();
+                            ui.label("Additional CLasses");
+                            if ui
+                                .checkbox(filter.tag_get_mut(&Tag::Complement), "Complements")
+                                .on_hover_text(
+                                    "Show complements of complexity classes (i.e. co-X classes)",
+                                )
                                 .changed()
                             {
                                 filter.redraw();
