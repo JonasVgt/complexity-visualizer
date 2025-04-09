@@ -16,7 +16,6 @@ pub fn ui_sidepanel_relation(ui: &mut egui::Ui, relation: &Relation) {
         Relation::Subset(Subset { from, to }) => {
             format!("{} ⊆ {}", from, to)
         }
-        Relation::Unknown => String::new(),
     };
     ui.add(rich_label_heading!(heading));
     ui.label("Unfortunately, this feature has not been implemented yet :(");

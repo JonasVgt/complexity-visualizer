@@ -3,7 +3,6 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Deserialize, Serialize, Clone, Copy, PartialEq, Eq)]
 pub enum RelationType {
     Subset,
-    Unknown,
 }
 
 #[allow(dead_code)]

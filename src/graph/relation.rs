@@ -23,7 +23,6 @@ impl Widget for RelationWidget<'_> {
         let relation_label = match self.relation {
             Relation::Subset(_) => "⊆",
             Relation::Equal(_, _) => "=",
-            Relation::Unknown => "Ukn",
         };
 
         let galley = {

@@ -49,7 +49,6 @@ impl VisualizationController {
             let edges = match relation {
                 Relation::Subset(Subset { from, to }) => vec![(from, to)],
                 Relation::Equal(Subset { from, to }, _) => vec![(from, to), (to, from)],
-                Relation::Unknown => vec![],
             };
             for (from, to) in edges {
                 graph.add_edge(
@@ -117,7 +116,6 @@ impl VisualizationController {
             let edges = match relation {
                 Relation::Subset(s) => vec![s],
                 Relation::Equal(s1, s2) => vec![s1, s2],
-                Relation::Unknown => vec![],
             };
 
             for Subset { from, to } in edges {

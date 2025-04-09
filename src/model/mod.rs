@@ -45,7 +45,6 @@ impl Model {
                 let r = match rel {
                     ModelRelation::Subset(Subset { from, to }) => Some((from, to)),
                     ModelRelation::Equal(Subset { from, to }, _) => Some((from, to)),
-                    ModelRelation::Unknown => None,
                 }
                 .map(|(from, to)| (self.get_class(*from).unwrap(), self.get_class(*to).unwrap()));
                 r.is_some_and(|(c1, c2)| self.filter.apply_relations(c1, c2))
@@ -63,7 +62,6 @@ impl Model {
                 (from == *f && to == *t) || (from == *t && to == *f)
             }
             ModelRelation::Subset(Subset { from: f, to: t }) => from == *f && to == *t,
-            ModelRelation::Unknown => false,
         })
     }
 

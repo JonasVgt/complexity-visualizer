@@ -33,7 +33,6 @@ impl Widget for GraphWidget<'_> {
                     if let Some((from, to)) = match relation {
                         Relation::Subset(Subset { from, to }) => Some((from, to)),
                         Relation::Equal(Subset { from, to }, _) => Some((from, to)),
-                        Relation::Unknown => None,
                     } {
                         let response = ui.add(RelationWidget {
                             path: self

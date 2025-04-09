@@ -21,7 +21,6 @@ impl Subset {
 pub enum Relation {
     Subset(Subset),
     Equal(Subset, Subset),
-    Unknown,
 }
 
 impl From<database::relation::Relation> for Relation {
@@ -31,7 +30,6 @@ impl From<database::relation::Relation> for Relation {
                 from: value.from.into(),
                 to: value.to.into(),
             }),
-            database::relation::RelationType::Unknown => Self::Unknown,
         }
     }
 }
