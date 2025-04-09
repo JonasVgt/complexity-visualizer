@@ -35,10 +35,9 @@ impl Widget for NodeWidget {
         // Paint:
         if ui.is_rect_visible(rect) {
             let visuals = ui.style().interact_selectable(&response, self.is_selected);
-            let radius = 0.5 * rect.height();
             ui.painter().circle(
                 rect.center(),
-                radius,
+                0.5 * rect.height(),
                 visuals.bg_fill,
                 visuals.fg_stroke,
             );

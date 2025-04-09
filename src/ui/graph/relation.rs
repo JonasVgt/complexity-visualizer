@@ -10,7 +10,7 @@ pub struct RelationWidget<'a> {
 
 impl Widget for RelationWidget<'_> {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
-        // Line
+        // Paint line
         let visuals = ui.style().noninteractive();
 
         for i in 0..self.path.len() - 1 {
@@ -19,7 +19,7 @@ impl Widget for RelationWidget<'_> {
             ui.painter().line_segment([from, to], visuals.fg_stroke);
         }
 
-        // Label
+        // Create label
         let relation_label = match self.relation {
             Relation::Subset(_) => "⊆",
             Relation::Equal(_, _) => "=",
@@ -40,10 +40,10 @@ impl Widget for RelationWidget<'_> {
             .rotate_bb(Rot2::from_angle(text_angle))
             .translate(0.5 * label_from.to_vec2() + 0.5 * label_to.to_vec2());
 
-        // 1. Deciding widget size:
         let response = ui.allocate_rect(bounding_rect, egui::Sense::click());
         let visuals = ui.style().interact_selectable(&response, self.is_selected);
 
+        // Paint Label
         if ui.is_rect_visible(bounding_rect) {
             ui.painter().circle(
                 bounding_rect.center(),
