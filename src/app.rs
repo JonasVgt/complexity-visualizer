@@ -1,10 +1,10 @@
 use egui::{pos2, FontData, FontDefinitions, FontFamily, Rect};
 
 use crate::{
-    filtering::FilterState,
-    graph::GraphWidget,
+    ui::filtering::FilterState,
+    ui::graph::GraphWidget,
     model::{complexity_class::ComplexityClassId, Model},
-    sidepanel::{ui_sidepanel_class, ui_sidepanel_relation},
+    ui::sidepanel::{ui_sidepanel_class, ui_sidepanel_relation},
     visualization_controller::VisualizationController,
 };
 
