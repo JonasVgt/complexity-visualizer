@@ -38,7 +38,7 @@ impl Widget for NodeWidget {
             let radius = 0.5 * rect.height();
             ui.painter().circle(
                 rect.center(),
-                0.75 * radius,
+                radius,
                 visuals.bg_fill,
                 visuals.fg_stroke,
             );

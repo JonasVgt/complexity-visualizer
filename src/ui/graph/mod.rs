@@ -53,7 +53,7 @@ impl Widget for GraphWidget<'_> {
                 for class in self.model.classes() {
                     let response = ui.put(
                         egui::Rect::from_center_size(
-                            *self
+                            self
                                 .visualization_controller
                                 .get_position(&class.id)
                                 .unwrap(),

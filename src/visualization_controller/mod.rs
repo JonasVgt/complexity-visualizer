@@ -25,6 +25,7 @@ use crate::model::{
 pub struct VisualizationController {
     positions: HashMap<ComplexityClassId, Pos2>,
     edge_paths: HashMap<(ComplexityClassId, ComplexityClassId), Vec<Pos2>>,
+    node_spacing: f32,
 }
 
 impl VisualizationController {
@@ -32,6 +33,7 @@ impl VisualizationController {
         Self {
             positions: HashMap::new(),
             edge_paths: HashMap::new(),
+            node_spacing: 150.0,
         }
     }
 
@@ -105,7 +107,7 @@ impl VisualizationController {
 
                 for i in 0..classes.len() {
                     let y = p.y - (classes.len() as f32 / 2.0) + i as f32;
-                    let pos = Pos2::new(p.x as f32 * 100.0, y * 100.0);
+                    let pos = Pos2::new(p.x as f32, y);
                     self.positions.insert(*classes.get(i).unwrap(), pos);
                 }
             }
@@ -146,8 +148,8 @@ impl VisualizationController {
                     self.edge_paths.insert(
                         (*from, *to),
                         vec![
-                            *self.get_position(from).unwrap(),
-                            *self.get_position(to).unwrap(),
+                            *self.positions.get(from).unwrap(),
+                            *self.positions.get(to).unwrap(),
                         ],
                     );
                     continue;
@@ -203,19 +205,19 @@ impl VisualizationController {
                     .unwrap();
                 let mut path_pos: Vec<Pos2> = path
                     .into_iter()
-                    .map(|n| *node_positions.get(&n).unwrap() * 100.0)
+                    .map(|n| *node_positions.get(&n).unwrap())
                     .collect();
-                path_pos[0] = *self.get_position(from).unwrap();
+                path_pos[0] = *self.positions.get(from).unwrap();
                 let len = path_pos.len();
-                path_pos[len - 1] = *self.get_position(to).unwrap();
+                path_pos[len - 1] = *self.positions.get(to).unwrap();
 
                 self.edge_paths.insert((*from, *to), path_pos);
             }
         }
     }
 
-    pub fn get_position(&self, id: &ComplexityClassId) -> Option<&Pos2> {
-        self.positions.get(id)
+    pub fn get_position(&self, id: &ComplexityClassId) -> Option<Pos2> {
+        self.positions.get(id).map(|n| *n * self.node_spacing)
     }
 
     pub fn get_edge_path(
@@ -223,6 +225,8 @@ impl VisualizationController {
         from: ComplexityClassId,
         to: ComplexityClassId,
     ) -> Option<Vec<Pos2>> {
-        self.edge_paths.get(&(from, to)).map(|v| v.to_vec())
+        self.edge_paths
+            .get(&(from, to))
+            .map(|v| v.iter().map(|p| *p * self.node_spacing).collect())
     }
 }

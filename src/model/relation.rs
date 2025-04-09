@@ -20,7 +20,7 @@ impl Subset {
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub enum Relation {
     Subset(Subset),
-    Equal(Subset, Subset),
+    Equal(Subset, Subset)
 }
 
 impl From<database::relation::Relation> for Relation {
