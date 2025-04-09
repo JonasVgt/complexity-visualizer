@@ -36,12 +36,22 @@ impl FilterState {
                             ui.separator();
                             ui.label("Tags:");
                             for tag in Tag::tags() {
+                                if matches!(tag, Tag::Complement) {
+                                    continue;
+                                }
                                 if ui
                                     .checkbox(filter.tag_get_mut(&tag), tag.to_string())
                                     .changed()
                                 {
                                     filter.redraw();
                                 }
+                            }
+                            ui.separator();
+                            if ui
+                                .checkbox(&mut filter.show_complements, "Complements")
+                                .changed()
+                            {
+                                filter.redraw();
                             }
                         });
                 });

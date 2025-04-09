@@ -5,6 +5,7 @@ use super::complexity_class::ComplexityClass;
 pub struct Filter {
     has_changed: bool,
     selected_tags: Vec<bool>,
+    pub show_complements: bool,
 }
 
 impl Filter {
@@ -20,6 +21,7 @@ impl Filter {
                     + 1
             ],
             has_changed: false,
+            show_complements: false,
         }
     }
 
@@ -43,7 +45,9 @@ impl Filter {
         class
             .tags
             .iter()
-            .any(|t| self.selected_tags[t.clone() as usize])
+            .filter(|a| !matches!(a, Tag::Complement))
+            .any(|tag| self.selected_tags[tag.clone() as usize])
+        && (!class.tags.contains(&Tag::Complement) || self.show_complements)
     }
 
     pub fn apply_relations(&self, from: &ComplexityClass, to: &ComplexityClass) -> bool {
