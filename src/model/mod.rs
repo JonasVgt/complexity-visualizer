@@ -7,7 +7,7 @@ use crate::database::{
 };
 use complexity_class::{ComplexityClass as ModelComplexityClass, ComplexityClassId};
 use egui::ahash::{HashSet, HashSetExt};
-use relation::{Relation as ModelRelation, Subset};
+use relation::{Relation as ModelRelation, RelationComposition, Subset};
 
 pub struct Model {
     relations: Vec<ModelRelation>,
@@ -52,6 +52,16 @@ impl Model {
             .collect()
     }
 
+    pub fn relation_compositions(&self) -> Vec<RelationComposition> {
+        self.relations()
+            .iter()
+            .map(|r| match r {
+                ModelRelation::Subset(_) => RelationComposition::Subset(vec![**r]),
+                ModelRelation::Equal(_, _) => RelationComposition::Equalily(vec![**r]),
+            })
+            .collect()
+    }
+
     pub fn get_relation(
         &self,
         from: ComplexityClassId,
@@ -75,10 +85,8 @@ impl Model {
 
         for relation in converted {
             match relation {
-                ModelRelation::Subset(s)
-                    if res.remove(&ModelRelation::Subset(s.clone().inversed())) =>
-                {
-                    res.insert(ModelRelation::Equal(s.clone(), s.clone().inversed()));
+                ModelRelation::Subset(s) if res.remove(&ModelRelation::Subset(s.inversed())) => {
+                    res.insert(ModelRelation::Equal(s, s.inversed()));
                 }
                 a => {
                     res.insert(a);

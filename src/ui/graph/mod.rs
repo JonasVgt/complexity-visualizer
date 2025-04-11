@@ -2,14 +2,7 @@ use egui::{Rect, Scene, Widget};
 use node::NodeWidget;
 use relation::RelationWidget;
 
-use crate::{
-    app::Selection,
-    model::{
-        relation::{Relation, Subset},
-        Model,
-    },
-    visualization_controller::VisualizationController,
-};
+use crate::{app::Selection, model::Model, visualization_controller::VisualizationController};
 
 mod node;
 mod relation;
@@ -29,32 +22,28 @@ impl Widget for GraphWidget<'_> {
 
         scene
             .show(ui, self.scene_rect, |ui| {
-                for relation in self.model.relations() {
-                    if let Some((from, to)) = match relation {
-                        Relation::Subset(Subset { from, to }) => Some((from, to)),
-                        Relation::Equal(Subset { from, to }, _) => Some((from, to)),
-                    } {
-                        let response = ui.add(RelationWidget {
-                            path: self
-                                .visualization_controller
-                                .get_edge_path(*from, *to)
-                                .unwrap(),
-                            relation,
-                            is_selected: match self.selected {
-                                Selection::Relation((f, t)) => from == f && to == t,
-                                _ => false,
-                            },
-                        });
-                        if response.clicked() {
-                            *self.selected = Selection::Relation((*from, *to));
-                        }
+                for relation in self.model.relation_compositions() {
+                    let from = relation.get_from();
+                    let to = relation.get_to();
+                    let response = ui.add(RelationWidget {
+                        path: self
+                            .visualization_controller
+                            .get_edge_path(from, to)
+                            .unwrap(),
+                        relation: &relation,
+                        is_selected: match self.selected {
+                            Selection::Relation((f, t)) => from == *f && to == *t,
+                            _ => false,
+                        },
+                    });
+                    if response.clicked() {
+                        *self.selected = Selection::Relation((from, to));
                     }
                 }
                 for class in self.model.classes() {
                     let response = ui.put(
                         egui::Rect::from_center_size(
-                            self
-                                .visualization_controller
+                            self.visualization_controller
                                 .get_position(&class.id)
                                 .unwrap(),
                             egui::vec2(100.0, 100.0),

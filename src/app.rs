@@ -1,9 +1,9 @@
 use egui::{pos2, FontData, FontDefinitions, FontFamily, Rect};
 
 use crate::{
+    model::{complexity_class::ComplexityClassId, Model},
     ui::filtering::FilterState,
     ui::graph::GraphWidget,
-    model::{complexity_class::ComplexityClassId, Model},
     ui::sidepanel::{ui_sidepanel_class, ui_sidepanel_relation},
     visualization_controller::VisualizationController,
 };

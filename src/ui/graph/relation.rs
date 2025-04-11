@@ -1,10 +1,10 @@
 use egui::{emath::Rot2, epaint::TextShape, FontSelection, Pos2, Rect, Widget};
 
-use crate::model::relation::Relation;
+use crate::model::relation::RelationComposition;
 
 pub struct RelationWidget<'a> {
     pub path: Vec<Pos2>,
-    pub relation: &'a Relation,
+    pub relation: &'a RelationComposition,
     pub is_selected: bool,
 }
 
@@ -21,8 +21,8 @@ impl Widget for RelationWidget<'_> {
 
         // Create label
         let relation_label = match self.relation {
-            Relation::Subset(_) => "⊆",
-            Relation::Equal(_, _) => "=",
+            RelationComposition::Subset(_) => "⊆",
+            RelationComposition::Equalily(_) => "=",
         };
 
         let galley = {
