@@ -18,7 +18,7 @@ use vertex_ordering::order_vertices;
 
 use crate::model::{
     complexity_class::ComplexityClassId,
-    relation::{Relation, Subset},
+    relation::{RelationType, Subset},
     Model,
 };
 
@@ -48,9 +48,9 @@ impl VisualizationController {
             .collect();
 
         model.relations().iter().for_each(|relation| {
-            let edges = match relation {
-                Relation::Subset(Subset { from, to }) => vec![(from, to)],
-                Relation::Equal(Subset { from, to }, _) => vec![(from, to), (to, from)],
+            let edges = match &relation.relation_type {
+                RelationType::Subset(Subset { from, to }) => vec![(from, to)],
+                RelationType::Equal(Subset { from, to }, _) => vec![(from, to), (to, from)],
             };
             for (from, to) in edges {
                 graph.add_edge(
@@ -115,9 +115,9 @@ impl VisualizationController {
         // Assign paths for relations
         self.edge_paths = HashMap::new();
         for relation in model.relations() {
-            let edges = match relation {
-                Relation::Subset(s) => vec![s],
-                Relation::Equal(s1, s2) => vec![s1, s2],
+            let edges = match &relation.relation_type {
+                RelationType::Subset(s) => vec![s],
+                RelationType::Equal(s1, s2) => vec![s1, s2],
             };
 
             for Subset { from, to } in edges {

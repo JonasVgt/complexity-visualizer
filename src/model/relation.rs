@@ -17,8 +17,13 @@ impl Subset {
     }
 }
 
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+pub struct Relation {
+    pub relation_type: RelationType,
+}
+
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
-pub enum Relation {
+pub enum RelationType {
     Subset(Subset),
     Equal(Subset, Subset),
 }
@@ -26,10 +31,12 @@ pub enum Relation {
 impl From<database::relation::Relation> for Relation {
     fn from(value: database::relation::Relation) -> Self {
         match value.relation_type {
-            database::relation::RelationType::Subset => Self::Subset(Subset {
-                from: value.from.into(),
-                to: value.to.into(),
-            }),
+            database::relation::RelationType::Subset => Relation {
+                relation_type: RelationType::Subset(Subset {
+                    from: value.from.into(),
+                    to: value.to.into(),
+                }),
+            },
         }
     }
 }
@@ -42,26 +49,26 @@ pub enum RelationComposition {
 impl RelationComposition {
     pub fn get_from(&self) -> ComplexityClassId {
         match self {
-            RelationComposition::Subset(rs) => match rs.first().unwrap() {
-                Relation::Equal(s, _) => s.from,
-                Relation::Subset(s) => s.from,
+            RelationComposition::Subset(rs) => match rs.first().unwrap().relation_type {
+                RelationType::Equal(s, _) => s.from,
+                RelationType::Subset(s) => s.from,
             },
-            RelationComposition::Equalily(rs) => match rs.first().unwrap() {
-                Relation::Equal(s, _) => s.from,
-                Relation::Subset(s) => s.from,
+            RelationComposition::Equalily(rs) => match rs.first().unwrap().relation_type {
+                RelationType::Equal(s, _) => s.from,
+                RelationType::Subset(s) => s.from,
             },
         }
     }
 
     pub fn get_to(&self) -> ComplexityClassId {
         match self {
-            RelationComposition::Subset(rs) => match rs.last().unwrap() {
-                Relation::Equal(s, _) => s.to,
-                Relation::Subset(s) => s.to,
+            RelationComposition::Subset(rs) => match rs.last().unwrap().relation_type {
+                RelationType::Equal(s, _) => s.to,
+                RelationType::Subset(s) => s.to,
             },
-            RelationComposition::Equalily(rs) => match rs.last().unwrap() {
-                Relation::Equal(s, _) => s.to,
-                Relation::Subset(s) => s.to,
+            RelationComposition::Equalily(rs) => match rs.last().unwrap().relation_type {
+                RelationType::Equal(s, _) => s.to,
+                RelationType::Subset(s) => s.to,
             },
         }
     }

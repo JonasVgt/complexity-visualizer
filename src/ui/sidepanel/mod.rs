@@ -2,18 +2,18 @@ use crate::{
     database::complexity_class::Tag,
     model::{
         complexity_class::ComplexityClass,
-        relation::{Relation, Subset},
+        relation::{Relation, RelationType, Subset},
     },
     rich_label, rich_label_heading,
     utils::text_parser::RichTextParser,
 };
 
 pub fn ui_sidepanel_relation(ui: &mut egui::Ui, relation: &Relation) {
-    let heading = match relation {
-        Relation::Equal(Subset { from, to }, _) => {
+    let heading = match relation.relation_type {
+        RelationType::Equal(Subset { from, to }, _) => {
             format!("{} = {}", from, to)
         }
-        Relation::Subset(Subset { from, to }) => {
+        RelationType::Subset(Subset { from, to }) => {
             format!("{} ⊆ {}", from, to)
         }
     };

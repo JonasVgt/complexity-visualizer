@@ -7,7 +7,7 @@ use crate::database::{
 };
 use complexity_class::{ComplexityClass as ModelComplexityClass, ComplexityClassId};
 use egui::ahash::{HashSet, HashSetExt};
-use relation::{Relation as ModelRelation, RelationComposition, Subset};
+use relation::{Relation as ModelRelation, RelationComposition, RelationType, Subset};
 
 pub struct Model {
     relations: Vec<ModelRelation>,
@@ -42,9 +42,9 @@ impl Model {
         self.relations
             .iter()
             .filter(|rel| {
-                let r = match rel {
-                    ModelRelation::Subset(Subset { from, to }) => Some((from, to)),
-                    ModelRelation::Equal(Subset { from, to }, _) => Some((from, to)),
+                let r = match &rel.relation_type {
+                    RelationType::Subset(Subset { from, to }) => Some((from, to)),
+                    RelationType::Equal(Subset { from, to }, _) => Some((from, to)),
                 }
                 .map(|(from, to)| (self.get_class(*from).unwrap(), self.get_class(*to).unwrap()));
                 r.is_some_and(|(c1, c2)| self.filter.apply_relations(c1, c2))
@@ -54,10 +54,10 @@ impl Model {
 
     pub fn relation_compositions(&self) -> Vec<RelationComposition> {
         self.relations()
-            .iter()
-            .map(|r| match r {
-                ModelRelation::Subset(_) => RelationComposition::Subset(vec![**r]),
-                ModelRelation::Equal(_, _) => RelationComposition::Equalily(vec![**r]),
+            .into_iter()
+            .map(|r| match r.relation_type {
+                RelationType::Subset(_) => RelationComposition::Subset(vec![r.clone()]),
+                RelationType::Equal(_, _) => RelationComposition::Equalily(vec![r.clone()]),
             })
             .collect()
     }
@@ -67,11 +67,11 @@ impl Model {
         from: ComplexityClassId,
         to: ComplexityClassId,
     ) -> Option<&ModelRelation> {
-        self.relations.iter().find(|e| match e {
-            ModelRelation::Equal(Subset { from: f, to: t }, _) => {
+        self.relations.iter().find(|e| match &e.relation_type {
+            RelationType::Equal(Subset { from: f, to: t }, _) => {
                 (from == *f && to == *t) || (from == *t && to == *f)
             }
-            ModelRelation::Subset(Subset { from: f, to: t }) => from == *f && to == *t,
+            RelationType::Subset(Subset { from: f, to: t }) => from == *f && to == *t,
         })
     }
 
@@ -84,12 +84,18 @@ impl Model {
         let mut res = HashSet::new();
 
         for relation in converted {
-            match relation {
-                ModelRelation::Subset(s) if res.remove(&ModelRelation::Subset(s.inversed())) => {
-                    res.insert(ModelRelation::Equal(s, s.inversed()));
+            match relation.relation_type {
+                RelationType::Subset(s)
+                    if res.remove(&ModelRelation {
+                        relation_type: RelationType::Subset(s.inversed()),
+                    }) =>
+                {
+                    res.insert(ModelRelation {
+                        relation_type: RelationType::Equal(s, s.inversed()),
+                    });
                 }
-                a => {
-                    res.insert(a);
+                _ => {
+                    res.insert(relation);
                 }
             };
         }
