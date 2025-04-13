@@ -50,7 +50,10 @@ impl VisualizationController {
         model.relation_compositions().iter().for_each(|relation| {
             let edges = match &relation {
                 RelationComposition::Subset(_) => vec![(relation.get_from(), relation.get_to())],
-                RelationComposition::Equalily(_) => vec![(relation.get_from(), relation.get_to()), (relation.get_to(), relation.get_from())],
+                RelationComposition::Equalily(_) => vec![
+                    (relation.get_from(), relation.get_to()),
+                    (relation.get_to(), relation.get_from()),
+                ],
             };
             for (from, to) in edges {
                 graph.add_edge(
