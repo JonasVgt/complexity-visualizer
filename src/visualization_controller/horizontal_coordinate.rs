@@ -1,8 +1,8 @@
-use std::{collections::HashMap, fmt::Debug};
+use std::collections::HashMap;
 
 use petgraph::graph::NodeIndex;
 
-use super::layered_graph::LayeredGraph;
+use super::layered_graph::{HasWidth, LayeredGraph};
 
 struct HorizontalCoordinates(HashMap<NodeIndex, f32>);
 
@@ -52,8 +52,7 @@ impl From<HorizontalCoordinates> for HashMap<NodeIndex, f32> {
 
 pub fn compute_horizontal_coordinate<N, E>(graph: &LayeredGraph<N, E>) -> HashMap<NodeIndex, f32>
 where
-    N: Debug,
-    E: Debug,
+    N: HasWidth,
 {
     let mut upper_assingment = compute_upper_assignment(graph);
     let mut lower_assingment = compute_lower_assignment(graph);
@@ -83,7 +82,10 @@ where
         .collect()
 }
 
-fn compute_upper_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoordinates {
+fn compute_upper_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoordinates
+where
+    N: HasWidth,
+{
     let mut pos: HashMap<NodeIndex, f32> = HashMap::new();
 
     // Assign coordinates to first layer
@@ -93,7 +95,7 @@ fn compute_upper_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoord
 
     for (layer_idx, layer) in graph.layers().iter().enumerate().skip(1) {
         // Assign node pos to average position of parents
-        let mut prev_node = None;
+        let mut prev_node: Option<&NodeIndex> = None;
         for node in layer {
             let mut sum = 0;
             let mut num = 0;
@@ -103,10 +105,17 @@ fn compute_upper_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoord
                     num += 1;
                 }
             }
+
+            let mut min_dist = 0.0;
+            if let Some(prev) = prev_node {
+                min_dist = graph.graph().node_weight(*prev).unwrap().get_width() * 0.5
+                    + graph.graph().node_weight(*node).unwrap().get_width() * 0.5;
+            }
+
             let x_pos = match (prev_node, num) {
-                (Some(p), 0) => *pos.get(p).unwrap() + 1.0,
+                (Some(p), 0) => *pos.get(p).unwrap() + min_dist,
                 (None, 0) => 0.0,
-                (Some(p), _) => f32::max(*pos.get(p).unwrap() + 1.0, 0.0),
+                (Some(p), _) => f32::max(*pos.get(p).unwrap() + min_dist, 0.0),
                 (None, _) => sum as f32 / num as f32,
             };
 
@@ -119,8 +128,7 @@ fn compute_upper_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoord
 
 fn compute_lower_assignment<N, E>(graph: &LayeredGraph<N, E>) -> HorizontalCoordinates
 where
-    N: Debug,
-    E: Debug,
+    N: HasWidth,
 {
     let mut pos: HashMap<NodeIndex, f32> = HashMap::new();
 
@@ -131,7 +139,7 @@ where
 
     for (layer_idx, layer) in graph.layers().iter().enumerate().rev().skip(1) {
         // Assign node pos to average position of parents
-        let mut prev_node = None;
+        let mut prev_node: Option<&NodeIndex> = None;
         for node in layer {
             let mut sum = 0;
             let mut num = 0;
@@ -141,10 +149,17 @@ where
                     num += 1;
                 }
             }
+
+            let mut min_dist = 0.0;
+            if let Some(prev) = prev_node {
+                min_dist = graph.graph().node_weight(*prev).unwrap().get_width() * 0.5
+                    + graph.graph().node_weight(*node).unwrap().get_width() * 0.5;
+            }
+
             let x_pos = match (prev_node, num) {
-                (Some(p), 0) => *pos.get(p).unwrap() + 1.0,
+                (Some(p), 0) => *pos.get(p).unwrap() + min_dist,
                 (None, 0) => 0.0,
-                (Some(p), _) => f32::max(*pos.get(p).unwrap() + 1.0, 0.0),
+                (Some(p), _) => f32::max(*pos.get(p).unwrap() + min_dist, 0.0),
                 (None, _) => sum as f32 / num as f32,
             };
 

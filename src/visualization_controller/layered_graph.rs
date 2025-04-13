@@ -134,3 +134,13 @@ impl<N, E> LayeredGraph<N, E> {
         (self.graph, self.layers)
     }
 }
+
+pub trait HasWidth {
+    fn get_width(&self) -> f32;
+}
+
+impl<X> HasWidth for Vec<X> {
+    fn get_width(&self) -> f32 {
+        self.len() as f32
+    }
+}
