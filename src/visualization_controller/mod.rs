@@ -16,11 +16,7 @@ use petgraph::{
 };
 use vertex_ordering::order_vertices;
 
-use crate::model::{
-    complexity_class::ComplexityClassId,
-    relation::{RelationComposition, RelationType, Subset},
-    Model,
-};
+use crate::model::{complexity_class::ComplexityClassId, relation::RelationComposition, Model};
 
 pub struct VisualizationController {
     positions: HashMap<ComplexityClassId, Pos2>,
@@ -117,13 +113,16 @@ impl VisualizationController {
         }
         // Assign paths for relations
         self.edge_paths = HashMap::new();
-        for relation in model.relations() {
-            let edges = match &relation.relation_type {
-                RelationType::Subset(s) => vec![s],
-                RelationType::Equal(s1, s2) => vec![s1, s2],
+        for relation in model.relation_compositions() {
+            let edges = match &relation {
+                RelationComposition::Subset(_) => vec![(relation.get_from(), relation.get_to())],
+                RelationComposition::Equalily(_) => vec![
+                    (relation.get_from(), relation.get_to()),
+                    (relation.get_to(), relation.get_from()),
+                ],
             };
 
-            for Subset { from, to } in edges {
+            for (from, to) in &edges {
                 let from_node = graph_with_dummynodes
                     .graph()
                     .node_indices()

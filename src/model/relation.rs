@@ -8,15 +8,6 @@ pub struct Subset {
     pub to: ComplexityClassId,
 }
 
-impl Subset {
-    pub fn inversed(self) -> Self {
-        Subset {
-            from: self.to,
-            to: self.from,
-        }
-    }
-}
-
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct Relation {
     pub relation_type: RelationType,
@@ -41,6 +32,7 @@ impl From<database::relation::Relation> for Relation {
     }
 }
 
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum RelationComposition {
     Subset(Vec<Relation>),
     Equalily(Vec<Relation>),
