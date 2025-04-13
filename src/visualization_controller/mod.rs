@@ -18,7 +18,7 @@ use vertex_ordering::order_vertices;
 
 use crate::model::{
     complexity_class::ComplexityClassId,
-    relation::{RelationType, Subset},
+    relation::{RelationComposition, RelationType, Subset},
     Model,
 };
 
@@ -47,15 +47,15 @@ impl VisualizationController {
             .map(|id| (id, graph.add_node(id).index()))
             .collect();
 
-        model.relations().iter().for_each(|relation| {
-            let edges = match &relation.relation_type {
-                RelationType::Subset(Subset { from, to }) => vec![(from, to)],
-                RelationType::Equal(Subset { from, to }, _) => vec![(from, to), (to, from)],
+        model.relation_compositions().iter().for_each(|relation| {
+            let edges = match &relation {
+                RelationComposition::Subset(_) => vec![(relation.get_from(), relation.get_to())],
+                RelationComposition::Equalily(_) => vec![(relation.get_from(), relation.get_to()), (relation.get_to(), relation.get_from())],
             };
             for (from, to) in edges {
                 graph.add_edge(
-                    node_index(*node_indices.get(from).unwrap()),
-                    node_index(*node_indices.get(to).unwrap()),
+                    node_index(*node_indices.get(&from).unwrap()),
+                    node_index(*node_indices.get(&to).unwrap()),
                     (),
                 );
             }
