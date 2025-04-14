@@ -8,9 +8,30 @@ pub struct Subset {
     pub to: ComplexityClassId,
 }
 
+pub type RelationId = u32;
+
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct Relation {
+    id: RelationId,
     pub relation_type: RelationType,
+}
+
+impl Relation {
+    pub fn from_db(id: RelationId, value: database::relation::Relation) -> Self {
+        match value.relation_type {
+            database::relation::RelationType::Subset => Relation {
+                relation_type: RelationType::Subset(Subset {
+                    from: value.from.into(),
+                    to: value.to.into(),
+                }),
+                id,
+            },
+        }
+    }
+
+    pub fn id(&self) -> RelationId {
+        self.id
+    }
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
@@ -19,18 +40,7 @@ pub enum RelationType {
     Equal(Subset, Subset),
 }
 
-impl From<database::relation::Relation> for Relation {
-    fn from(value: database::relation::Relation) -> Self {
-        match value.relation_type {
-            database::relation::RelationType::Subset => Relation {
-                relation_type: RelationType::Subset(Subset {
-                    from: value.from.into(),
-                    to: value.to.into(),
-                }),
-            },
-        }
-    }
-}
+pub type RelationCompositionId = Vec<RelationId>;
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum RelationComposition {
@@ -63,5 +73,15 @@ impl RelationComposition {
                 RelationType::Subset(s) => s.to,
             },
         }
+    }
+
+    pub fn id(&self) -> RelationCompositionId {
+        match self {
+            RelationComposition::Subset(r) => r,
+            RelationComposition::Equalily(r) => r,
+        }
+        .iter()
+        .map(|r| r.id())
+        .collect()
     }
 }

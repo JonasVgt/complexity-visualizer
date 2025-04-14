@@ -32,12 +32,15 @@ impl Widget for GraphWidget<'_> {
                             .unwrap(),
                         relation: &relation,
                         is_selected: match self.selected {
-                            Selection::Relation((f, t)) => from == *f && to == *t,
+                            Selection::Relation(id) => *id == relation.id(),
                             _ => false,
                         },
                     });
                     if response.clicked() {
-                        *self.selected = Selection::Relation((from, to));
+                        *self.selected = Selection::Relation(relation.id());
+                    }
+                    if response.hovered() {
+                        println!("hover: {:?}", relation.id())
                     }
                 }
                 for class in self.model.classes() {

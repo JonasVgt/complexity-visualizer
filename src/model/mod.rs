@@ -16,7 +16,10 @@ use petgraph::{
     prelude::StableDiGraph,
     visit::{depth_first_search, Control, DfsEvent},
 };
-use relation::{Relation as ModelRelation, RelationComposition, RelationType, Subset};
+use relation::{
+    Relation as ModelRelation, RelationComposition, RelationCompositionId, RelationId,
+    RelationType, Subset,
+};
 
 pub struct Model {
     relations: Vec<ModelRelation>,
@@ -140,17 +143,19 @@ impl Model {
         res.into_iter().collect()
     }
 
-    pub fn get_relation(
+    pub fn get_relation(&self, id: RelationId) -> Option<&ModelRelation> {
+        self.relations.iter().find(|e| e.id() == id)
+    }
+
+    pub fn get_relation_composition(
         &self,
-        from: ComplexityClassId,
-        to: ComplexityClassId,
-    ) -> Option<&ModelRelation> {
-        self.relations.iter().find(|e| match &e.relation_type {
-            RelationType::Equal(Subset { from: f, to: t }, _) => {
-                (from == *f && to == *t) || (from == *t && to == *f)
-            }
-            RelationType::Subset(Subset { from: f, to: t }) => from == *f && to == *t,
-        })
+        id: RelationCompositionId,
+    ) -> Option<RelationComposition> {
+        let rels = id
+            .into_iter()
+            .map(|id| self.get_relation(id).unwrap().clone())
+            .collect();
+        Some(RelationComposition::Subset(rels))
     }
 
     pub fn filter_mut(&mut self) -> &mut filter::Filter {
@@ -158,7 +163,11 @@ impl Model {
     }
 
     fn convert_relations(input: Vec<DBRelation>) -> Vec<ModelRelation> {
-        input.into_iter().map(ModelRelation::from).collect()
+        input
+            .into_iter()
+            .enumerate()
+            .map(|(id, rel)| ModelRelation::from_db(id as u32, rel))
+            .collect()
     }
 
     fn convert_nodes(input: Vec<DBComplexityClass>) -> Vec<ModelComplexityClass> {

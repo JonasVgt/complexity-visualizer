@@ -1,16 +1,18 @@
 use egui::{pos2, FontData, FontDefinitions, FontFamily, Rect};
 
 use crate::{
-    model::{complexity_class::ComplexityClassId, Model},
-    ui::filtering::FilterState,
-    ui::graph::GraphWidget,
-    ui::sidepanel::{ui_sidepanel_class, ui_sidepanel_relation},
+    model::{complexity_class::ComplexityClassId, relation::RelationCompositionId, Model},
+    ui::{
+        filtering::FilterState,
+        graph::GraphWidget,
+        sidepanel::{ui_sidepanel_class, ui_sidepanel_relation},
+    },
     visualization_controller::VisualizationController,
 };
 
 pub enum Selection {
     ComplexityClass(ComplexityClassId),
-    Relation((ComplexityClassId, ComplexityClassId)),
+    Relation(RelationCompositionId),
     None,
 }
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
@@ -130,21 +132,24 @@ impl eframe::App for ComplexityVisualizerApp {
             });
         });
 
-        match self.selected {
+        match &self.selected {
             Selection::ComplexityClass(class) => {
                 let sidepanel_width = f32::min(ctx.available_rect().width() * 0.33, 300.0);
                 egui::SidePanel::right("my_right_panel")
                     .default_width(sidepanel_width)
                     .show(ctx, |ui| {
-                        ui_sidepanel_class(ui, self.model.get_class(class).unwrap())
+                        ui_sidepanel_class(ui, self.model.get_class(*class).unwrap())
                     });
             }
-            Selection::Relation((from, to)) => {
+            Selection::Relation(id) => {
                 let sidepanel_width = f32::min(ctx.available_rect().width() * 0.33, 300.0);
                 egui::SidePanel::right("my_right_panel")
                     .default_width(sidepanel_width)
                     .show(ctx, |ui| {
-                        ui_sidepanel_relation(ui, self.model.get_relation(from, to).unwrap())
+                        ui_sidepanel_relation(
+                            ui,
+                            &self.model.get_relation_composition(id.clone()).unwrap(),
+                        )
                     });
             }
             Selection::None => {}
