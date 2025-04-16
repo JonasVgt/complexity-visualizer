@@ -16,11 +16,15 @@ use petgraph::{
 };
 use vertex_ordering::order_vertices;
 
-use crate::model::{complexity_class::ComplexityClassId, relation::RelationComposition, Model};
+use crate::model::{
+    complexity_class::ComplexityClassId,
+    relation::{RelationComposition, RelationCompositionId},
+    Model,
+};
 
 pub struct VisualizationController {
     positions: HashMap<ComplexityClassId, Pos2>,
-    edge_paths: HashMap<(ComplexityClassId, ComplexityClassId), Vec<Pos2>>,
+    edge_paths: HashMap<RelationCompositionId, Vec<Pos2>>,
     node_spacing: f32,
 }
 
@@ -148,7 +152,7 @@ impl VisualizationController {
 
                 if from_node == to_node {
                     self.edge_paths.insert(
-                        (*from, *to),
+                        relation.id(),
                         vec![
                             *self.positions.get(from).unwrap(),
                             *self.positions.get(to).unwrap(),
@@ -213,7 +217,7 @@ impl VisualizationController {
                 let len = path_pos.len();
                 path_pos[len - 1] = *self.positions.get(to).unwrap();
 
-                self.edge_paths.insert((*from, *to), path_pos);
+                self.edge_paths.insert(relation.id(), path_pos);
             }
         }
     }
@@ -222,13 +226,9 @@ impl VisualizationController {
         self.positions.get(id).map(|n| *n * self.node_spacing)
     }
 
-    pub fn get_edge_path(
-        &self,
-        from: ComplexityClassId,
-        to: ComplexityClassId,
-    ) -> Option<Vec<Pos2>> {
+    pub fn get_edge_path(&self, id: RelationCompositionId) -> Option<Vec<Pos2>> {
         self.edge_paths
-            .get(&(from, to))
+            .get(&id)
             .map(|v| v.iter().map(|p| *p * self.node_spacing).collect())
     }
 }

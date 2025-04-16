@@ -23,12 +23,10 @@ impl Widget for GraphWidget<'_> {
         scene
             .show(ui, self.scene_rect, |ui| {
                 for relation in self.model.relation_compositions() {
-                    let from = relation.get_from();
-                    let to = relation.get_to();
                     let response = ui.add(RelationWidget {
                         path: self
                             .visualization_controller
-                            .get_edge_path(from, to)
+                            .get_edge_path(relation.id())
                             .unwrap(),
                         relation: &relation,
                         is_selected: match self.selected {
