@@ -1,3 +1,5 @@
+use egui::Hyperlink;
+
 use crate::{
     database::complexity_class::Tag,
     model::{complexity_class::ComplexityClass, relation::RelationComposition},
@@ -30,7 +32,7 @@ pub fn ui_sidepanel_class(ui: &mut egui::Ui, class: &ComplexityClass) {
     ui.separator();
     ui.add(rich_label!(class.description.clone()));
     ui.separator();
-    ui.hyperlink(&class.wikipedia);
+    ui.add(Hyperlink::from_label_and_url(format!("{} ", class.wikipedia.as_str()), &class.wikipedia).open_in_new_tab(true));
     ui.separator();
     let text = class
         .tags
