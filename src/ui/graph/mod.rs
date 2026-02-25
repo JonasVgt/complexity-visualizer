@@ -12,6 +12,8 @@ pub struct GraphWidget<'a> {
     pub model: &'a Model,
     pub visualization_controller: &'a VisualizationController,
     pub scene_rect: &'a mut Rect,
+    #[cfg(debug_assertions)]
+    pub show_debug: bool
 }
 
 impl Widget for GraphWidget<'_> {
@@ -56,6 +58,10 @@ impl Widget for GraphWidget<'_> {
                                 _ => false,
                             },
                             tags: class.tags.clone(),
+                            #[cfg(debug_assertions)]
+                            id: class.id,
+                            #[cfg(debug_assertions)]
+                            show_debug: self.show_debug
                         },
                     );
                     if response.clicked() {
