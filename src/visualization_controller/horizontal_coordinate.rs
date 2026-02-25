@@ -17,24 +17,25 @@ impl HorizontalCoordinates {
         self
     }
 
-    fn min(&self) -> (NodeIndex, f32) {
+    fn min(&self) -> Option<(NodeIndex, f32)> {
         self.0
             .iter()
             .map(|(n, v)| (*n, *v))
             .min_by(|(_, v1), (_, v2)| f32::total_cmp(v1, v2))
-            .unwrap()
     }
 
-    fn max(&self) -> (NodeIndex, f32) {
+    fn max(&self) -> Option<(NodeIndex, f32)> {
         self.0
             .iter()
             .map(|(n, v)| (*n, *v))
             .max_by(|(_, v1), (_, v2)| f32::total_cmp(v1, v2))
-            .unwrap()
     }
 
     fn width(&self) -> f32 {
-        self.max().1 - self.min().1
+        match (self.max(), self.min()) {
+            (Some((_, max)), Some((_, min))) => max - min,
+            _ => 0.0,
+        }
     }
 }
 
@@ -57,16 +58,14 @@ where
     let mut upper_assingment = compute_upper_assignment(graph);
     let mut lower_assingment = compute_lower_assignment(graph);
 
-    let width_upper = upper_assingment.width();
-    let width_lower = lower_assingment.width();
-
-    let (min_node_upper, min_val_upper) = upper_assingment.min();
-    let (min_node_lower, min_val_lower) = lower_assingment.min();
-
-    if width_upper > width_lower {
-        upper_assingment = upper_assingment.align_to(min_node_lower, min_val_lower);
-    } else {
-        lower_assingment = lower_assingment.align_to(min_node_upper, min_val_upper);
+    if let (Some((min_node_upper, min_val_upper)), Some((min_node_lower, min_val_lower))) =
+        (upper_assingment.min(), lower_assingment.min())
+    {
+        if upper_assingment.width() > lower_assingment.width() {
+            upper_assingment = upper_assingment.align_to(min_node_lower, min_val_lower);
+        } else {
+            lower_assingment = lower_assingment.align_to(min_node_upper, min_val_upper);
+        }
     }
 
     graph
