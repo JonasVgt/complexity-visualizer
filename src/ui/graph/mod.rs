@@ -2,7 +2,9 @@ use egui::{Rect, Scene, Widget};
 use node::NodeWidget;
 use relation::RelationWidget;
 
-use crate::{app::Selection, model::Model, ui::AppState, visualization_controller::VisualizationController};
+use crate::{
+    app::Selection, model::Model, ui::AppState, visualization_controller::VisualizationController,
+};
 
 mod node;
 mod relation;
@@ -69,10 +71,15 @@ impl Widget for GraphWidget<'_> {
                                 egui::vec2(200.0, 100.0),
                             );
 
-                            let debug_text =
-                                egui::RichText::new(format!("ID: {}", class.id.to_string()))
-                                    .italics()
-                                    .color(egui::Color32::RED);
+                            let debug_text = egui::RichText::new(format!(
+                                "ID: {}\nLAYER: {}",
+                                class.id.to_string(),
+                                self.visualization_controller
+                                    .get_node_layer(&class.id)
+                                    .map_or(String::from("-"), |l| l.to_string())
+                            ))
+                            .italics()
+                            .color(egui::Color32::RED);
                             ui.put(rect, egui::Label::new(debug_text).selectable(false));
                         };
                     }

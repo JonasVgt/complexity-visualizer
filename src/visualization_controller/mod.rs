@@ -26,15 +26,26 @@ pub struct VisualizationController {
     positions: HashMap<ComplexityClassId, Pos2>,
     edge_paths: HashMap<RelationCompositionId, Vec<Pos2>>,
     node_spacing: f32,
+    #[cfg(debug_assertions)]
+    debug_layers: HashMap<ComplexityClassId, usize>,
 }
 
 impl VisualizationController {
     pub fn new() -> Self {
-        Self {
+        #[cfg(not(debug_assertions))]
+        return Self {
             positions: HashMap::new(),
             edge_paths: HashMap::new(),
             node_spacing: 150.0,
-        }
+        };
+
+        #[cfg(debug_assertions)]
+        return Self {
+            positions: HashMap::new(),
+            edge_paths: HashMap::new(),
+            node_spacing: 150.0,
+            debug_layers: HashMap::new(),
+        };
     }
 
     fn generate_graph(model: &Model) -> Graph<ComplexityClassId, ()> {
@@ -78,6 +89,16 @@ impl VisualizationController {
         // An Directed Acyclic Graph containing the complexity classes. Equal classes are stored in a single node
         let condensated_graph = condensation(graph, true);
         let layered_graph = assign_layers(condensated_graph);
+
+        #[cfg(debug_assertions)]
+        {
+            self.debug_layers = layered_graph
+                .layer_map()
+                .iter()
+                .map(|(node, layer)| (layered_graph.graph().node_weight(*node).unwrap(), layer))
+                .flat_map(|(classes, layer)| classes.iter().map(|c| (*c, *layer)))
+                .collect();
+        }
 
         let mut graph_with_dummynodes = layered_graph.add_dummy_nodes(vec![]);
         graph_with_dummynodes = order_vertices(graph_with_dummynodes);
@@ -230,5 +251,10 @@ impl VisualizationController {
         self.edge_paths
             .get(&id)
             .map(|v| v.iter().map(|p| *p * self.node_spacing).collect())
+    }
+
+    #[cfg(debug_assertions)]
+    pub fn get_node_layer(&self, id: &ComplexityClassId) -> Option<usize> {
+        self.debug_layers.get(id).map(|l| *l)
     }
 }
