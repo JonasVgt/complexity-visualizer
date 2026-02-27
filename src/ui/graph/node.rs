@@ -1,17 +1,10 @@
 use egui::{epaint::TextShape, vec2, Align2, FontSelection, Widget};
-
-#[cfg(debug_assertions)]
-use crate::model::complexity_class::ComplexityClassId;
 use crate::{database::complexity_class::Tag, utils::text_parser::RichTextParser};
 
 pub struct NodeWidget {
     pub label: String,
     pub is_selected: bool,
     pub tags: Vec<Tag>,
-    #[cfg(debug_assertions)]
-    pub show_debug: bool,
-    #[cfg(debug_assertions)]
-    pub id: ComplexityClassId,
 }
 
 fn tags_str(tags: &[Tag]) -> String {
@@ -66,19 +59,6 @@ impl Widget for NodeWidget {
                 font_id,
                 visuals.text_color(),
             );
-
-            #[cfg(debug_assertions)]
-            {
-                if self.show_debug  {
-                    ui.painter().text(
-                        rect.center_bottom(),
-                        Align2::CENTER_TOP,
-                        self.id.to_string(),
-                        FontSelection::Default.resolve(ui.style()),
-                        visuals.text_color(),
-                    );
-                }
-            }
         }
         response
     }

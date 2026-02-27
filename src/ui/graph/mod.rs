@@ -2,7 +2,7 @@ use egui::{Rect, Scene, Widget};
 use node::NodeWidget;
 use relation::RelationWidget;
 
-use crate::{app::Selection, model::Model, visualization_controller::VisualizationController};
+use crate::{app::Selection, model::Model, ui::AppState, visualization_controller::VisualizationController};
 
 mod node;
 mod relation;
@@ -12,8 +12,8 @@ pub struct GraphWidget<'a> {
     pub model: &'a Model,
     pub visualization_controller: &'a VisualizationController,
     pub scene_rect: &'a mut Rect,
-    #[cfg(debug_assertions)]
-    pub show_debug: bool
+    #[allow(dead_code)]
+    pub app_state: &'a AppState,
 }
 
 impl Widget for GraphWidget<'_> {
@@ -58,12 +58,25 @@ impl Widget for GraphWidget<'_> {
                                 _ => false,
                             },
                             tags: class.tags.clone(),
-                            #[cfg(debug_assertions)]
-                            id: class.id,
-                            #[cfg(debug_assertions)]
-                            show_debug: self.show_debug
                         },
                     );
+
+                    #[cfg(debug_assertions)]
+                    {
+                        if self.app_state.debug.show_node_labels {
+                            let rect = Rect::from_center_size(
+                                response.rect.center_bottom(),
+                                egui::vec2(200.0, 100.0),
+                            );
+
+                            let debug_text =
+                                egui::RichText::new(format!("ID: {}", class.id.to_string()))
+                                    .italics()
+                                    .color(egui::Color32::RED);
+                            ui.put(rect, egui::Label::new(debug_text).selectable(false));
+                        };
+                    }
+
                     if response.clicked() {
                         *self.selected = Selection::ComplexityClass(class.id);
                     }

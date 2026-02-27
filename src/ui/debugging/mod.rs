@@ -1,5 +1,18 @@
+use crate::{ui::AppState};
 
-#[allow(dead_code)]
-pub fn ui_debugging_panel(ui: &mut egui::Ui, enabled: &mut bool) {
-    ui.checkbox(enabled, "Debug");
+
+pub struct DebugAppState {
+    pub show_node_labels: bool,
+}
+
+impl DebugAppState {
+    pub fn new() -> Self{
+        DebugAppState {
+            show_node_labels:false
+        }
+    }
+}
+
+pub fn ui_debugging_panel(ui: &mut egui::Ui, appstate: &mut AppState) {
+    ui.checkbox(&mut appstate.debug.show_node_labels, "Show node labels");
 }

@@ -1,14 +1,12 @@
 use egui::{pos2, FontData, FontDefinitions, FontFamily, Rect};
 
-#[cfg(debug_assertions)]
-use crate::ui::debugging::ui_debugging_panel;
-
 use crate::{
     model::{complexity_class::ComplexityClassId, relation::RelationCompositionId, Model},
     ui::{
         filtering::FilterState,
         graph::GraphWidget,
         sidepanel::{ui_sidepanel_class, ui_sidepanel_relation},
+        AppState,
     },
     visualization_controller::VisualizationController,
 };
@@ -37,7 +35,7 @@ pub struct ComplexityVisualizerApp {
     filter_state: FilterState,
 
     #[serde(skip)]
-    show_debug: bool,
+    app_state: AppState,
 }
 
 impl Default for ComplexityVisualizerApp {
@@ -57,7 +55,7 @@ impl Default for ComplexityVisualizerApp {
                 },
             ),
             filter_state: FilterState::new(),
-            show_debug: false,
+            app_state: AppState::new(),
         }
     }
 }
@@ -137,7 +135,11 @@ impl eframe::App for ComplexityVisualizerApp {
 
                 egui::widgets::global_theme_preference_buttons(ui);
                 #[cfg(debug_assertions)]
-                ui_debugging_panel(ui, &mut self.show_debug);
+                {
+                    use crate::ui::debugging::ui_debugging_panel;
+
+                    ui_debugging_panel(ui, &mut self.app_state);
+                }
             });
         });
 
@@ -178,8 +180,7 @@ impl eframe::App for ComplexityVisualizerApp {
                 model: &self.model,
                 visualization_controller: &self.visualization_controller,
                 scene_rect: &mut self.scene_rect,
-                #[cfg(debug_assertions)]
-                show_debug: self.show_debug
+                app_state: &self.app_state,
             });
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
