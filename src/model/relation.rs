@@ -35,6 +35,7 @@ impl Relation {
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+#[allow(dead_code)]
 pub enum RelationType {
     Subset(Subset),
     Equal(Subset, Subset),
