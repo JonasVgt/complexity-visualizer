@@ -133,7 +133,10 @@ impl VisualizationController {
                 .collect();
 
         self.positions = HashMap::new();
-
+        #[cfg(debug_assertions)]
+        {
+            self.debug_dummy_node_positions.clear();
+        }
         for layer in graph_with_dummynodes.layers().clone() {
             for node in layer {
                 if graph_with_dummynodes
