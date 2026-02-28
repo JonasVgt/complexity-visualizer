@@ -26,8 +26,9 @@ where
     N: Clone,
     E: Clone,
 {
-    let (graph, mut layers) = graph.into_graph_and_layers();
+    let (graph, input_layers) = graph.into_graph_and_layers();
 
+    let mut layers = input_layers;
     loop {
         let mut sorted = vec![layers[0].clone()];
         for layer in layers.iter().skip(1) {
@@ -51,7 +52,7 @@ where
         }
 
         let mut sorted2 = vec![sorted.last().unwrap().clone()];
-        for layer in layers.iter().rev().skip(1) {
+        for layer in sorted.iter().rev().skip(1) {
             let mut barycenter: Vec<(NodeIndex, f32)> = layer
                 .clone()
                 .into_iter()
