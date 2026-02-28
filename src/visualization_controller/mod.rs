@@ -30,6 +30,8 @@ pub struct VisualizationController {
     debug_layers: HashMap<ComplexityClassId, usize>,
     #[cfg(debug_assertions)]
     debug_sort_index: HashMap<ComplexityClassId, usize>,
+    #[cfg(debug_assertions)]
+    debug_dummy_node_positions: Vec<Pos2>,
 }
 
 impl VisualizationController {
@@ -48,6 +50,7 @@ impl VisualizationController {
             node_spacing: 150.0,
             debug_layers: HashMap::new(),
             debug_sort_index: HashMap::new(),
+            debug_dummy_node_positions: Vec::new(),
         };
     }
 
@@ -139,6 +142,12 @@ impl VisualizationController {
                     .unwrap_or(&vec![])
                     .is_empty()
                 {
+                    #[cfg(debug_assertions)]
+                    {
+                        let pos = *node_positions.get(&node).unwrap();
+                        self.debug_dummy_node_positions.push(pos);
+                    }
+
                     continue;
                 }
                 let p = *node_positions.get(&node).unwrap();
@@ -276,5 +285,13 @@ impl VisualizationController {
     #[cfg(debug_assertions)]
     pub fn get_node_sort_idx(&self, id: &ComplexityClassId) -> Option<usize> {
         self.debug_sort_index.get(id).map(|l| *l)
+    }
+
+    #[cfg(debug_assertions)]
+    pub fn get_dummy_node_postions(&self) -> Vec<Pos2> {
+        self.debug_dummy_node_positions
+            .iter()
+            .map(|p| *p * self.node_spacing)
+            .collect()
     }
 }

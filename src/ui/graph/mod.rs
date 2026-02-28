@@ -91,6 +91,22 @@ impl Widget for GraphWidget<'_> {
                         *self.selected = Selection::ComplexityClass(class.id);
                     }
                 }
+
+                #[cfg(debug_assertions)]
+                {
+                    if self.app_state.debug.show_dummy_nodes {
+                        for dummy_node in self.visualization_controller.get_dummy_node_postions() {
+                            ui.put(
+                                egui::Rect::from_center_size(dummy_node, egui::vec2(100.0, 100.0)),
+                                NodeWidget {
+                                    label: String::new(),
+                                    is_selected: false,
+                                    tags: Vec::new(),
+                                },
+                            );
+                        }
+                    }
+                }
             })
             .response
     }
