@@ -72,10 +72,13 @@ impl Widget for GraphWidget<'_> {
                             );
 
                             let debug_text = egui::RichText::new(format!(
-                                "ID: {}\nLAYER: {}",
+                                "ID: {}\nLAYER: {}\nSORT IDX: {}",
                                 class.id.to_string(),
                                 self.visualization_controller
                                     .get_node_layer(&class.id)
+                                    .map_or(String::from("-"), |l| l.to_string()),
+                                self.visualization_controller
+                                    .get_node_sort_idx(&class.id)
                                     .map_or(String::from("-"), |l| l.to_string())
                             ))
                             .italics()

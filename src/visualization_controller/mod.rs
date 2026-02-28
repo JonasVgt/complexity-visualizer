@@ -28,6 +28,8 @@ pub struct VisualizationController {
     node_spacing: f32,
     #[cfg(debug_assertions)]
     debug_layers: HashMap<ComplexityClassId, usize>,
+    #[cfg(debug_assertions)]
+    debug_sort_index: HashMap<ComplexityClassId, usize>,
 }
 
 impl VisualizationController {
@@ -45,6 +47,7 @@ impl VisualizationController {
             edge_paths: HashMap::new(),
             node_spacing: 150.0,
             debug_layers: HashMap::new(),
+            debug_sort_index: HashMap::new(),
         };
     }
 
@@ -102,6 +105,18 @@ impl VisualizationController {
 
         let mut graph_with_dummynodes = layered_graph.add_dummy_nodes(vec![]);
         graph_with_dummynodes = order_vertices(graph_with_dummynodes);
+
+        #[cfg(debug_assertions)]
+        {
+            for layer in graph_with_dummynodes.layers() {
+                for (i, node) in layer.iter().enumerate() {
+                    let classes = graph_with_dummynodes.graph().node_weight(*node).unwrap();
+                    for class in classes {
+                        self.debug_sort_index.insert(*class, i);
+                    }
+                }
+            }
+        }
 
         let node_positions: HashMap<NodeIndex, Pos2> =
             compute_horizontal_coordinate(&graph_with_dummynodes)
@@ -256,5 +271,10 @@ impl VisualizationController {
     #[cfg(debug_assertions)]
     pub fn get_node_layer(&self, id: &ComplexityClassId) -> Option<usize> {
         self.debug_layers.get(id).map(|l| *l)
+    }
+
+    #[cfg(debug_assertions)]
+    pub fn get_node_sort_idx(&self, id: &ComplexityClassId) -> Option<usize> {
+        self.debug_sort_index.get(id).map(|l| *l)
     }
 }
